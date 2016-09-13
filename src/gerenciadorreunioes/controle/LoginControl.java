@@ -41,6 +41,7 @@ public class LoginControl {
         boolean achou = false;
         boolean encontrou = verificaLogin(siape, senha);
         if (encontrou) {
+            //se o servidor for da Diretoria de Ensino abre a tela da DE
             if (servidorAux.getSerDE() == 1) {
                 TelaPrincipalDeGUI telaPrincipal = new TelaPrincipalDeGUI();
                 telaPrincipal.setVisible(true);

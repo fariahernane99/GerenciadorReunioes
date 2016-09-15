@@ -7,6 +7,8 @@ package gerenciadorreunioes.controle;
 
 import gerenciadorreunioes.modelo.Servidor;
 import gerenciadorreunioes.modelo.ServidorDAO;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 /**
@@ -18,6 +20,7 @@ public class ServidorControl {
     private ServidorDAO servidorDao = new ServidorDAO();
     private ArrayList<Servidor> arrayServidores;
     private ArrayList<Servidor> arrayCoordenadores;
+    private static MessageDigest md = null;
 
     public boolean verificaCampos(String text, String text0, String text1, String text2, String text3, String text4) {
         boolean verifica = false;
@@ -28,11 +31,13 @@ public class ServidorControl {
     }
 
     public boolean adiciona(Servidor x) {
+        x.setSenha(criptografar(x.getSenha()));
         return servidorDao.adiciona(x);
     }
 
     public boolean atualiza(Servidor x, String siapeAntigo) {
-        return servidorDao.atualizar(x.getSiape(), x.getNome(), x.getTelefone(), x.getEmail(), x.getSenha(), x.getArea(), x.getSerResponsavelATA(), x.getSerCoordenador(), x.getSerDE(), siapeAntigo);
+        String senha = criptografar(x.getSenha());
+        return servidorDao.atualizar(x.getSiape(), x.getNome(), x.getTelefone(), x.getEmail(), senha, x.getArea(), x.getSerResponsavelATA(), x.getSerCoordenador(), x.getSerDE(), siapeAntigo);
     }
 
     public boolean deleta(String siape) {
@@ -113,6 +118,38 @@ public class ServidorControl {
             }
         }
         return encontrou;
+    }
+    
+    
+ 
+    static {
+        //Try catch referente ao algoritmo do MD5 e seus possiveis erros
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException ex) {
+            ex.printStackTrace();
+        }
+    }
+ 
+    
+  private static char[] hexCodes(byte[] text) {
+        char[] hexOutput = new char[text.length * 2];
+        String hexString;
+ 
+        for (int i = 0; i < text.length; i++) {
+            hexString = "00" + Integer.toHexString(text[i]);
+            hexString.toUpperCase().getChars(hexString.length() -2,
+            hexString.length(), hexOutput, i * 2);
+        }
+        return hexOutput;
+    }
+ 
+  
+public static String criptografar(String pwd) {
+        if (md != null) {
+            return new String(hexCodes(md.digest(pwd.getBytes())));
+        }
+        return null;
     }
 
 }

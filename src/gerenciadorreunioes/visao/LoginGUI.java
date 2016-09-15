@@ -1,6 +1,8 @@
 package gerenciadorreunioes.visao;
 
 import gerenciadorreunioes.controle.LoginControl;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import javax.swing.JOptionPane;
 
 /*
@@ -15,6 +17,7 @@ import javax.swing.JOptionPane;
 public class LoginGUI extends javax.swing.JFrame {
 
     private LoginControl loginControle = new LoginControl();
+    
 
     public LoginGUI() {
         initComponents();
@@ -190,5 +193,8 @@ public class LoginGUI extends javax.swing.JFrame {
             }
         }
     }
+    
+   
+    
 
 }

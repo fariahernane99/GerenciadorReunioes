@@ -5,94 +5,74 @@
  */
 package gerenciadorreunioes.modelo;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.transform.Transformers;
 
 /**
  *
  * @author Hernane Faria
  */
 public class AlunoGrupoDAO {
-    
-    private Connection connection;
 
-    public AlunoGrupoDAO() {
-        this.connection = new ConnectionFactory().getConnection();
+    public void cadastrar(AlunoGrupo aluGrupo) {
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        s.save(aluGrupo);
+        s.getTransaction().commit();
     }
 
-    public boolean adiciona(String matricula, int codigoGrupo) {
-        String sql = "INSERT INTO Aluno_Grupo(alg_aluMatricula, alg_gruCodigo) VALUES (?,?);";
-        boolean adicionou = false;
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(1, matricula);
-            stmt.setInt(2, codigoGrupo);
-            stmt.execute();
-            stmt.close();
-            adicionou = true;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    public void deletar(int codigo, String matricula) {
+        for (AlunoGrupo alg : getAlunosGrupos()) {
+            if ((alg.getAluno().getMatricula().equals(matricula)) && (alg.getGrupo().getCodigo() == codigo)) {
+                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+                s.beginTransaction();
+                s.delete(alg);
+                s.getTransaction().commit();
+            }
         }
-        return adicionou;
     }
-    
+
+    public void alterar(AlunoGrupo aluGrupo) {
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        s.saveOrUpdate(aluGrupo);
+        s.getTransaction().commit();
+    }
+
     public ArrayList<AlunoGrupo> getAlunosGrupos() {
-        String sql = "SELECT * FROM Aluno_Grupo;";
-        ArrayList<AlunoGrupo> s = new ArrayList();
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                AlunoGrupo x = new AlunoGrupo();
-                x.setCodigo(rs.getInt(1));
-                x.setAlg_aluMatricula(rs.getString(2));
-                x.setAlg_gruCodigo(rs.getInt(3));
-                s.add(x);
-            }
-            stmt.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return s;
-    }
-    
-    public ArrayList<AlunoGrupo> getAlunosGrupos(int gruCodigo) {
-        String sql = "SELECT * FROM Aluno_Grupo WHERE alg_gruCodigo = ?;";
-        ArrayList<AlunoGrupo> s = new ArrayList();
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, gruCodigo);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                AlunoGrupo x = new AlunoGrupo();
-                x.setCodigo(rs.getInt(1));
-                x.setAlg_aluMatricula(rs.getString(2));
-                x.setAlg_gruCodigo(rs.getInt(3));
-                s.add(x);
-            }
-            stmt.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return s;
+        String hql = "SELECT * FROM Aluno_Grupo;";
+        ArrayList<AlunoGrupo> arrayAlunosGrupos;
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        Query query = s.createSQLQuery(hql);
+        query.setResultTransformer(Transformers.aliasToBean(AlunoGrupo.class));//Sem isso aqui impossível de retornar
+        List<AlunoGrupo> listAlunosGrupos = query.list();
+        s.getTransaction().commit();
+        arrayAlunosGrupos = (ArrayList<AlunoGrupo>) listAlunosGrupos;
+        return arrayAlunosGrupos;
     }
 
-    public boolean removeTodosAlunosDoGrupo(int gruCodigo) {
-        boolean removeu = false;
-        String sql = "DELETE FROM Aluno_Grupo WHERE alg_gruCodigo = ?;";
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, gruCodigo);
-            stmt.execute();
-            stmt.close();
-            removeu = true;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return removeu;
+    public ArrayList<AlunoGrupo> getAlunosGrupos(int codigo) {
+        String hql = "SELECT * FROM Aluno_Grupo WHERE alg_gruCodigo = ?;";
+        ArrayList<AlunoGrupo> arrayAlunosGrupos;
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        Query query = s.createSQLQuery(hql);
+        query.setResultTransformer(Transformers.aliasToBean(AlunoGrupo.class));//Sem isso aqui impossível de retornar
+        List<AlunoGrupo> listAlunosGrupos = query.list();
+        s.getTransaction().commit();
+        arrayAlunosGrupos = (ArrayList<AlunoGrupo>) listAlunosGrupos;
+        return arrayAlunosGrupos;
     }
-    
+
+    public void removeTodosAlunosDoGrupo(int codigo) {
+        for (AlunoGrupo alg : getAlunosGrupos()) {
+            if (codigo == alg.getGrupo().getCodigo()) {
+                deletar(alg.getGrupo().getCodigo(), alg.getAluno().getMatricula());
+            }
+        }
+    }
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 16/09/2016 10:50:07 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="gerenciadorreunioes.modelo.Servidor" table="Servidor" catalog="reunioes" optimistic-lock="version">
+        <id name="serSiape" type="string">
+            <column name="serSiape" length="7" />
+            <generator class="assigned" />
+        </id>
+        <property name="serNome" type="string">
+            <column name="serNome" length="65535" not-null="true" />
+        </property>
+        <property name="serTelefone" type="string">
+            <column name="serTelefone" length="45" not-null="true" />
+        </property>
+        <property name="serEmail" type="string">
+            <column name="serEmail" length="100" not-null="true" />
+        </property>
+        <property name="serSenha" type="string">
+            <column name="serSenha" length="45" not-null="true" />
+        </property>
+        <property name="serArea" type="string">
+            <column name="serArea" length="50" not-null="true" />
+        </property>
+        <property name="serDe" type="int">
+            <column name="serDe" not-null="true" />
+        </property>
+        <property name="serCoordenador" type="int">
+            <column name="serCoordenador" not-null="true" />
+        </property>
+        <property name="serResponsavelAta" type="int">
+            <column name="serResponsavelAta" not-null="true" />
+        </property>
+        <set name="servidorGrupos" table="Servidor_Grupo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="seg_serSiape" length="7" not-null="true" />
+            </key>
+            <one-to-many class="gerenciadorreunioes.modelo.ServidorGrupo" />
+        </set>
+    </class>
+</hibernate-mapping>

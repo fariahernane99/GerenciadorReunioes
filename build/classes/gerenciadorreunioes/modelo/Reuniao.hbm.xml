@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 16/09/2016 10:50:07 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="gerenciadorreunioes.modelo.Reuniao" table="Reuniao" catalog="reunioes" optimistic-lock="version">
+        <id name="reuCodigo" type="java.lang.Integer">
+            <column name="reuCodigo" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="grupo" class="gerenciadorreunioes.modelo.Grupo" fetch="select">
+            <column name="reu_gruCodigo" not-null="true" />
+        </many-to-one>
+        <property name="reuNome" type="string">
+            <column name="reuNome" length="45" not-null="true" />
+        </property>
+        <property name="reuData" type="string">
+            <column name="reuData" length="10" not-null="true" />
+        </property>
+        <property name="reuHorarioInicio" type="string">
+            <column name="reuHorarioInicio" length="6" />
+        </property>
+        <property name="reuHorarioFim" type="string">
+            <column name="reuHorarioFim" length="45" />
+        </property>
+        <property name="reuLocal" type="string">
+            <column name="reuLocal" length="45" />
+        </property>
+        <property name="reuSiapeResponsavelAta" type="string">
+            <column name="reuSiapeResponsavelAta" length="7" />
+        </property>
+        <set name="atas" table="Ata" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ata_reuCodigo" not-null="true" />
+            </key>
+            <one-to-many class="gerenciadorreunioes.modelo.Ata" />
+        </set>
+    </class>
+</hibernate-mapping>

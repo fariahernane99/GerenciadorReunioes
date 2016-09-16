@@ -5,11 +5,11 @@
  */
 package gerenciadorreunioes.modelo;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.transform.Transformers;
 
 /**
  *
@@ -17,99 +17,42 @@ import java.util.ArrayList;
  */
 public class AlunoDAO {
 
-    private Connection connection;
-    
-    public AlunoDAO() {
-       //inicializa a conexão com o BD
-        this.connection =  ConnectionFactory.getConnection();    
+    public void cadastrar(Aluno alu) {
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        s.save(alu);
+        s.getTransaction().commit();
     }
 
-
-    public boolean adiciona(Aluno a) {
-        boolean adicionou = false;
-        String sql = "insert into Aluno(aluMatricula, aluNome, aluEmail) values (?,?,?);";
-        try {
-            // prepared statement para inserção
-            PreparedStatement stmt = connection.prepareStatement(sql);
-
-            // seta os valores
-            stmt.setString(1, a.getMatricula());
-            stmt.setString(2, a.getNome());
-            stmt.setString(3, a.getEmail());
-            // executa
-            stmt.execute();
-            stmt.close();
-            adicionou = true;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return adicionou;
+    public void alterar(Aluno alu) {
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        s.saveOrUpdate(alu);
+        s.getTransaction().commit();
     }
 
-    public boolean deleta(String matricula) {
-        boolean deletou = false;
-        String sql = "DELETE FROM Aluno WHERE aluMatricula = ?;";
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-
-            // seta os valores
-            stmt.setString(1, matricula);
-
-            // executa
-            stmt.execute();
-            stmt.close();
-            deletou = true;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return deletou;
-    }
-
-    public boolean atualizar(String matricula, String nome, String email, String antMatricula) {
-        boolean atualizou = false;
-        String sql = "UPDATE Aluno SET aluMatricula = ?, aluNome = ?, aluEmail = ? WHERE aluMatricula = ?;";
-        ArrayList<Aluno> a = new ArrayList<>();
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            a = getAlunos();
-            for (Aluno alu : a) {
-                if (alu.getMatricula().equals(antMatricula)) {
-                    stmt.setString(1, matricula);
-                    stmt.setString(2, nome);
-                    stmt.setString(3, email);
-                    stmt.setString(4, antMatricula);
-                }
+    public void deletar(String matricula) {
+        for (Aluno alu : listar()) {
+            if (matricula.equals(alu.getMatricula())) {
+                Aluno a = alu;
+                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+                s.beginTransaction();
+                s.delete(a);
+                s.getTransaction().commit();
             }
-            stmt.execute();
-            stmt.close();
-            atualizou = true;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
-        return atualizou;
     }
 
-    public ArrayList<Aluno> getAlunos() {
-        String sql = "SELECT * FROM Aluno;";
-        ArrayList<Aluno> a = new ArrayList();
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-
-            // executa
-            ResultSet rs = stmt.executeQuery();
-            //joga resultado da consulta no ArrayList
-            while (rs.next()) {
-                Aluno x = new Aluno();
-                x.setMatricula(rs.getString(1));
-                x.setNome(rs.getString(2));
-                x.setEmail(rs.getString(3));
-                a.add(x);
-            }
-            stmt.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return a;
+    public ArrayList<Aluno> listar() {
+        String hql = "SELECT * FROM Aluno;";
+        ArrayList<Aluno> arrayAlunos;
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        Query query = s.createSQLQuery(hql);
+        query.setResultTransformer(Transformers.aliasToBean(Aluno.class));//Sem isso aqui impossível de retornar
+        List<Aluno> listAlunos = query.list();
+        s.getTransaction().commit();
+        arrayAlunos = (ArrayList<Aluno>) listAlunos;
+        return arrayAlunos;
     }
-
 }

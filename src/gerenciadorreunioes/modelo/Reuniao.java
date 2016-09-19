@@ -11,42 +11,90 @@ import java.util.Set;
 public class Reuniao  implements java.io.Serializable {
 
 
-     private Integer reuCodigo;
+     private Integer codigo;
      private Grupo grupo;
-     private String reuNome;
-     private String reuData;
-     private String reuHorarioInicio;
-     private String reuHorarioFim;
-     private String reuLocal;
-     private String reuSiapeResponsavelAta;
+     private String nome;
+     private String data;
+     private String horarioInicio;
+     private String horarioFim;
+     private String local;
+     private String siapeResponsavelAta;
      private Set atas = new HashSet(0);
 
     public Reuniao() {
     }
 
 	
-    public Reuniao(Grupo grupo, String reuNome, String reuData) {
+    public Reuniao(Grupo grupo, String nome, String data) {
         this.grupo = grupo;
-        this.reuNome = reuNome;
-        this.reuData = reuData;
+        this.nome = nome;
+        this.data = data;
     }
-    public Reuniao(Grupo grupo, String reuNome, String reuData, String reuHorarioInicio, String reuHorarioFim, String reuLocal, String reuSiapeResponsavelAta, Set atas) {
+    public Reuniao(Grupo grupo, String nome, String data, String horarioInicio, String horarioFim, String local, String siapeResponsavelAta, Set atas) {
        this.grupo = grupo;
-       this.reuNome = reuNome;
-       this.reuData = reuData;
-       this.reuHorarioInicio = reuHorarioInicio;
-       this.reuHorarioFim = reuHorarioFim;
-       this.reuLocal = reuLocal;
-       this.reuSiapeResponsavelAta = reuSiapeResponsavelAta;
+       this.nome = nome;
+       this.data = data;
+       this.horarioInicio = horarioInicio;
+       this.horarioFim = horarioFim;
+       this.local = local;
+       this.siapeResponsavelAta = siapeResponsavelAta;
        this.atas = atas;
     }
-   
-    public Integer getReuCodigo() {
-        return this.reuCodigo;
+
+    public Integer getCodigo() {
+        return codigo;
     }
-    
-    public void setReuCodigo(Integer reuCodigo) {
-        this.reuCodigo = reuCodigo;
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public String getHorarioInicio() {
+        return horarioInicio;
+    }
+
+    public void setHorarioInicio(String horarioInicio) {
+        this.horarioInicio = horarioInicio;
+    }
+
+    public String getHorarioFim() {
+        return horarioFim;
+    }
+
+    public void setHorarioFim(String horarioFim) {
+        this.horarioFim = horarioFim;
+    }
+
+    public String getLocal() {
+        return local;
+    }
+
+    public void setLocal(String local) {
+        this.local = local;
+    }
+
+    public String getSiapeResponsavelAta() {
+        return siapeResponsavelAta;
+    }
+
+    public void setSiapeResponsavelAta(String siapeResponsavelAta) {
+        this.siapeResponsavelAta = siapeResponsavelAta;
     }
     public Grupo getGrupo() {
         return this.grupo;
@@ -55,48 +103,6 @@ public class Reuniao  implements java.io.Serializable {
     public void setGrupo(Grupo grupo) {
         this.grupo = grupo;
     }
-    public String getReuNome() {
-        return this.reuNome;
-    }
-    
-    public void setReuNome(String reuNome) {
-        this.reuNome = reuNome;
-    }
-    public String getReuData() {
-        return this.reuData;
-    }
-    
-    public void setReuData(String reuData) {
-        this.reuData = reuData;
-    }
-    public String getReuHorarioInicio() {
-        return this.reuHorarioInicio;
-    }
-    
-    public void setReuHorarioInicio(String reuHorarioInicio) {
-        this.reuHorarioInicio = reuHorarioInicio;
-    }
-    public String getReuHorarioFim() {
-        return this.reuHorarioFim;
-    }
-    
-    public void setReuHorarioFim(String reuHorarioFim) {
-        this.reuHorarioFim = reuHorarioFim;
-    }
-    public String getReuLocal() {
-        return this.reuLocal;
-    }
-    
-    public void setReuLocal(String reuLocal) {
-        this.reuLocal = reuLocal;
-    }
-    public String getReuSiapeResponsavelAta() {
-        return this.reuSiapeResponsavelAta;
-    }
-    
-    public void setReuSiapeResponsavelAta(String reuSiapeResponsavelAta) {
-        this.reuSiapeResponsavelAta = reuSiapeResponsavelAta;
-    }
     public Set getAtas() {
         return this.atas;
     }
@@ -104,10 +110,4 @@ public class Reuniao  implements java.io.Serializable {
     public void setAtas(Set atas) {
         this.atas = atas;
     }
-
-
-
-
 }
-
-

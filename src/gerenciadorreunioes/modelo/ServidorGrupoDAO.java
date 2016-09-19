@@ -10,88 +10,67 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.transform.Transformers;
 
 /**
  *
  * @author Alunos
  */
 public class ServidorGrupoDAO {
-
-    private Connection connection;
-
-    public ServidorGrupoDAO() {
-        this.connection = new ConnectionFactory().getConnection();
-    }
-
-    public boolean adiciona(String siapeMembro, int codigoGrupo) {
-        String sql = "INSERT INTO Servidor_Grupo(seg_serSiape, seg_gruCodigo) VALUES (?,?);";
-        boolean adicionou = false;
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(1, siapeMembro);
-            stmt.setInt(2, codigoGrupo);
-            stmt.execute();
-            stmt.close();
-            adicionou = true;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return adicionou;
+    
+    public void cadastrar(ServidorGrupo ser) {
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        s.save(ser);
+        s.getTransaction().commit();
     }
 
     public ArrayList<ServidorGrupo> getServidoresGrupos() {
-        String sql = "SELECT * FROM Servidor_Grupo;";
-        ArrayList<ServidorGrupo> s = new ArrayList();
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                ServidorGrupo x = new ServidorGrupo();
-                x.setCodigo(rs.getInt(1));
-                x.setSeg_serSiape(rs.getString(2));
-                x.setSeg_gruCodigo(rs.getInt(3));
-                s.add(x);
-            }
-            stmt.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return s;
+        String hql = "SELECT * FROM Servidor_Grupo;";
+        ArrayList<ServidorGrupo> arrayServidores;
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        Query query = s.createSQLQuery(hql);
+        query.setResultTransformer(Transformers.aliasToBean(Servidor.class));//Sem isso aqui impossível de retornar
+        List<ServidorGrupo> listServidores = query.list();
+        s.getTransaction().commit();
+        arrayServidores = (ArrayList<ServidorGrupo>) listServidores;
+        return arrayServidores;
     }
-
+    
     public ArrayList<ServidorGrupo> getServidoresGrupos(int gruCodigo) {
-        String sql = "SELECT * FROM Servidor_Grupo WHERE seg_gruCodigo = ?;";
-        ArrayList<ServidorGrupo> s = new ArrayList();
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, gruCodigo);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                ServidorGrupo x = new ServidorGrupo();
-                x.setCodigo(rs.getInt(1));
-                x.setSeg_serSiape(rs.getString(2));
-                x.setSeg_gruCodigo(rs.getInt(3));
-                s.add(x);
+        String hql = "SELECT * FROM Servidor_Grupo WHERE seg_gruCodigo = " + gruCodigo + ";";
+        ArrayList<ServidorGrupo> arrayServidores;
+        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+        s.beginTransaction();
+        Query query = s.createSQLQuery(hql);
+        query.setResultTransformer(Transformers.aliasToBean(Servidor.class));//Sem isso aqui impossível de retornar
+        List<ServidorGrupo> listServidores = query.list();
+        s.getTransaction().commit();
+        arrayServidores = (ArrayList<ServidorGrupo>) listServidores;
+        return arrayServidores;
+    }
+    
+    public void deletar(int codigo, String matricula) {
+        for (ServidorGrupo ser : getServidoresGrupos()) {
+            if ((ser.getServidor().getSiape().equals(matricula)) && (ser.getGrupo().getCodigo() == codigo)) {
+                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+                s.beginTransaction();
+                s.delete(ser);
+                s.getTransaction().commit();
             }
-            stmt.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
-        return s;
+    }
+    
+    public void removeTodosAlunosDoGrupo(int codigo) {
+        for (ServidorGrupo ser : getServidoresGrupos()) {
+            if (codigo == ser.getGrupo().getCodigo()) {
+                deletar(ser.getGrupo().getCodigo(), ser.getServidor().getSiape());
+            }
+        }
     }
 
-    public boolean removeTodosServidoresDoGrupo(int gruCodigo) {
-        boolean removeu = false;
-        String sql = "DELETE FROM Servidor_Grupo WHERE seg_gruCodigo = ?;";
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, gruCodigo);
-            stmt.execute();
-            stmt.close();
-            removeu = true;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return removeu;
-    }
 }

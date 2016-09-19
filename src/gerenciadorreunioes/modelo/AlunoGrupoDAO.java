@@ -56,7 +56,7 @@ public class AlunoGrupoDAO {
     }
 
     public ArrayList<AlunoGrupo> getAlunosGrupos(int codigo) {
-        String hql = "SELECT * FROM Aluno_Grupo WHERE alg_gruCodigo = ?;";
+        String hql = "SELECT * FROM Aluno_Grupo WHERE alg_gruCodigo = " + codigo + ";";
         ArrayList<AlunoGrupo> arrayAlunosGrupos;
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();

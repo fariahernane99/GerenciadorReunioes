@@ -4,7 +4,7 @@
 <!-- Generated 16/09/2016 10:50:07 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="gerenciadorreunioes.modelo.ServidorGrupo" table="Servidor_Grupo" catalog="reunioes" optimistic-lock="version">
-        <id name="segCodigo" type="java.lang.Integer">
+        <id name="codigo" type="java.lang.Integer">
             <column name="segCodigo" />
             <generator class="identity" />
         </id>

@@ -9,7 +9,7 @@ package gerenciadorreunioes.modelo;
 public class ServidorGrupo  implements java.io.Serializable {
 
 
-     private Integer segCodigo;
+     private Integer codigo;
      private Grupo grupo;
      private Servidor servidor;
 
@@ -21,12 +21,12 @@ public class ServidorGrupo  implements java.io.Serializable {
        this.servidor = servidor;
     }
    
-    public Integer getSegCodigo() {
-        return this.segCodigo;
+    public Integer getCodigo() {
+        return this.codigo;
     }
     
-    public void setSegCodigo(Integer segCodigo) {
-        this.segCodigo = segCodigo;
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
     }
     public Grupo getGrupo() {
         return this.grupo;
@@ -43,9 +43,4 @@ public class ServidorGrupo  implements java.io.Serializable {
         this.servidor = servidor;
     }
 
-
-
-
 }
-
-

@@ -4,29 +4,29 @@
 <!-- Generated 16/09/2016 10:50:07 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="gerenciadorreunioes.modelo.Reuniao" table="Reuniao" catalog="reunioes" optimistic-lock="version">
-        <id name="reuCodigo" type="java.lang.Integer">
+        <id name="codigo" type="java.lang.Integer">
             <column name="reuCodigo" />
             <generator class="identity" />
         </id>
         <many-to-one name="grupo" class="gerenciadorreunioes.modelo.Grupo" fetch="select">
             <column name="reu_gruCodigo" not-null="true" />
         </many-to-one>
-        <property name="reuNome" type="string">
+        <property name="nome" type="string">
             <column name="reuNome" length="45" not-null="true" />
         </property>
-        <property name="reuData" type="string">
+        <property name="data" type="string">
             <column name="reuData" length="10" not-null="true" />
         </property>
-        <property name="reuHorarioInicio" type="string">
+        <property name="horarioInicio" type="string">
             <column name="reuHorarioInicio" length="6" />
         </property>
-        <property name="reuHorarioFim" type="string">
+        <property name="horarioFim" type="string">
             <column name="reuHorarioFim" length="45" />
         </property>
-        <property name="reuLocal" type="string">
+        <property name="local" type="string">
             <column name="reuLocal" length="45" />
         </property>
-        <property name="reuSiapeResponsavelAta" type="string">
+        <property name="siapeResponsavelAta" type="string">
             <column name="reuSiapeResponsavelAta" length="7" />
         </property>
         <set name="atas" table="Ata" inverse="true" lazy="true" fetch="select">

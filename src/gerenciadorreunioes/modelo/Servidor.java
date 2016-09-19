@@ -11,12 +11,12 @@ import java.util.Set;
 public class Servidor  implements java.io.Serializable {
 
 
-     private String serSiape;
-     private String serNome;
-     private String serTelefone;
-     private String serEmail;
-     private String serSenha;
-     private String serArea;
+     private String siape;
+     private String nome;
+     private String telefone;
+     private String email;
+     private String senha;
+     private String area;
      private int serDe;
      private int serCoordenador;
      private int serResponsavelAta;
@@ -26,71 +26,76 @@ public class Servidor  implements java.io.Serializable {
     }
 
 	
-    public Servidor(String serSiape, String serNome, String serTelefone, String serEmail, String serSenha, String serArea, int serDe, int serCoordenador, int serResponsavelAta) {
-        this.serSiape = serSiape;
-        this.serNome = serNome;
-        this.serTelefone = serTelefone;
-        this.serEmail = serEmail;
-        this.serSenha = serSenha;
-        this.serArea = serArea;
+    public Servidor(String siape, String nome, String telefone, String email, String senha, String area, int serDe, int serCoordenador, int serResponsavelAta) {
+        this.siape = siape;
+        this.nome = nome;
+        this.telefone = telefone;
+        this.email = email;
+        this.senha = senha;
+        this.area = area;
         this.serDe = serDe;
         this.serCoordenador = serCoordenador;
         this.serResponsavelAta = serResponsavelAta;
     }
-    public Servidor(String serSiape, String serNome, String serTelefone, String serEmail, String serSenha, String serArea, int serDe, int serCoordenador, int serResponsavelAta, Set servidorGrupos) {
-       this.serSiape = serSiape;
-       this.serNome = serNome;
-       this.serTelefone = serTelefone;
-       this.serEmail = serEmail;
-       this.serSenha = serSenha;
-       this.serArea = serArea;
+    public Servidor(String siape, String nome, String telefone, String email, String senha, String area, int serDe, int serCoordenador, int serResponsavelAta, Set servidorGrupos) {
+       this.siape = siape;
+       this.nome = nome;
+       this.telefone = telefone;
+       this.email = email;
+       this.senha = senha;
+       this.area = area;
        this.serDe = serDe;
        this.serCoordenador = serCoordenador;
        this.serResponsavelAta = serResponsavelAta;
        this.servidorGrupos = servidorGrupos;
     }
-   
-    public String getSerSiape() {
-        return this.serSiape;
+
+    public String getSiape() {
+        return siape;
     }
-    
-    public void setSerSiape(String serSiape) {
-        this.serSiape = serSiape;
+
+    public void setSiape(String siape) {
+        this.siape = siape;
     }
-    public String getSerNome() {
-        return this.serNome;
+
+    public String getNome() {
+        return nome;
     }
-    
-    public void setSerNome(String serNome) {
-        this.serNome = serNome;
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
-    public String getSerTelefone() {
-        return this.serTelefone;
+
+    public String getTelefone() {
+        return telefone;
     }
-    
-    public void setSerTelefone(String serTelefone) {
-        this.serTelefone = serTelefone;
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
-    public String getSerEmail() {
-        return this.serEmail;
+
+    public String getEmail() {
+        return email;
     }
-    
-    public void setSerEmail(String serEmail) {
-        this.serEmail = serEmail;
+
+    public void setEmail(String email) {
+        this.email = email;
     }
-    public String getSerSenha() {
-        return this.serSenha;
+
+    public String getSenha() {
+        return senha;
     }
-    
-    public void setSerSenha(String serSenha) {
-        this.serSenha = serSenha;
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
-    public String getSerArea() {
-        return this.serArea;
+
+    public String getArea() {
+        return area;
     }
-    
-    public void setSerArea(String serArea) {
-        this.serArea = serArea;
+
+    public void setArea(String area) {
+        this.area = area;
     }
     public int getSerDe() {
         return this.serDe;
@@ -120,10 +125,4 @@ public class Servidor  implements java.io.Serializable {
     public void setServidorGrupos(Set servidorGrupos) {
         this.servidorGrupos = servidorGrupos;
     }
-
-
-
-
 }
-
-

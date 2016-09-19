@@ -9,32 +9,25 @@ package gerenciadorreunioes.modelo;
 public class Pauta  implements java.io.Serializable {
 
 
-     private Integer pauCodigo;
+     private Integer codigo;
      private Ata ata;
-     private String pauTitulo;
-     private String pauDefinicao;
+     private String titulo;
+     private String definicao;
 
     public Pauta() {
     }
-
-	
-    public Pauta(Ata ata, String pauTitulo) {
+    
+    public Pauta(Ata ata, String titulo) {
         this.ata = ata;
-        this.pauTitulo = pauTitulo;
-    }
-    public Pauta(Ata ata, String pauTitulo, String pauDefinicao) {
-       this.ata = ata;
-       this.pauTitulo = pauTitulo;
-       this.pauDefinicao = pauDefinicao;
-    }
-   
-    public Integer getPauCodigo() {
-        return this.pauCodigo;
+        this.titulo = titulo;
     }
     
-    public void setPauCodigo(Integer pauCodigo) {
-        this.pauCodigo = pauCodigo;
+    public Pauta(Ata ata, String titulo, String definicao) {
+       this.ata = ata;
+       this.titulo = titulo;
+       this.definicao = definicao;
     }
+    
     public Ata getAta() {
         return this.ata;
     }
@@ -42,24 +35,29 @@ public class Pauta  implements java.io.Serializable {
     public void setAta(Ata ata) {
         this.ata = ata;
     }
-    public String getPauTitulo() {
-        return this.pauTitulo;
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getDefinicao() {
+        return definicao;
+    }
+
+    public void setDefinicao(String definicao) {
+        this.definicao = definicao;
     }
     
-    public void setPauTitulo(String pauTitulo) {
-        this.pauTitulo = pauTitulo;
-    }
-    public String getPauDefinicao() {
-        return this.pauDefinicao;
-    }
-    
-    public void setPauDefinicao(String pauDefinicao) {
-        this.pauDefinicao = pauDefinicao;
-    }
-
-
-
-
 }
-
-

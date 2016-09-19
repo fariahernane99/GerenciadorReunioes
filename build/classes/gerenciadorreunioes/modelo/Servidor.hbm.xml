@@ -4,23 +4,23 @@
 <!-- Generated 16/09/2016 10:50:07 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="gerenciadorreunioes.modelo.Servidor" table="Servidor" catalog="reunioes" optimistic-lock="version">
-        <id name="serSiape" type="string">
+        <id name="siape" type="string">
             <column name="serSiape" length="7" />
             <generator class="assigned" />
         </id>
-        <property name="serNome" type="string">
+        <property name="nome" type="string">
             <column name="serNome" length="65535" not-null="true" />
         </property>
-        <property name="serTelefone" type="string">
+        <property name="telefone" type="string">
             <column name="serTelefone" length="45" not-null="true" />
         </property>
-        <property name="serEmail" type="string">
+        <property name="email" type="string">
             <column name="serEmail" length="100" not-null="true" />
         </property>
-        <property name="serSenha" type="string">
+        <property name="senha" type="string">
             <column name="serSenha" length="45" not-null="true" />
         </property>
-        <property name="serArea" type="string">
+        <property name="area" type="string">
             <column name="serArea" length="50" not-null="true" />
         </property>
         <property name="serDe" type="int">

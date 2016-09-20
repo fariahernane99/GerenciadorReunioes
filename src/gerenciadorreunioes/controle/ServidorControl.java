@@ -32,16 +32,16 @@ public class ServidorControl {
 
     public boolean adiciona(Servidor x) {
         x.setSenha(criptografar(x.getSenha()));
-        return servidorDao.adiciona(x);
+        return servidorDao.cadastrar(x);
     }
 
-    public boolean atualiza(Servidor x, String siapeAntigo) {
+    public boolean atualiza(Servidor x) {
         String senha = criptografar(x.getSenha());
-        return servidorDao.atualizar(x.getSiape(), x.getNome(), x.getTelefone(), x.getEmail(), senha, x.getArea(), x.getSerResponsavelATA(), x.getSerCoordenador(), x.getSerDE(), siapeAntigo);
+        return servidorDao.alterar(x);
     }
 
     public boolean deleta(String siape) {
-        return servidorDao.deleta(siape);
+        return servidorDao.deletar(siape);
     }
 
     public ArrayList<Servidor> lista() {

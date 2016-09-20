@@ -17,30 +17,48 @@ import org.hibernate.transform.Transformers;
  */
 public class AtaDAO {
 
-    public void cadastrar(Ata ata) {
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        s.save(ata);
-        s.getTransaction().commit();
-    }
-
-    public void alterar(Ata ata) {
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        s.saveOrUpdate(ata);
-        s.getTransaction().commit();
-    }
-
-    public void deletar(int codigo) {
-        for (Ata ata : getAtas()) {
-            if (codigo == ata.getCodigo()) {
-                Ata a = ata;
-                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-                s.beginTransaction();
-                s.delete(a);
-                s.getTransaction().commit();
-            }
+    public boolean cadastrar(Ata ata) {
+        boolean conseguiu = false;
+        try {
+            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+            s.beginTransaction();
+            s.save(ata);
+            s.getTransaction().commit();
+        } catch (Exception e) {
+            conseguiu = false;
         }
+        return conseguiu;
+    }
+
+    public boolean alterar(Ata ata) {
+        boolean conseguiu = false;
+        try {
+            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+            s.beginTransaction();
+            s.saveOrUpdate(ata);
+            s.getTransaction().commit();
+        } catch (Exception e) {
+            conseguiu = false;
+        }
+        return conseguiu;
+    }
+
+    public boolean deletar(int codigo) {
+        boolean conseguiu = false;
+        try {
+            for (Ata ata : getAtas()) {
+                if (codigo == ata.getCodigo()) {
+                    Ata a = ata;
+                    Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+                    s.beginTransaction();
+                    s.delete(a);
+                    s.getTransaction().commit();
+                }
+            }
+        } catch (Exception e) {
+            conseguiu = false;
+        }
+        return conseguiu;
     }
 
     public ArrayList<Ata> getAtas() {

@@ -18,15 +18,15 @@ public class AtaControl {
     private AtaDAO ataDAO = new AtaDAO();
 
     public boolean deleta(int codigo) {
-        return ataDAO.deleta(codigo);
+        return ataDAO.deletar(codigo);
     }
 
     public boolean adiciona(Ata x) {
-        return ataDAO.adiciona(x);
+        return ataDAO.cadastrar(x);
     }
 
     public boolean atualiza(Ata x) {
-        return ataDAO.atualizar(x.getAtaCodigo(), x.getAtaStatus());
+        return ataDAO.alterar(x);
     }
 
     public ArrayList<Ata> getAtas() {
@@ -37,8 +37,8 @@ public class AtaControl {
         int codAta = 0;
         ArrayList<Ata> ata = getAtas();
         for (int i = 0; i < ata.size(); i++) {
-            if (ata.get(i).getAta_reuCodigo() == codReuniao) {
-                codAta = ata.get(i).getAtaCodigo();
+            if (ata.get(i).getReuniao().getCodigo() == codReuniao) {
+                codAta = ata.get(i).getCodigo();
             }
         }
         return codAta;

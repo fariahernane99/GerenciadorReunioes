@@ -17,30 +17,48 @@ import org.hibernate.transform.Transformers;
  */
 public class PautaDAO {
 
-    public void cadastrar(Pauta pau) {
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        s.save(pau);
-        s.getTransaction().commit();
-    }
-
-    public void alterar(Pauta pau) {
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        s.saveOrUpdate(pau);
-        s.getTransaction().commit();
-    }
-
-    public void deletar(int codigo) {
-        for (Pauta pau : getPautas()) {
-            if (codigo == pau.getCodigo()) {
-                Pauta a = pau;
-                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-                s.beginTransaction();
-                s.delete(a);
-                s.getTransaction().commit();
-            }
+    public boolean cadastrar(Pauta pau) {
+        boolean conseguiu = false;
+        try {
+            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+            s.beginTransaction();
+            s.save(pau);
+            s.getTransaction().commit();
+        } catch (Exception e) {
+            conseguiu = false;
         }
+        return conseguiu;
+    }
+
+    public boolean alterar(Pauta pau) {
+        boolean conseguiu = false;
+        try {
+            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+            s.beginTransaction();
+            s.saveOrUpdate(pau);
+            s.getTransaction().commit();
+        } catch (Exception e) {
+            conseguiu = false;
+        }
+        return conseguiu;
+    }
+
+    public boolean deletar(int codigo) {
+        boolean conseguiu = false;
+        try {
+            for (Pauta pau : getPautas()) {
+                if (codigo == pau.getCodigo()) {
+                    Pauta a = pau;
+                    Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+                    s.beginTransaction();
+                    s.delete(a);
+                    s.getTransaction().commit();
+                }
+            }
+        } catch (Exception e) {
+            conseguiu = false;
+        }
+        return conseguiu;
     }
 
     public ArrayList<Pauta> getPautas() {
@@ -56,17 +74,17 @@ public class PautaDAO {
         return arrayPautas;
     }
 
-    public ArrayList<Grupo> getPautas(String siapeCoordenador) {
-        String hql = "SELECT * FROM Pauta WHERE pau_ataCodigo = " + siapeCoordenador + ";";
-        ArrayList<Grupo> arrayGrupos;
+    public ArrayList<Pauta> getPautas(int codAta) {
+        String hql = "SELECT * FROM Pauta WHERE pau_ataCodigo = " + codAta + ";";
+        ArrayList<Pauta> arrayPautas;
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();
         s.beginTransaction();
         Query query = s.createSQLQuery(hql);
         query.setResultTransformer(Transformers.aliasToBean(Grupo.class));//Sem isso aqui impossível de retornar
-        List<Grupo> listGrupos = query.list();
+        List<Pauta> listPautas = query.list();
         s.getTransaction().commit();
-        arrayGrupos = (ArrayList<Grupo>) listGrupos;
-        return arrayGrupos;
+        arrayPautas = (ArrayList<Pauta>) listPautas;
+        return arrayPautas;
     }
-    
+
 }

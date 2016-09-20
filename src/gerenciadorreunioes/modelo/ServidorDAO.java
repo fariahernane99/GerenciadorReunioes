@@ -7,31 +7,49 @@ import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 
 public class ServidorDAO {
-    
-    public void cadastrar(Servidor ser) {
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        s.save(ser);
-        s.getTransaction().commit();
-    }
 
-    public void alterar(Servidor ser) {
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        s.saveOrUpdate(ser);
-        s.getTransaction().commit();
-    }
-
-    public void deletar(String siape) {
-        for (Servidor ser : getServidores()) {
-            if (siape.equals(ser.getSiape())) {
-                Servidor a = ser;
-                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-                s.beginTransaction();
-                s.delete(a);
-                s.getTransaction().commit();
-            }
+    public boolean cadastrar(Servidor ser) {
+        boolean conseguiu = false;
+        try {
+            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+            s.beginTransaction();
+            s.save(ser);
+            s.getTransaction().commit();
+        } catch (Exception e) {
+            conseguiu = false;
         }
+        return conseguiu;
+    }
+
+    public boolean alterar(Servidor ser) {
+        boolean conseguiu = false;
+        try {
+            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+            s.beginTransaction();
+            s.saveOrUpdate(ser);
+            s.getTransaction().commit();
+        } catch (Exception e) {
+            conseguiu = false;
+        }
+        return conseguiu;
+    }
+
+    public boolean deletar(String siape) {
+        boolean conseguiu = false;
+        try {
+            for (Servidor ser : getServidores()) {
+                if (siape.equals(ser.getSiape())) {
+                    Servidor a = ser;
+                    Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+                    s.beginTransaction();
+                    s.delete(a);
+                    s.getTransaction().commit();
+                }
+            }
+        } catch (Exception e) {
+            conseguiu = false;
+        }
+        return conseguiu;
     }
 
     public ArrayList<Servidor> getServidores() {
@@ -46,7 +64,7 @@ public class ServidorDAO {
         arrayServidores = (ArrayList<Servidor>) listServidores;
         return arrayServidores;
     }
-    
+
     public ArrayList<Servidor> getMembrosComuns() {
         String hql = "SELECT * FROM Servidor WHERE serDe = 0 AND serCoordenador = 0;";
         ArrayList<Servidor> arrayServidores;
@@ -59,7 +77,7 @@ public class ServidorDAO {
         arrayServidores = (ArrayList<Servidor>) listServidores;
         return arrayServidores;
     }
-    
+
     public ArrayList<Servidor> getServidores(String siapeCoordenador) {
         String hql = "SELECT * FROM Servidor JOIN Servidor_Grupo JOIN Grupo WHERE serSiape = seg_serSiape AND seg_gruCodigo = gruCodigo AND gruSiapeCoordenador = " + siapeCoordenador + ";";
         ArrayList<Servidor> arrayServidores;
@@ -72,7 +90,7 @@ public class ServidorDAO {
         arrayServidores = (ArrayList<Servidor>) listServidores;
         return arrayServidores;
     }
-    
+
     public ArrayList<Servidor> getCoordenadores() {
         String hql = "SELECT * FROM Servidor WHERE serCoordenador = 1;";
         ArrayList<Servidor> arrayServidores;
@@ -85,7 +103,7 @@ public class ServidorDAO {
         arrayServidores = (ArrayList<Servidor>) listServidores;
         return arrayServidores;
     }
-    
+
     public ArrayList<Servidor> getServidoresDE() {
         String hql = "SELECT * FROM Servidor WHERE serDe = 1;";
         ArrayList<Servidor> arrayServidores;
@@ -98,7 +116,7 @@ public class ServidorDAO {
         arrayServidores = (ArrayList<Servidor>) listServidores;
         return arrayServidores;
     }
-    
+
     public ArrayList<Servidor> getParticipantesDoGrupo(int gruCodigo) {
         String hql = "SELECT serSiape, serNome, serTelefone, serEmail, serSenha, serArea, serDe, serCoordenador, serResponsavelAta "
                 + "FROM Servidor JOIN Servidor_Grupo JOIN Grupo "
@@ -113,5 +131,5 @@ public class ServidorDAO {
         arrayServidores = (ArrayList<Servidor>) listServidores;
         return arrayServidores;
     }
-    
+
 }

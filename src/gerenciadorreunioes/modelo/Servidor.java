@@ -10,7 +10,6 @@ import java.util.Set;
  */
 public class Servidor  implements java.io.Serializable {
 
-
      private String siape;
      private String nome;
      private String telefone;

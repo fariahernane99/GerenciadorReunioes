@@ -17,8 +17,8 @@ public class AlunoGrupoControl {
 
     private AlunoGrupoDAO servidorGrupoDAO = new AlunoGrupoDAO();
 
-    public boolean adiciona(String siapeMembro, int codigoGrupo) {
-        return servidorGrupoDAO.adiciona(siapeMembro, codigoGrupo);
+    public boolean adiciona(AlunoGrupo aluGrupo) {
+        return servidorGrupoDAO.cadastrar(aluGrupo);
     }
 
     public ArrayList<AlunoGrupo> getAluGrupos() {

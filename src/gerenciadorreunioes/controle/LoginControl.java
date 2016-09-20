@@ -46,13 +46,13 @@ public class LoginControl {
         boolean encontrou = verificaLogin(siape, senha);
         if (encontrou) {
             //se o servidor for da Diretoria de Ensino abre a tela da DE
-            if (servidorAux.getSerDE() == 1) {
+            if (servidorAux.getSerDe() == 1) {
                 TelaPrincipalDeGUI telaPrincipal = new TelaPrincipalDeGUI();
                 telaPrincipal.setVisible(true);
             } else if (servidorAux.getSerCoordenador() == 1) {
                 TelaPrincipalCoordenadorGUI telaPrincipal = new TelaPrincipalCoordenadorGUI();
                 telaPrincipal.setVisible(true);
-            } else if (servidorAux.getSerResponsavelATA() == 1) {
+            } else if (servidorAux.getSerResponsavelAta() == 1) {
                 TelaPrincipalServidorComumGUI telaPrincipal = new TelaPrincipalServidorComumGUI(1);
                 telaPrincipal.setVisible(true);
             } else {

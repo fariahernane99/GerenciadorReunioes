@@ -24,15 +24,15 @@ public class ReuniaoControl {
     private GrupoDAO gruDao = new GrupoDAO();     
 
     public boolean deleta(int codigo) {
-        return reuniaoDAO.deleta(codigo);
+        return reuniaoDAO.deletar(codigo);
     }
 
     public boolean adiciona(Reuniao x) {
-        return reuniaoDAO.adiciona(x);
+        return reuniaoDAO.cadastrar(x);
     }
 
     public boolean atualiza(Reuniao x) {
-        return reuniaoDAO.atualizar(x.getCodigo(), x.getNome(), x.getData(), x.getReuHorarioInicio(), x.getReuHorarioFim(), x.getReuLocal(), x.getReuSiapeResponsavelATA(), x.getReu_gruCodigo());
+        return reuniaoDAO.alterar(x);
     }
 
     public ArrayList<Reuniao> getReunioes() {
@@ -86,7 +86,7 @@ public class ReuniaoControl {
     public ArrayList<Reuniao> reunioes(int codGru){
         ArrayList<Reuniao> reunioes = new ArrayList<Reuniao>();
         for (int i = 0; i < getReunioes().size(); i++) {
-            if (codGru == getReunioes().get(i).getReu_gruCodigo()) {
+            if (codGru == getReunioes().get(i).getCodigo()) {
                 reunioes.add(getReunioes().get(i));
             }
         }

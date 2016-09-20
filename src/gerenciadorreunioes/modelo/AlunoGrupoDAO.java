@@ -17,29 +17,48 @@ import org.hibernate.transform.Transformers;
  */
 public class AlunoGrupoDAO {
 
-    public void cadastrar(AlunoGrupo aluGrupo) {
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        s.save(aluGrupo);
-        s.getTransaction().commit();
-    }
-
-    public void deletar(int codigo, String matricula) {
-        for (AlunoGrupo alg : getAlunosGrupos()) {
-            if ((alg.getAluno().getMatricula().equals(matricula)) && (alg.getGrupo().getCodigo() == codigo)) {
-                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-                s.beginTransaction();
-                s.delete(alg);
-                s.getTransaction().commit();
-            }
+    public boolean cadastrar(AlunoGrupo aluGrupo) {
+        boolean conseguiu = false;
+        try {
+            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+            s.beginTransaction();
+            s.save(aluGrupo);
+            s.getTransaction().commit();
+            conseguiu = true;
+        } catch (Exception e) {
+            conseguiu = false;
         }
+        return conseguiu;
     }
 
-    public void alterar(AlunoGrupo aluGrupo) {
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        s.saveOrUpdate(aluGrupo);
-        s.getTransaction().commit();
+    public boolean deletar(int codigo, String matricula) {
+        boolean conseguiu = false;
+        try {
+            for (AlunoGrupo alg : getAlunosGrupos()) {
+                if ((alg.getAluno().getMatricula().equals(matricula)) && (alg.getGrupo().getCodigo() == codigo)) {
+                    Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+                    s.beginTransaction();
+                    s.delete(alg);
+                    s.getTransaction().commit();
+                }
+            }
+        } catch (Exception e) {
+            conseguiu = false;
+        }
+        return conseguiu;
+    }
+
+    public boolean alterar(AlunoGrupo aluGrupo) {
+        boolean conseguiu = false;
+        try {
+            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+            s.beginTransaction();
+            s.saveOrUpdate(aluGrupo);
+            s.getTransaction().commit();
+        } catch (Exception e) {
+            conseguiu = false;
+        }
+        return conseguiu;
     }
 
     public ArrayList<AlunoGrupo> getAlunosGrupos() {
@@ -68,11 +87,17 @@ public class AlunoGrupoDAO {
         return arrayAlunosGrupos;
     }
 
-    public void removeTodosAlunosDoGrupo(int codigo) {
-        for (AlunoGrupo alg : getAlunosGrupos()) {
-            if (codigo == alg.getGrupo().getCodigo()) {
-                deletar(alg.getGrupo().getCodigo(), alg.getAluno().getMatricula());
+    public boolean removeTodosAlunosDoGrupo(int codigo) {
+        boolean conseguiu = false;
+        try {
+            for (AlunoGrupo alg : getAlunosGrupos()) {
+                if (codigo == alg.getGrupo().getCodigo()) {
+                    deletar(alg.getGrupo().getCodigo(), alg.getAluno().getMatricula());
+                }
             }
+        } catch (Exception e) {
+            conseguiu = false;
         }
+        return conseguiu;
     }
 }

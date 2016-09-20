@@ -51,15 +51,15 @@ public class GrupoControl {
     }
 
     public boolean deleta(int codigo) {
-        return grupoDao.deleta(codigo);
+        return grupoDao.deletar(codigo);
     }
 
     public boolean adiciona(Grupo x) {
-        return grupoDao.adiciona(x);
+        return grupoDao.alterar(x);
     }
 
     public boolean atualiza(Grupo x) {
-        return grupoDao.atualizar(x.getCodigo(), x.getNome(), x.getDescricao(), x.getSiapeCoordenador());
+        return grupoDao.cadastrar(x);
     }
 
     public ArrayList<Grupo> getGrupos() {

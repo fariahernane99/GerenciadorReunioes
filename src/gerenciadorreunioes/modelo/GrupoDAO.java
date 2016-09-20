@@ -17,30 +17,48 @@ import org.hibernate.transform.Transformers;
  */
 public class GrupoDAO {
 
-    public void cadastrar(Grupo alu) {
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        s.save(alu);
-        s.getTransaction().commit();
-    }
-
-    public void alterar(Grupo alu) {
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        s.saveOrUpdate(alu);
-        s.getTransaction().commit();
-    }
-
-    public void deletar(int codigo) {
-        for (Grupo gru : getGrupos()) {
-            if (codigo == gru.getCodigo()) {
-                Grupo a = gru;
-                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-                s.beginTransaction();
-                s.delete(a);
-                s.getTransaction().commit();
-            }
+    public boolean cadastrar(Grupo alu) {
+        boolean conseguiu = false;
+        try {
+            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+            s.beginTransaction();
+            s.save(alu);
+            s.getTransaction().commit();
+        } catch (Exception e) {
+            conseguiu = false;
         }
+        return conseguiu;
+    }
+
+    public boolean alterar(Grupo alu) {
+        boolean conseguiu = false;
+        try {
+            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+            s.beginTransaction();
+            s.saveOrUpdate(alu);
+            s.getTransaction().commit();
+        } catch (Exception e) {
+            conseguiu = false;
+        }
+        return conseguiu;
+    }
+
+    public boolean deletar(int codigo) {
+        boolean conseguiu = false;
+        try {
+            for (Grupo gru : getGrupos()) {
+                if (codigo == gru.getCodigo()) {
+                    Grupo a = gru;
+                    Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+                    s.beginTransaction();
+                    s.delete(a);
+                    s.getTransaction().commit();
+                }
+            }
+        } catch (Exception e) {
+            conseguiu = false;
+        }
+        return conseguiu;
     }
 
     public ArrayList<Grupo> getGrupos() {

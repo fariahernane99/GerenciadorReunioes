@@ -27,15 +27,15 @@ public class RedigirAtaControl {
     private ArrayList<ServidorGrupo> segGru = new ArrayList<>();
 
     public boolean adicionaAta(Ata x) {
-        return ata.adiciona(x);
+        return ata.cadastrar(x);
     }
 
     public boolean atualizaAta(Ata x) {
-        return ata.atualizar(x.getAtaCodigo(), x.getAtaStatus());
+        return ata.alterar(x);
     }
 
     public boolean deletaAta(int cod) {
-        return ata.deleta(cod);
+        return ata.deletar(cod);
     }
 
     public ArrayList<Ata> getAtas() {
@@ -59,19 +59,19 @@ public class RedigirAtaControl {
     }
 
     public boolean adicionaPauta(Pauta x) {
-        return pauta.adiciona(x);
+        return pauta.cadastrar(x);
     }
 
     public boolean atualizaPauta(Pauta x) {
-        return pauta.atualizar(x.getPauCodigo(), x.getPauTitulo(), x.getPauDefinicao(), x.getEncaminhamento(), x.getPau_ataCodigo());
+        return pauta.alterar(x);
     }
 
-    public boolean atualizaReuniao(int cod, String horarioInicio, String horarioFim, String local) {
-        return reuniaoDao.atualizarFinal(cod, horarioInicio, horarioFim, local);
+    public boolean atualizaReuniao(Reuniao reu) {
+        return reuniaoDao.alterar(reu);
     }
 
     public boolean deletaPauta(int codigo) {
-        return pauta.deleta(codigo);
+        return pauta.deletar(codigo);
     }
 
     public ArrayList<ServidorGrupo> retornaServidorGrupo(int codigo) {
@@ -86,7 +86,7 @@ public class RedigirAtaControl {
         segGru = s.getSerGrupos();
         ArrayList<ServidorGrupo> sg = new ArrayList<>();
         for (int i = 0; i < segGru.size(); i++) {
-            if (segGru.get(i).getSeg_serSiape().equals(siape)) {
+            if (segGru.get(i).getServidor().getSiape().equals(siape)) {
                 sg.add(segGru.get(i));
             }
         }
@@ -97,7 +97,7 @@ public class RedigirAtaControl {
         ArrayList<Grupo> gru = new ArrayList<Grupo>();
         for (int i = 0; i < getGrupos().size(); i++) {
             for (int j = 0; j < sgg.size(); j++) {
-                if (getGrupos().get(i).getCodigo() == sgg.get(j).getSeg_gruCodigo()) {
+                if (getGrupos().get(i).getCodigo() == sgg.get(j).getGrupo().getCodigo()) {
                     gru.add(getGrupos().get(i));
                 }
             }
@@ -109,7 +109,7 @@ public class RedigirAtaControl {
         Ata ata = new Ata();
         for (int i = 0; i < getReunioes().size(); i++) {
             for (int j = 0; j < getAtas().size(); j++) {
-                if (getReunioes().get(i).getCodigo() == getAtas().get(j).getAtaCodigo()) {
+                if (getReunioes().get(i).getCodigo() == getAtas().get(j).getCodigo()) {
                     ata = getAtas().get(j);
                 }
             }
@@ -120,7 +120,7 @@ public class RedigirAtaControl {
     public ArrayList<Reuniao> pesquisaReunioes(int codGrupo) {
         ArrayList<Reuniao> reunioes = new ArrayList<Reuniao>();
         for (int i = 0; i < getReunioes().size(); i++) {
-            if (getReunioes().get(i).getReu_gruCodigo() == codGrupo) {
+            if (getReunioes().get(i).getGrupo().getCodigo() == codGrupo) {
                 reunioes.add(getReunioes().get(i));
             }
         }
@@ -131,7 +131,7 @@ public class RedigirAtaControl {
         ArrayList<Servidor> r = new ArrayList<Servidor>();
         for (int i = 0; i < s.size(); i++) {
             for (int j = 0; j < getServidores().size(); j++) {
-                if (s.get(i).getSeg_serSiape().equals(getServidores().get(j).getSiape())) {
+                if (s.get(i).getServidor().getSiape().equals(getServidores().get(j).getSiape())) {
                     r.add(getServidores().get(i));
                 }
             }
@@ -160,7 +160,7 @@ public class RedigirAtaControl {
     public Pauta retornaPauta(int cod) {
         Pauta r = new Pauta();
         for (int i = 0; i < getPautas().size(); i++) {
-            if (getPautas().get(i).getPauCodigo() == cod) {
+            if (getPautas().get(i).getCodigo() == cod) {
                 r = getPautas().get(i);
             }
         }

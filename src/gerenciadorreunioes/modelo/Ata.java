@@ -28,6 +28,9 @@ public class Ata implements java.io.Serializable {
         this.pautas = pautas;
     }
 
+    public Reuniao getReuniao() {
+        return reuniao;
+    }
     public void setReuniao(Reuniao reuniao) {
         this.reuniao = reuniao;
     }

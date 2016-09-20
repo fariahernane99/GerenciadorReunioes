@@ -9,15 +9,15 @@ public class PautaControl {
     private PautaDAO pautaDAO = new PautaDAO();
 
     public boolean deleta(int codigo) {
-        return pautaDAO.deleta(codigo);
+        return pautaDAO.deletar(codigo);
     }
 
     public boolean adiciona(Pauta x) {
-        return pautaDAO.adiciona(x);
+        return pautaDAO.cadastrar(x);
     }
 
     public boolean atualiza(Pauta x) {
-        return pautaDAO.atualizar(x.getPauCodigo(), x.getPauTitulo(), x.getPauDefinicao(),x.getEncaminhamento(),x.getPau_ataCodigo());
+        return pautaDAO.alterar(x);
     }
 
     public ArrayList<Pauta> getPautas() {

@@ -17,8 +17,8 @@ public class ServidorGrupoControl {
 
     ServidorGrupoDAO servidorGrupoDAO = new ServidorGrupoDAO();
 
-    public boolean adiciona(String siapeMembro, int codigoGrupo) {
-        return servidorGrupoDAO.adiciona(siapeMembro, codigoGrupo);
+    public boolean adiciona(ServidorGrupo serGrupo) {
+        return servidorGrupoDAO.cadastrar(serGrupo);
     }
     
     public ArrayList<ServidorGrupo> getSerGrupos(){

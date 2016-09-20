@@ -19,15 +19,15 @@ public class AlunoControl {
     private ArrayList<Aluno> arrayAlunos = alunoDao.getAlunos();
 
     public boolean adiciona(Aluno x) {
-        return alunoDao.adiciona(x);
+        return alunoDao.cadastrar(x);
     }
 
-    public boolean atualiza(Aluno x, String antMatricula) {
-        return alunoDao.atualizar(x.getMatricula(), x.getNome(), x.getEmail(), antMatricula);
+    public boolean atualiza(Aluno x) {
+        return alunoDao.alterar(x);
     }
 
     public boolean deleta(String matricula) {
-        return alunoDao.deleta(matricula);
+        return alunoDao.deletar(matricula);
     }
 
     public ArrayList<Aluno> getAlunos() {

@@ -323,7 +323,7 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
                 alu.setMatricula(jTextFieldMatricula.getText());
                 alu.setNome(jTextFieldNome.getText());
                 alu.setEmail(jTextFieldEmail.getText());
-                boolean verifica = alunoControl.atualiza(alu, antMatricula);
+                boolean verifica = alunoControl.atualiza(alu);
                 limparCampos();
                 if (verifica) {
                     JOptionPane.showMessageDialog(this, "O aluno foi atualizado com sucesso !!!");
@@ -345,10 +345,10 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
         if (serAux.getSerCoordenador() == 1) {
             new TelaPrincipalCoordenadorGUI().setVisible(true);
             this.dispose();
-        } else if (serAux.getSerDE() == 1) {
+        } else if (serAux.getSerDe() == 1) {
             new TelaPrincipalDeGUI().setVisible(true);
             this.dispose();
-        } else if (serAux.getSerResponsavelATA() == 1) {
+        } else if (serAux.getSerResponsavelAta() == 1) {
             new TelaPrincipalServidorComumGUI(1).setVisible(true);
             this.dispose();
         } else {

@@ -17,33 +17,54 @@ import org.hibernate.transform.Transformers;
  */
 public class AlunoDAO {
 
-    public void cadastrar(Aluno alu) {
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        s.save(alu);
-        s.getTransaction().commit();
-    }
-
-    public void alterar(Aluno alu) {
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        s.saveOrUpdate(alu);
-        s.getTransaction().commit();
-    }
-
-    public void deletar(String matricula) {
-        for (Aluno alu : listar()) {
-            if (matricula.equals(alu.getMatricula())) {
-                Aluno a = alu;
-                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-                s.beginTransaction();
-                s.delete(a);
-                s.getTransaction().commit();
-            }
+    public boolean cadastrar(Aluno alu) {
+        boolean conseguiu = false;
+        try {
+            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+            s.beginTransaction();
+            s.save(alu);
+            s.getTransaction().commit();
+            conseguiu = true;
+        } catch (Exception e) {
+            conseguiu = false;
         }
+        return conseguiu;
     }
 
-    public ArrayList<Aluno> listar() {
+    public boolean alterar(Aluno alu) {
+        boolean conseguiu = false;
+        try {
+            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+            s.beginTransaction();
+            s.save(alu);
+            s.getTransaction().commit();
+            conseguiu = true;
+        } catch (Exception e) {
+            conseguiu = false;
+        }
+        return conseguiu;
+    }
+
+    public boolean deletar(String matricula) {
+        boolean conseguiu = false;
+        try {
+            for (Aluno alu : getAlunos()) {
+                if (matricula.equals(alu.getMatricula())) {
+                    Aluno a = alu;
+                    Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+                    s.beginTransaction();
+                    s.delete(a);
+                    s.getTransaction().commit();
+                }
+            }
+            conseguiu = true;
+        } catch (Exception e) {
+            conseguiu = false;
+        }
+        return conseguiu;
+    }
+
+    public ArrayList<Aluno> getAlunos() {
         String hql = "SELECT * FROM Aluno;";
         ArrayList<Aluno> arrayAlunos;
         Session s = HibernateUtil.getSessionFactory().getCurrentSession();

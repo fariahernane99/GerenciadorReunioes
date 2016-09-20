@@ -474,7 +474,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
 
     private void listaGrupos() {
         jListGrupos.removeAll();
-        if (serAux.getSerDE() == 1) {
+        if (serAux.getSerDe() == 1) {
             jListGrupos.setListData(grupoControl.listaGruposEmVetorDeString());
         } else {
             jListGrupos.setListData(grupoControl.listaGruposEmVetorDeString(serAux.getSiape()));
@@ -552,9 +552,15 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
             }
         }
         if (cadastrouServ) {
-            servGrupoControl.adiciona(par.getSiape(), grupoAux.getCodigo());
+            ServidorGrupo ser = new ServidorGrupo();
+            ser.setGrupo(grupoAux);
+            ser.setServidor(par);
+            servGrupoControl.adiciona(ser);
         } else if (cadastrouAlu) {
-            aluGrupoControl.adiciona(part.getMatricula(), grupoAux.getCodigo());
+            AlunoGrupo alu = new AlunoGrupo();
+            alu.setGrupo(grupoAux);
+            alu.setAluno(part);
+            aluGrupoControl.adiciona(alu);
         } else {
             JOptionPane.showMessageDialog(this, "Não foi possível cadastrar o participante de siape/matrícula: " + codigo + "!");
         }
@@ -579,7 +585,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
 
     private void atualizaComboCoordenadores(Servidor serAux) {
         jComboBoxCoordenadores.removeAllItems();
-        if (serAux.getSerDE() == 1) {
+        if (serAux.getSerDe() == 1) {
             ArrayList<String> arrayString = servControl.pegaSiapeNomeCoordenadores(serAux);
             for (String s : arrayString) {
                 jComboBoxCoordenadores.addItem(s);
@@ -637,7 +643,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         arrayServidores = servControl.lista();
         for (int i = 0; i < arrayServGrupo.size(); i++) {
             for (Servidor s : arrayServidores) {
-                if (s.getSiape().equals(arrayServGrupo.get(i).getSeg_serSiape())) {
+                if (s.getSiape().equals(arrayServGrupo.get(i).getServidor().getSiape())) {
                     modelo.addElement(s.getSiape() + " - " + s.getNome());
                 }
             }
@@ -645,7 +651,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         arrayAlunos = alunoControl.getAlunos();
         for (int i = 0; i < arrayAluGrupo.size(); i++) {
             for (Aluno a : arrayAlunos) {
-                if (a.getMatricula().equals(arrayAluGrupo.get(i).getAlg_aluMatricula())) {
+                if (a.getMatricula().equals(arrayAluGrupo.get(i).getAluno().getMatricula())) {
                     modelo.addElement(a.getMatricula() + " - " + a.getNome());
                 }
             }

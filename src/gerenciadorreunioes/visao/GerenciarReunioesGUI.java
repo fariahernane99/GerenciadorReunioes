@@ -483,10 +483,13 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             String n = jTextFieldHora.getText() + " - " + nome + " - " + data;
             x.setNome(n);
             x.setData(data);
-            x.setReuHorarioInicio(jTextFieldHora.getText());
-            x.setReuHorarioFim("-");
-            x.setReuLocal(jTextFieldLocal.getText());
-            x.setReuSiapeResponsavelATA(separaCodigo());
+            x.setHorarioInicio(jTextFieldHora.getText());
+            x.setHorarioFim("-");
+            x.setLocal(jTextFieldLocal.getText());
+            
+            // acabar daqui !!!
+            
+            x.setSiapeResponsavelAta(separaCodigo());
             x.setReu_gruCodigo(pegaCodigoGrupo());
             reuniaoControl.adiciona(x);
             Ata a = new Ata();

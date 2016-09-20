@@ -16,31 +16,49 @@ import org.hibernate.transform.Transformers;
  * @author Alunos
  */
 public class ReuniaoDAO {
-    
-    public void cadastrar(Reuniao reu) {
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        s.save(reu);
-        s.getTransaction().commit();
-    }
 
-    public void alterar(Reuniao reu) {
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        s.saveOrUpdate(reu);
-        s.getTransaction().commit();
-    }
-
-    public void deletar(int codigo) {
-        for (Reuniao reu : getReunioes()) {
-            if (codigo == reu.getCodigo()) {
-                Reuniao a = reu;
-                Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-                s.beginTransaction();
-                s.delete(a);
-                s.getTransaction().commit();
-            }
+    public boolean cadastrar(Reuniao reu) {
+        boolean conseguiu = false;
+        try {
+            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+            s.beginTransaction();
+            s.save(reu);
+            s.getTransaction().commit();
+        } catch (Exception e) {
+            conseguiu = false;
         }
+        return conseguiu;
+    }
+
+    public boolean alterar(Reuniao reu) {
+        boolean conseguiu = false;
+        try {
+            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+            s.beginTransaction();
+            s.saveOrUpdate(reu);
+            s.getTransaction().commit();
+        } catch (Exception e) {
+            conseguiu = false;
+        }
+        return conseguiu;
+    }
+
+    public boolean deletar(int codigo) {
+        boolean conseguiu = false;
+        try {
+            for (Reuniao reu : getReunioes()) {
+                if (codigo == reu.getCodigo()) {
+                    Reuniao a = reu;
+                    Session s = HibernateUtil.getSessionFactory().getCurrentSession();
+                    s.beginTransaction();
+                    s.delete(a);
+                    s.getTransaction().commit();
+                }
+            }
+        } catch (Exception e) {
+            conseguiu = false;
+        }
+        return conseguiu;
     }
 
     public ArrayList<Reuniao> getReunioes() {

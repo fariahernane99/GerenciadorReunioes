@@ -9,78 +9,23 @@ import gerenciadorreunioes.modelo.Reuniao;
 import gerenciadorreunioes.modelo.ReuniaoDAO;
 import gerenciadorreunioes.modelo.Servidor;
 import gerenciadorreunioes.modelo.ServidorDAO;
-import gerenciadorreunioes.modelo.ServidorGrupo;
-import gerenciadorreunioes.modelo.ServidorGrupoDAO;
 import java.util.ArrayList;
 
 public class RedigirAtaControl {
 
-    private AtaDAO ata = new AtaDAO();
-    private PautaDAO pauta = new PautaDAO();
-    private ServidorGrupoControl s = new ServidorGrupoControl();
-    private ServidorDAO ser = new ServidorDAO();
-    private ServidorGrupoDAO serv = new ServidorGrupoDAO();
-    private GrupoControl grupo = new GrupoControl();
+    private AtaDAO ataDao = new AtaDAO();
+    private PautaDAO pautaDao = new PautaDAO();
+    private ServidorDAO servidorDao = new ServidorDAO();
+    private GrupoControl grupoControl = new GrupoControl();
     private ReuniaoDAO reuniaoDao = new ReuniaoDAO();
-    private ReuniaoControl reuniao = new ReuniaoControl();
-    private ArrayList<Pauta> pautas = new ArrayList<>();
-    private ArrayList<ServidorGrupo> segGru = new ArrayList<>();
+    private ReuniaoControl reuniaoControl = new ReuniaoControl();
+    private ArrayList<Pauta> arrayPautas = new ArrayList<>();
 
-    public boolean adicionaAta(Ata x) {
-        return ata.cadastrar(x);
-    }
-
-    public boolean atualizaAta(Ata x) {
-        return ata.alterar(x);
-    }
-
-    public boolean deletaAta(int cod) {
-        return ata.deletar(cod);
-    }
-
-    public ArrayList<Ata> getAtas() {
-        return ata.getAtas();
-    }
-
-    public ArrayList<ServidorGrupo> getServidorGrupo() {
-        return s.getSerGrupos();
-    }
-
-    public ArrayList<Reuniao> getReunioes() {
-        return reuniao.getReunioes();
-    }
-
-    public ArrayList<Grupo> getGrupos() {
-        return grupo.getGrupos();
-    }
-
-    public ArrayList<Servidor> getServidores() {
-        return ser.getServidores();
-    }
-
-    public boolean adicionaPauta(Pauta x) {
-        return pauta.cadastrar(x);
-    }
-
-    public boolean atualizaPauta(Pauta x) {
-        return pauta.alterar(x);
-    }
-
-    public boolean atualizaReuniao(Reuniao reu) {
-        return reuniaoDao.alterar(reu);
-    }
-
-    public boolean deletaPauta(int codigo) {
-        return pauta.deletar(codigo);
-    }
 
     public ArrayList<ServidorGrupo> retornaServidorGrupo(int codigo) {
         return serv.getServidoresGrupos(codigo);
     }
 
-    public ArrayList<Pauta> getPautas() {
-        return pauta.getPautas();
-    }
 
     public ArrayList<ServidorGrupo> pesquisaServidor(String siape) {
         segGru = s.getSerGrupos();

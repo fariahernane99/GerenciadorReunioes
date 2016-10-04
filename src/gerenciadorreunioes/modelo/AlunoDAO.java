@@ -48,15 +48,15 @@ public class AlunoDAO {
         }
     }
 
-    public boolean atualizar(String matricula, String nome, String email, String antMatricula) {
+    public boolean atualizar(Aluno a, String antMatricula) {
         try {
             EntityManager manager = JpaUtil.getEntityManager();
             EntityTransaction tx = manager.getTransaction();
             tx.begin();
             Aluno aluno = manager.find(Aluno.class, antMatricula);
-            aluno.setMatricula(matricula);
-            aluno.setNome(nome);
-            aluno.setEmail(email);
+            aluno.setMatricula(a.getMatricula());
+            aluno.setNome(a.getNome());
+            aluno.setEmail(a.getEmail());
             tx.commit();
             manager.close();
             JpaUtil.close();

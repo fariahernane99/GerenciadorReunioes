@@ -32,16 +32,16 @@ public class ServidorControl {
 
     public boolean adiciona(Servidor x) {
         x.setSenha(criptografar(x.getSenha()));
-        return servidorDao.cadastrar(x);
+        return servidorDao.adiciona(x);
     }
 
     public boolean atualiza(Servidor x) {
         String senha = criptografar(x.getSenha());
-        return servidorDao.alterar(x);
+        return servidorDao.atualizar(x);
     }
 
     public boolean deleta(String siape) {
-        return servidorDao.deletar(siape);
+        return servidorDao.deleta(siape);
     }
 
     public ArrayList<Servidor> lista() {
@@ -55,19 +55,19 @@ public class ServidorControl {
     public ArrayList<Servidor> getCoordenadores() {
         return servidorDao.getCoordenadores();
     }
-    
+
     public ArrayList<Servidor> getServidoresDE() {
         return servidorDao.getServidoresDE();
     }
-    
+
     public ArrayList<Servidor> getMembrosComuns() {
         return servidorDao.getMembrosComuns();
     }
-    
-    public ArrayList<Servidor> getParticipantesDoGrupo(int gruCodigo){
+
+    public ArrayList<Servidor> getParticipantesDoGrupo(int gruCodigo) {
         return servidorDao.getParticipantesDoGrupo(gruCodigo);
     }
-    
+
     public String[] retornaSiapeNomeEmVetor(ArrayList<Servidor> arrayServ) {
         String[] arrayString = new String[arrayServ.size()];
         for (int i = 0; i < arrayString.length; i++) {
@@ -119,9 +119,7 @@ public class ServidorControl {
         }
         return encontrou;
     }
-    
-    
- 
+
     static {
         //Try catch referente ao algoritmo do MD5 e seus possiveis erros
         try {
@@ -130,22 +128,20 @@ public class ServidorControl {
             ex.printStackTrace();
         }
     }
- 
-    
-  private static char[] hexCodes(byte[] text) {
+
+    private static char[] hexCodes(byte[] text) {
         char[] hexOutput = new char[text.length * 2];
         String hexString;
- 
+
         for (int i = 0; i < text.length; i++) {
             hexString = "00" + Integer.toHexString(text[i]);
-            hexString.toUpperCase().getChars(hexString.length() -2,
-            hexString.length(), hexOutput, i * 2);
+            hexString.toUpperCase().getChars(hexString.length() - 2,
+                    hexString.length(), hexOutput, i * 2);
         }
         return hexOutput;
     }
- 
-  
-public static String criptografar(String pwd) {
+
+    public static String criptografar(String pwd) {
         if (md != null) {
             return new String(hexCodes(md.digest(pwd.getBytes())));
         }

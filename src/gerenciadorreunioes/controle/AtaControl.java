@@ -18,15 +18,15 @@ public class AtaControl {
     private AtaDAO ataDAO = new AtaDAO();
 
     public boolean deleta(int codigo) {
-        return ataDAO.deletar(codigo);
+        return ataDAO.deleta(codigo);
     }
 
     public boolean adiciona(Ata x) {
-        return ataDAO.cadastrar(x);
+        return ataDAO.adiciona(x);
     }
 
     public boolean atualiza(Ata x) {
-        return ataDAO.alterar(x);
+        return ataDAO.atualizar(x);
     }
 
     public ArrayList<Ata> getAtas() {

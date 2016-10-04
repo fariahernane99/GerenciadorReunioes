@@ -23,12 +23,12 @@ public class ServidorDAO {
         }
     }
 
-    public boolean deleta(int codigo) {
+    public boolean deleta(String siape) {
         try {
             EntityManager manager = JpaUtil.getEntityManager();
             EntityTransaction tx = manager.getTransaction();
             tx.begin();
-            Servidor servidor = manager.find(Servidor.class, codigo);
+            Servidor servidor = manager.find(Servidor.class, siape);
             manager.remove(servidor);
             tx.commit();
             manager.close();
@@ -102,7 +102,7 @@ public class ServidorDAO {
     public ArrayList<Servidor> getCoordenadores() {
         ArrayList<Servidor> array = new ArrayList<>();
         for (Servidor ser : getServidores()) {
-            if (ser.getSerCoordenador() == 1 ) {
+            if (ser.getSerCoordenador() == 1) {
                 array.add(ser);
             }
         }
@@ -112,7 +112,7 @@ public class ServidorDAO {
     public ArrayList<Servidor> getServidoresDE() {
         ArrayList<Servidor> array = new ArrayList<>();
         for (Servidor ser : getServidores()) {
-            if (ser.getSerDe() == 1 ) {
+            if (ser.getSerDe() == 1) {
                 array.add(ser);
             }
         }

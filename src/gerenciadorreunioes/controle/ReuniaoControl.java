@@ -9,8 +9,6 @@ import gerenciadorreunioes.modelo.Grupo;
 import gerenciadorreunioes.modelo.GrupoDAO;
 import gerenciadorreunioes.modelo.Reuniao;
 import gerenciadorreunioes.modelo.ReuniaoDAO;
-import gerenciadorreunioes.modelo.ServidorGrupo;
-import gerenciadorreunioes.modelo.ServidorGrupoDAO;
 import java.util.ArrayList;
 
 /**
@@ -20,32 +18,28 @@ import java.util.ArrayList;
 public class ReuniaoControl {
 
     private ReuniaoDAO reuniaoDAO = new ReuniaoDAO();
-    private ServidorGrupoDAO segDao = new ServidorGrupoDAO();
-    private GrupoDAO gruDao = new GrupoDAO();     
+    private GrupoDAO gruDao = new GrupoDAO();
 
     public boolean deleta(int codigo) {
-        return reuniaoDAO.deletar(codigo);
+        return reuniaoDAO.deleta(codigo);
     }
 
     public boolean adiciona(Reuniao x) {
-        return reuniaoDAO.cadastrar(x);
+        return reuniaoDAO.adiciona(x);
     }
 
     public boolean atualiza(Reuniao x) {
-        return reuniaoDAO.alterar(x);
+        return reuniaoDAO.atualizar(x);
     }
 
     public ArrayList<Reuniao> getReunioes() {
         return reuniaoDAO.getReunioes();
     }
 
-    public ArrayList<ServidorGrupo> getSeg() {
-        return segDao.getServidoresGrupos();
-    }
-    
     public ArrayList<Grupo> getGrupos() {
         return gruDao.getGrupos();
     }
+
     public int codReuniao(String nome) {
         int codReuniao = 0;
         ArrayList<Reuniao> arrayReunioes = getReunioes();
@@ -64,16 +58,16 @@ public class ReuniaoControl {
         }
         return vazio;
     }
-    
+
     public boolean verificaCampos(int tamanho, String data, String horarioInicio, String local) {
         boolean verifica = false;
-        if ((tamanho < 1)|| (data.equals("")) || (horarioInicio.equals("")) || (local.equals(""))) {
+        if ((tamanho < 1) || (data.equals("")) || (horarioInicio.equals("")) || (local.equals(""))) {
             verifica = true;
         }
         return verifica;
     }
-    
-    public Grupo pesquisaGrupo(String siape){
+
+    public Grupo pesquisaGrupo(String siape) {
         Grupo x = new Grupo();
         for (int i = 0; i < getGrupos().size(); i++) {
             if (siape.equals(getGrupos().get(i).getSiapeCoordenador())) {
@@ -82,8 +76,8 @@ public class ReuniaoControl {
         }
         return x;
     }
-    
-    public ArrayList<Reuniao> reunioes(int codGru){
+
+    public ArrayList<Reuniao> reunioes(int codGru) {
         ArrayList<Reuniao> reunioes = new ArrayList<Reuniao>();
         for (int i = 0; i < getReunioes().size(); i++) {
             if (codGru == getReunioes().get(i).getCodigo()) {
@@ -92,5 +86,5 @@ public class ReuniaoControl {
         }
         return reunioes;
     }
-    
+
 }

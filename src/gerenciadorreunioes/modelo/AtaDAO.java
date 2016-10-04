@@ -5,11 +5,11 @@
  */
 package gerenciadorreunioes.modelo;
 
+import gerenciadorreunioes.jpa.JpaUtil;
 import java.util.ArrayList;
-import java.util.List;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 
 /**
  *
@@ -17,60 +17,64 @@ import org.hibernate.transform.Transformers;
  */
 public class AtaDAO {
 
-    public boolean cadastrar(Ata ata) {
-        boolean conseguiu = false;
+    public boolean adiciona(Ata a) {
         try {
-            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-            s.beginTransaction();
-            s.save(ata);
-            s.getTransaction().commit();
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            manager.persist(a);
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
-    public boolean alterar(Ata ata) {
-        boolean conseguiu = false;
+    public boolean deleta(int codigo) {
         try {
-            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-            s.beginTransaction();
-            s.saveOrUpdate(ata);
-            s.getTransaction().commit();
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            Ata ata = manager.find(Ata.class, codigo);
+            manager.remove(ata);
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
-    public boolean deletar(int codigo) {
-        boolean conseguiu = false;
+    public boolean atualizar(Ata a) {
         try {
-            for (Ata ata : getAtas()) {
-                if (codigo == ata.getCodigo()) {
-                    Ata a = ata;
-                    Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-                    s.beginTransaction();
-                    s.delete(a);
-                    s.getTransaction().commit();
-                }
-            }
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            Ata ata = manager.find(Ata.class, a.getCodigo());
+            ata.setStatus(a.getStatus());
+            ata.setReuniao(a.getReuniao());
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
     public ArrayList<Ata> getAtas() {
-        String hql = "SELECT * FROM Ata;";
-        ArrayList<Ata> arrayAtas;
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        Query query = s.createSQLQuery(hql);
-        query.setResultTransformer(Transformers.aliasToBean(Ata.class));//Sem isso aqui impossível de retornar
-        List<Ata> listAtas = query.list();
-        s.getTransaction().commit();
-        arrayAtas = (ArrayList<Ata>) listAtas;
-        return arrayAtas;
+        EntityManager manager = JpaUtil.getEntityManager();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        Query query = manager.createQuery("from Ata");
+        ArrayList<Ata> atas = (ArrayList) query.getResultList();
+        tx.commit();
+        manager.close();
+        JpaUtil.close();
+        return atas;
     }
+
 }

@@ -1,135 +1,136 @@
 package gerenciadorreunioes.modelo;
 
+import gerenciadorreunioes.jpa.JpaUtil;
 import java.util.ArrayList;
-import java.util.List;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 
 public class ServidorDAO {
 
-    public boolean cadastrar(Servidor ser) {
-        boolean conseguiu = false;
+    public boolean adiciona(Servidor s) {
         try {
-            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-            s.beginTransaction();
-            s.save(ser);
-            s.getTransaction().commit();
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            manager.persist(s);
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
-    public boolean alterar(Servidor ser) {
-        boolean conseguiu = false;
+    public boolean deleta(int codigo) {
         try {
-            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-            s.beginTransaction();
-            s.saveOrUpdate(ser);
-            s.getTransaction().commit();
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            Servidor servidor = manager.find(Servidor.class, codigo);
+            manager.remove(servidor);
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
-    public boolean deletar(String siape) {
-        boolean conseguiu = false;
+    public boolean atualizar(Servidor s) {
         try {
-            for (Servidor ser : getServidores()) {
-                if (siape.equals(ser.getSiape())) {
-                    Servidor a = ser;
-                    Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-                    s.beginTransaction();
-                    s.delete(a);
-                    s.getTransaction().commit();
-                }
-            }
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            Servidor servidor = manager.find(Servidor.class, s.getSiape());
+            servidor.setArea(s.getArea());
+            servidor.setEmail(s.getEmail());
+            servidor.setNome(s.getNome());
+            servidor.setSenha(s.getSenha());
+            servidor.setSerCoordenador(s.getSerCoordenador());
+            servidor.setSerDe(s.getSerDe());
+            servidor.setSerResponsavelAta(s.getSerResponsavelAta());
+            servidor.setTelefone(s.getTelefone());
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
     public ArrayList<Servidor> getServidores() {
-        String hql = "SELECT * FROM Servidor;";
-        ArrayList<Servidor> arrayServidores;
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        Query query = s.createSQLQuery(hql);
-        query.setResultTransformer(Transformers.aliasToBean(Servidor.class));//Sem isso aqui impossível de retornar
-        List<Servidor> listServidores = query.list();
-        s.getTransaction().commit();
-        arrayServidores = (ArrayList<Servidor>) listServidores;
-        return arrayServidores;
+        EntityManager manager = JpaUtil.getEntityManager();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        Query query = manager.createQuery("from Servidor");
+        ArrayList<Servidor> servidores = (ArrayList) query.getResultList();
+        tx.commit();
+        manager.close();
+        JpaUtil.close();
+        return servidores;
     }
 
     public ArrayList<Servidor> getMembrosComuns() {
-        String hql = "SELECT * FROM Servidor WHERE serDe = 0 AND serCoordenador = 0;";
-        ArrayList<Servidor> arrayServidores;
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        Query query = s.createSQLQuery(hql);
-        query.setResultTransformer(Transformers.aliasToBean(Servidor.class));//Sem isso aqui impossível de retornar
-        List<Servidor> listServidores = query.list();
-        s.getTransaction().commit();
-        arrayServidores = (ArrayList<Servidor>) listServidores;
-        return arrayServidores;
+        ArrayList<Servidor> array = new ArrayList<>();
+        for (Servidor ser : getServidores()) {
+            if ((ser.getSerCoordenador() == 0) && (ser.getSerDe() == 0)) {
+                array.add(ser);
+            }
+        }
+        return array;
     }
 
-    public ArrayList<Servidor> getServidores(String siapeCoordenador) {
-        String hql = "SELECT * FROM Servidor JOIN Servidor_Grupo JOIN Grupo WHERE serSiape = seg_serSiape AND seg_gruCodigo = gruCodigo AND gruSiapeCoordenador = " + siapeCoordenador + ";";
-        ArrayList<Servidor> arrayServidores;
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        Query query = s.createSQLQuery(hql);
-        query.setResultTransformer(Transformers.aliasToBean(Servidor.class));//Sem isso aqui impossível de retornar
-        List<Servidor> listServidores = query.list();
-        s.getTransaction().commit();
-        arrayServidores = (ArrayList<Servidor>) listServidores;
-        return arrayServidores;
+    public ArrayList<Servidor> getServidoresDeUmGrupo(String siapeCoordenador) {
+        EntityManager manager = JpaUtil.getEntityManager();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        Query query = manager.createQuery("SELECT serSiape, serNome, serTelefone, serEmail,"
+                + " serSenha, serArea, serDe, serCoordenador, serResponsavelAta  FROM Servidor"
+                + " JOIN Servidor_Grupo JOIN Grupo WHERE serSiape = seg_serSiape AND"
+                + " seg_gruCodigo = gruCodigo AND gruSiapeCoordenador = '" + siapeCoordenador + "';");
+        ArrayList<Servidor> servidores = (ArrayList) query.getResultList();
+        tx.commit();
+        manager.close();
+        JpaUtil.close();
+        return servidores;
     }
 
     public ArrayList<Servidor> getCoordenadores() {
-        String hql = "SELECT * FROM Servidor WHERE serCoordenador = 1;";
-        ArrayList<Servidor> arrayServidores;
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        Query query = s.createSQLQuery(hql);
-        query.setResultTransformer(Transformers.aliasToBean(Servidor.class));//Sem isso aqui impossível de retornar
-        List<Servidor> listServidores = query.list();
-        s.getTransaction().commit();
-        arrayServidores = (ArrayList<Servidor>) listServidores;
-        return arrayServidores;
+        ArrayList<Servidor> array = new ArrayList<>();
+        for (Servidor ser : getServidores()) {
+            if (ser.getSerCoordenador() == 1 ) {
+                array.add(ser);
+            }
+        }
+        return array;
     }
 
     public ArrayList<Servidor> getServidoresDE() {
-        String hql = "SELECT * FROM Servidor WHERE serDe = 1;";
-        ArrayList<Servidor> arrayServidores;
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        Query query = s.createSQLQuery(hql);
-        query.setResultTransformer(Transformers.aliasToBean(Servidor.class));//Sem isso aqui impossível de retornar
-        List<Servidor> listServidores = query.list();
-        s.getTransaction().commit();
-        arrayServidores = (ArrayList<Servidor>) listServidores;
-        return arrayServidores;
+        ArrayList<Servidor> array = new ArrayList<>();
+        for (Servidor ser : getServidores()) {
+            if (ser.getSerDe() == 1 ) {
+                array.add(ser);
+            }
+        }
+        return array;
     }
 
     public ArrayList<Servidor> getParticipantesDoGrupo(int gruCodigo) {
-        String hql = "SELECT serSiape, serNome, serTelefone, serEmail, serSenha, serArea, serDe, serCoordenador, serResponsavelAta "
+        EntityManager manager = JpaUtil.getEntityManager();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        Query query = manager.createQuery("SELECT serSiape, serNome, serTelefone, serEmail, serSenha, serArea, serDe, serCoordenador, serResponsavelAta "
                 + "FROM Servidor JOIN Servidor_Grupo JOIN Grupo "
-                + "WHERE serSiape = seg_serSiape AND gruCodigo = seg_gruCodigo AND gruCodigo = ?;";
-        ArrayList<Servidor> arrayServidores;
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        Query query = s.createSQLQuery(hql);
-        query.setResultTransformer(Transformers.aliasToBean(Servidor.class));//Sem isso aqui impossível de retornar
-        List<Servidor> listServidores = query.list();
-        s.getTransaction().commit();
-        arrayServidores = (ArrayList<Servidor>) listServidores;
-        return arrayServidores;
+                + "WHERE serSiape = seg_serSiape AND gruCodigo = seg_gruCodigo AND gruCodigo = " + gruCodigo + ";");
+        ArrayList<Servidor> servidores = (ArrayList) query.getResultList();
+        tx.commit();
+        manager.close();
+        JpaUtil.close();
+        return servidores;
     }
 
 }

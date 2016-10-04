@@ -5,11 +5,11 @@
  */
 package gerenciadorreunioes.modelo;
 
+import gerenciadorreunioes.jpa.JpaUtil;
 import java.util.ArrayList;
-import java.util.List;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 
 /**
  *
@@ -17,60 +17,69 @@ import org.hibernate.transform.Transformers;
  */
 public class ReuniaoDAO {
 
-    public boolean cadastrar(Reuniao reu) {
-        boolean conseguiu = false;
+    public boolean adiciona(Reuniao r) {
         try {
-            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-            s.beginTransaction();
-            s.save(reu);
-            s.getTransaction().commit();
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            manager.persist(r);
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
-    public boolean alterar(Reuniao reu) {
-        boolean conseguiu = false;
+    public boolean deleta(int codigo) {
         try {
-            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-            s.beginTransaction();
-            s.saveOrUpdate(reu);
-            s.getTransaction().commit();
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            Reuniao reuniao = manager.find(Reuniao.class, codigo);
+            manager.remove(reuniao);
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
-    public boolean deletar(int codigo) {
-        boolean conseguiu = false;
+    public boolean atualizar(Reuniao r) {
         try {
-            for (Reuniao reu : getReunioes()) {
-                if (codigo == reu.getCodigo()) {
-                    Reuniao a = reu;
-                    Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-                    s.beginTransaction();
-                    s.delete(a);
-                    s.getTransaction().commit();
-                }
-            }
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            Reuniao reuniao = manager.find(Reuniao.class, r.getCodigo());
+            reuniao.setData(r.getData());
+            reuniao.setNome(r.getNome());
+            reuniao.setHorarioInicio(r.getHorarioInicio());
+            reuniao.setHorarioFim(r.getHorarioFim());
+            reuniao.setLocal(r.getLocal());
+            reuniao.setSiapeResponsavelAta(r.getSiapeResponsavelAta());
+            reuniao.setGrupo(r.getGrupo());
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
     public ArrayList<Reuniao> getReunioes() {
-        String hql = "SELECT * FROM Reuniao;";
-        ArrayList<Reuniao> arrayReunioes;
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        Query query = s.createSQLQuery(hql);
-        query.setResultTransformer(Transformers.aliasToBean(Reuniao.class));//Sem isso aqui impossível de retornar
-        List<Reuniao> listReunioes = query.list();
-        s.getTransaction().commit();
-        arrayReunioes = (ArrayList<Reuniao>) listReunioes;
-        return arrayReunioes;
+        EntityManager manager = JpaUtil.getEntityManager();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        Query query = manager.createQuery("from Reuniao");
+        ArrayList<Reuniao> reunioes = (ArrayList) query.getResultList();
+        tx.commit();
+        manager.close();
+        JpaUtil.close();
+        return reunioes;
     }
+
 }

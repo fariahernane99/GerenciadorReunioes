@@ -104,7 +104,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         codReuniao = Integer.parseInt(pegaCodigo[0]);
         Reuniao r = red.pesquisaCertaReuniao(codReuniao);
         codReuniao = r.getCodigo();
-        jTextFieldHorarioInicio.setText(r.getReuHorarioInicio());
+        jTextFieldHorarioInicio.setText(r.getHorarioInicio());
     }
 
     public void preencheComboPauta() {
@@ -113,7 +113,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         ArrayList<Pauta> pautas = pautaControl.getPautas(a.getAtaCodigo());
         jComboBoxPontoPauta.removeAllItems();
         for (int i = 0; i < pautas.size(); i++) {
-            jComboBoxPontoPauta.addItem(pautas.get(i).getPauCodigo() + " - " + pautas.get(i).getPauTitulo());
+            jComboBoxPontoPauta.addItem(pautas.get(i).getCodigo() + " - " + pautas.get(i).getTitulo());
         }
         preencheTabelaPontos();
     }
@@ -124,7 +124,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         ArrayList<Pauta> pautas = pautaControl.getPautas(a.getAtaCodigo());
         dp.getDataVector().removeAllElements();
         for (int i = 0; i < pautas.size(); i++) {
-            dp.addRow(new Object[]{pautas.get(i).getPauCodigo() + " - " + pautas.get(i).getPauTitulo(), pautas.get(i).getPauDefinicao(),
+            dp.addRow(new Object[]{pautas.get(i).getCodigo() + " - " + pautas.get(i).getTitulo(), pautas.get(i).getDefinicao(),
                 pautas.get(i).getEncaminhamento()});
 
         }
@@ -140,13 +140,13 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         Pauta p = new Pauta();
         String pauta = pegaTituloPauta();
         String[] pegaTitulo = pauta.split(" - ");
-        p.setPauCodigo(Integer.parseInt(pegaTitulo[0]));
-        p.setPauTitulo(pegaTitulo[1]);
+        p.setCodigo(Integer.parseInt(pegaTitulo[0]));
+        p.setTitulo(pegaTitulo[1]);
         boolean flag = red.verificaCamposPauta(jTextAreaDefinicao.getText(), jTextAreaEncaminhamento.getText());
         if (flag) {
             JOptionPane.showMessageDialog(this, "Preencha os campos de encaminhamento e definição");
         } else {
-            p.setPauDefinicao(jTextAreaDefinicao.getText());
+            p.setDefinicao(jTextAreaDefinicao.getText());
             p.setEncaminhamento(jTextAreaEncaminhamento.getText());
             p.setPau_ataCodigo(codAta);
             red.atualizaPauta(p);
@@ -157,22 +157,22 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
     public void criaNovoPonto() {
         Pauta p = new Pauta();
         String titulo = JOptionPane.showInputDialog("Informe o título do novo ponto de pauta");
-        p.setPauTitulo(titulo);
+        p.setTitulo(titulo);
         p.setPau_ataCodigo(codAta);
         p.setEncaminhamento("-");
-        p.setPauDefinicao("-");
+        p.setDefinicao("-");
         if (red.verificaCampos(titulo)) {
             JOptionPane.showMessageDialog(this, "Título da pauta vazio, tente novamente.");
         } else {
             red.adicionaPauta(p);
             ArrayList<Pauta> array = pautaControl.getPautas(codAta);
             for (Pauta pauta : array) {
-                if (pauta.getPauTitulo().equals(p.getPauTitulo())) {
+                if (pauta.getTitulo().equals(p.getTitulo())) {
                     p = pauta;
                 }
             }
             JOptionPane.showMessageDialog(this, "Novo ponto adicionado com sucesso!!");
-            jComboBoxPontoPauta.addItem(p.getPauCodigo() + " - " + p.getPauTitulo());
+            jComboBoxPontoPauta.addItem(p.getCodigo() + " - " + p.getTitulo());
         }
         preencheTabelaPontos();
     }
@@ -185,7 +185,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
             String[] pegaCodigo = selecionado.split(" - ");
             int cod = Integer.parseInt(pegaCodigo[0]);
             Pauta p = red.retornaPauta(cod);
-            jTextAreaDefinicao.setText(p.getPauDefinicao());
+            jTextAreaDefinicao.setText(p.getDefinicao());
             jTextAreaEncaminhamento.setText(p.getEncaminhamento());
         }
     }

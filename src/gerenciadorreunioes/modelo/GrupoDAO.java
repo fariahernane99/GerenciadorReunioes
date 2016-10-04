@@ -5,11 +5,11 @@
  */
 package gerenciadorreunioes.modelo;
 
+import gerenciadorreunioes.jpa.JpaUtil;
 import java.util.ArrayList;
-import java.util.List;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 
 /**
  *
@@ -17,73 +17,75 @@ import org.hibernate.transform.Transformers;
  */
 public class GrupoDAO {
 
-    public boolean cadastrar(Grupo alu) {
-        boolean conseguiu = false;
+    public boolean adiciona(Grupo g) {
         try {
-            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-            s.beginTransaction();
-            s.save(alu);
-            s.getTransaction().commit();
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            manager.persist(g);
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
-    public boolean alterar(Grupo alu) {
-        boolean conseguiu = false;
+    public boolean deleta(int codigo) {
         try {
-            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-            s.beginTransaction();
-            s.saveOrUpdate(alu);
-            s.getTransaction().commit();
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            Grupo grupo = manager.find(Grupo.class, codigo);
+            manager.remove(grupo);
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
-    public boolean deletar(int codigo) {
-        boolean conseguiu = false;
+    public boolean atualizar(Grupo g) {
         try {
-            for (Grupo gru : getGrupos()) {
-                if (codigo == gru.getCodigo()) {
-                    Grupo a = gru;
-                    Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-                    s.beginTransaction();
-                    s.delete(a);
-                    s.getTransaction().commit();
-                }
-            }
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            Grupo grupo = manager.find(Grupo.class, g.getCodigo());
+            grupo.setDescricao(g.getDescricao());
+            grupo.setNome(g.getNome());
+            grupo.setSiapeCoordenador(g.getSiapeCoordenador());
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
     public ArrayList<Grupo> getGrupos() {
-        String hql = "SELECT * FROM Grupo;";
-        ArrayList<Grupo> arrayGrupos;
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        Query query = s.createSQLQuery(hql);
-        query.setResultTransformer(Transformers.aliasToBean(Grupo.class));//Sem isso aqui impossível de retornar
-        List<Grupo> listGrupos = query.list();
-        s.getTransaction().commit();
-        arrayGrupos = (ArrayList<Grupo>) listGrupos;
-        return arrayGrupos;
+        EntityManager manager = JpaUtil.getEntityManager();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        Query query = manager.createQuery("from Grupo");
+        ArrayList<Grupo> grupos = (ArrayList) query.getResultList();
+        tx.commit();
+        manager.close();
+        JpaUtil.close();
+        return grupos;
     }
 
     public ArrayList<Grupo> getGrupos(String siapeCoordenador) {
-        String hql = "SELECT * FROM Grupo WHERE gruSiapeCoordenador = '" + siapeCoordenador + "';";
-        ArrayList<Grupo> arrayGrupos;
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        Query query = s.createSQLQuery(hql);
-        query.setResultTransformer(Transformers.aliasToBean(Grupo.class));//Sem isso aqui impossível de retornar
-        List<Grupo> listGrupos = query.list();
-        s.getTransaction().commit();
-        arrayGrupos = (ArrayList<Grupo>) listGrupos;
-        return arrayGrupos;
+        ArrayList<Grupo> array = new ArrayList<>();
+        for (Grupo gru : getGrupos()) {
+            if (gru.getSiapeCoordenador().equals(siapeCoordenador)) {
+                array.add(gru);
+            }
+        }
+        return array;
     }
+
 }

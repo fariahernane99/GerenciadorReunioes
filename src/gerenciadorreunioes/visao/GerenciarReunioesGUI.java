@@ -499,9 +499,9 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             Pauta p = new Pauta();
             ArrayList<String> titulos = pegaPontos();
             for (int i = 0; i < titulos.size(); i++) {
-                p.setPauTitulo(titulos.get(i));
+                p.setTitulo(titulos.get(i));
                 p.setPau_ataCodigo(ataControl.codAta(reuniaoControl.codReuniao(n)));
-                p.setPauDefinicao(" - ");
+                p.setDefinicao(" - ");
                 p.setEncaminhamento(" - ");
                 pautaControl.adiciona(p);
             }

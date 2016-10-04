@@ -5,11 +5,11 @@
  */
 package gerenciadorreunioes.modelo;
 
+import gerenciadorreunioes.jpa.JpaUtil;
 import java.util.ArrayList;
-import java.util.List;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 
 /**
  *
@@ -17,74 +17,76 @@ import org.hibernate.transform.Transformers;
  */
 public class PautaDAO {
 
-    public boolean cadastrar(Pauta pau) {
-        boolean conseguiu = false;
+    public boolean adiciona(Pauta p) {
         try {
-            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-            s.beginTransaction();
-            s.save(pau);
-            s.getTransaction().commit();
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            manager.persist(p);
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
-    public boolean alterar(Pauta pau) {
-        boolean conseguiu = false;
+    public boolean deleta(int codigo) {
         try {
-            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-            s.beginTransaction();
-            s.saveOrUpdate(pau);
-            s.getTransaction().commit();
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            Pauta pauta = manager.find(Pauta.class, codigo);
+            manager.remove(pauta);
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
-    public boolean deletar(int codigo) {
-        boolean conseguiu = false;
+    public boolean atualizar(Pauta p) {
         try {
-            for (Pauta pau : getPautas()) {
-                if (codigo == pau.getCodigo()) {
-                    Pauta a = pau;
-                    Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-                    s.beginTransaction();
-                    s.delete(a);
-                    s.getTransaction().commit();
-                }
-            }
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            Pauta pauta = manager.find(Pauta.class, p.getCodigo());
+            pauta.setDefinicao(p.getDefinicao());
+            pauta.setEncaminhamento(p.getEncaminhamento());
+            pauta.setTitulo(p.getTitulo());
+            pauta.setAta(p.getAta());
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
     public ArrayList<Pauta> getPautas() {
-        String hql = "SELECT * FROM Pauta;";
-        ArrayList<Pauta> arrayPautas;
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        Query query = s.createSQLQuery(hql);
-        query.setResultTransformer(Transformers.aliasToBean(Pauta.class));//Sem isso aqui impossível de retornar
-        List<Pauta> listPautas = query.list();
-        s.getTransaction().commit();
-        arrayPautas = (ArrayList<Pauta>) listPautas;
-        return arrayPautas;
+        EntityManager manager = JpaUtil.getEntityManager();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        Query query = manager.createQuery("from Pauta");
+        ArrayList<Pauta> pautas = (ArrayList) query.getResultList();
+        tx.commit();
+        manager.close();
+        JpaUtil.close();
+        return pautas;
     }
 
     public ArrayList<Pauta> getPautas(int codAta) {
-        String hql = "SELECT * FROM Pauta WHERE pau_ataCodigo = " + codAta + ";";
-        ArrayList<Pauta> arrayPautas;
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        Query query = s.createSQLQuery(hql);
-        query.setResultTransformer(Transformers.aliasToBean(Grupo.class));//Sem isso aqui impossível de retornar
-        List<Pauta> listPautas = query.list();
-        s.getTransaction().commit();
-        arrayPautas = (ArrayList<Pauta>) listPautas;
-        return arrayPautas;
+        ArrayList<Pauta> array = new ArrayList<>();
+        for (Pauta pau : getPautas()) {
+            if (pau.getAta().getCodigo() == codAta) {
+                array.add(pau);
+            }
+        }
+        return array;
     }
 
 }

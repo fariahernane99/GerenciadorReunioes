@@ -49,7 +49,7 @@ public class ServidorControl {
     }
 
     public ArrayList<Servidor> lista(String siape) {
-        return servidorDao.getServidores(siape);
+        return servidorDao.getServidoresDeUmGrupo(siape);
     }
 
     public ArrayList<Servidor> getCoordenadores() {

@@ -5,11 +5,11 @@
  */
 package gerenciadorreunioes.modelo;
 
+import gerenciadorreunioes.jpa.JpaUtil;
 import java.util.ArrayList;
-import java.util.List;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 
 /**
  *
@@ -17,63 +17,65 @@ import org.hibernate.transform.Transformers;
  */
 public class AlunoDAO {
 
-    public boolean cadastrar(Aluno alu) {
-        boolean conseguiu = false;
+    public boolean adiciona(Aluno a) {
         try {
-            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-            s.beginTransaction();
-            s.save(alu);
-            s.getTransaction().commit();
-            conseguiu = true;
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            manager.persist(a);
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
-    public boolean alterar(Aluno alu) {
-        boolean conseguiu = false;
+    public boolean deleta(String matricula) {
         try {
-            Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-            s.beginTransaction();
-            s.save(alu);
-            s.getTransaction().commit();
-            conseguiu = true;
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            Aluno aluno = manager.find(Aluno.class, matricula);
+            manager.remove(aluno);
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
-    public boolean deletar(String matricula) {
-        boolean conseguiu = false;
+    public boolean atualizar(String matricula, String nome, String email, String antMatricula) {
         try {
-            for (Aluno alu : getAlunos()) {
-                if (matricula.equals(alu.getMatricula())) {
-                    Aluno a = alu;
-                    Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-                    s.beginTransaction();
-                    s.delete(a);
-                    s.getTransaction().commit();
-                }
-            }
-            conseguiu = true;
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            Aluno aluno = manager.find(Aluno.class, antMatricula);
+            aluno.setMatricula(matricula);
+            aluno.setNome(nome);
+            aluno.setEmail(email);
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
         } catch (Exception e) {
-            conseguiu = false;
+            return false;
         }
-        return conseguiu;
     }
 
     public ArrayList<Aluno> getAlunos() {
-        String hql = "SELECT * FROM Aluno;";
-        ArrayList<Aluno> arrayAlunos;
-        Session s = HibernateUtil.getSessionFactory().getCurrentSession();
-        s.beginTransaction();
-        Query query = s.createSQLQuery(hql);
-        query.setResultTransformer(Transformers.aliasToBean(Aluno.class));//Sem isso aqui impossível de retornar
-        List<Aluno> listAlunos = query.list();
-        s.getTransaction().commit();
-        arrayAlunos = (ArrayList<Aluno>) listAlunos;
-        return arrayAlunos;
+        EntityManager manager = JpaUtil.getEntityManager();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        Query query = manager.createQuery("from Aluno");
+        ArrayList<Aluno> alunos = (ArrayList) query.getResultList();
+        tx.commit();
+        manager.close();
+        JpaUtil.close();
+        return alunos;
     }
+
 }

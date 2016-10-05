@@ -18,13 +18,12 @@ public class TelaPrincipalDeGUI extends javax.swing.JFrame {
     /**
      * Creates new form TelaPrincipalNova
      */
-    
     private Servidor serAux;
-    
+
     public TelaPrincipalDeGUI() {
         initComponents();
         serAux = LoginControl.retornaServidorLogado();
-        if (serAux.getSerResponsavelATA() == 0) {
+        if (serAux.getSerResponsavelAta() == 0) {
             jMenuItemRedigirATA.setEnabled(false);
         }
     }
@@ -360,7 +359,7 @@ public class TelaPrincipalDeGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemConsultaATAActionPerformed
 
     private void jMenuSobreMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuSobreMouseClicked
-         JOptionPane.showMessageDialog(this, "Desenvolvido por World Systems \n Desenvolvedores: Hernane Marcos de Faria Júnior \n Igor Ribeiro da Silva \n Técnico em Informática III - IFMG Formiga");
+        JOptionPane.showMessageDialog(this, "Desenvolvido por World Systems \n Desenvolvedores: Hernane Marcos de Faria Júnior \n Igor Ribeiro da Silva \n Técnico em Informática III - IFMG Formiga");
     }//GEN-LAST:event_jMenuSobreMouseClicked
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -369,8 +368,8 @@ public class TelaPrincipalDeGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButtonGerenciarAlunosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerenciarAlunosActionPerformed
-         new GerenciarAlunosGUI().setVisible(true);
-         this.dispose();
+        new GerenciarAlunosGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButtonGerenciarAlunosActionPerformed
 
     private void jMenuItemRedigirATAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRedigirATAActionPerformed
@@ -387,7 +386,6 @@ public class TelaPrincipalDeGUI extends javax.swing.JFrame {
         new LoginGUI().setVisible(true);
     }//GEN-LAST:event_jButtonSairActionPerformed
 
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBuscarATA;

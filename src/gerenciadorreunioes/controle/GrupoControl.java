@@ -54,11 +54,11 @@ public class GrupoControl {
         return grupoDao.deleta(codigo);
     }
 
-    public boolean adiciona(Grupo x) {
+    public boolean atualiza(Grupo x) {
         return grupoDao.atualizar(x);
     }
 
-    public boolean atualiza(Grupo x) {
+    public boolean adiciona(Grupo x) {
         return grupoDao.adiciona(x);
     }
 
@@ -98,6 +98,14 @@ public class GrupoControl {
             }
         }
         return aux;
+    }
+
+    public boolean removeTodosServidoresDoGrupo(int codGrupo) {
+        return grupoDao.removeTodosServidoresDoGrupo(codGrupo);
+    }
+
+    public boolean removeTodosAlunosDoGrupo(int codGrupo) {
+        return grupoDao.removeTodosAlunosDoGrupo(codGrupo);
     }
 
 }

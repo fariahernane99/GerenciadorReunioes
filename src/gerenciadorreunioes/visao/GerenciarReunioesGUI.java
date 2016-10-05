@@ -38,6 +38,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
     private ReuniaoControl reuniaoControl = new ReuniaoControl();
     private LoginControl loginControl = new LoginControl();
     private Servidor serAux;
+    private Grupo grupoAux;
 
     /**
      * Creates new form GerenciarReunioesGUI
@@ -71,8 +72,8 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             jComboBoxResponsavelATA.addItem(arrayServidores.get(i));
         }
     }
-    
-    public void listaReunioes(){
+
+    public void listaReunioes() {
         Grupo aux = reuniaoControl.pesquisaGrupo(serAux.getSiape());
         ArrayList<Reuniao> reunioes = reuniaoControl.reunioes(aux.getCodigo());
         DefaultListModel e = new DefaultListModel();
@@ -82,20 +83,19 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
         }
         jListReuniões.setModel(e);
     }
-    
-    public void deletarReuniao(){
+
+    public void deletarReuniao() {
         String selecionado = (String) jListReuniões.getSelectedValue();
         String[] pegaCodigo = selecionado.split(" - ");
-        int cod = Integer.parseInt(pegaCodigo[0]);  
+        int cod = Integer.parseInt(pegaCodigo[0]);
         boolean v = reuniaoControl.deleta(cod);
-        if(v){
+        if (v) {
             JOptionPane.showMessageDialog(this, "Reunião deletada com sucesso");
             listaReunioes();
-        } else{
-        JOptionPane.showMessageDialog(this, "Não foi possível deltar esta reunião, tente novamente");
+        } else {
+            JOptionPane.showMessageDialog(this, "Não foi possível deltar esta reunião, tente novamente");
+        }
     }
-    }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -371,6 +371,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
 
     private void jComboBoxGrupoParticipanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxGrupoParticipanteActionPerformed
         atualizaComboResponsavelAta();
+        grupoAux = pegaGrupoDoCombo(pegaCodigoGrupo());
     }//GEN-LAST:event_jComboBoxGrupoParticipanteActionPerformed
 
     private void jButtonCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarActionPerformed
@@ -394,17 +395,16 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jList1MouseClicked
 
     private void jComboBoxGrupoParticipanteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxGrupoParticipanteMouseClicked
-        
+
     }//GEN-LAST:event_jComboBoxGrupoParticipanteMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       deletarReuniao();
+        deletarReuniao();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -469,7 +469,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
         }
         return pontos;
     }
-    
+
     private void cadastraReuniao() {
         String data = new SimpleDateFormat("dd/MM/yyyy").format(jDateChooser1.getDate());
         boolean vazio = reuniaoControl.verificaCampos(jList1.getModel().getSize(), data, jTextFieldHora.getText(), jTextFieldLocal.getText());
@@ -486,21 +486,18 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             x.setHorarioInicio(jTextFieldHora.getText());
             x.setHorarioFim("-");
             x.setLocal(jTextFieldLocal.getText());
-            
-            // acabar daqui !!!
-            
             x.setSiapeResponsavelAta(separaCodigo());
-            x.setReu_gruCodigo(pegaCodigoGrupo());
+            x.setGrupo(grupoAux);
             reuniaoControl.adiciona(x);
             Ata a = new Ata();
-            a.setAtaStatus("Aberta");
-            a.setAta_reuCodigo(reuniaoControl.codReuniao(n));
+            a.setStatus("Aberta");
+            a.setReuniao(x);
             ataControl.adiciona(a);
             Pauta p = new Pauta();
             ArrayList<String> titulos = pegaPontos();
             for (int i = 0; i < titulos.size(); i++) {
                 p.setTitulo(titulos.get(i));
-                p.setPau_ataCodigo(ataControl.codAta(reuniaoControl.codReuniao(n)));
+                p.setAta(a);
                 p.setDefinicao(" - ");
                 p.setEncaminhamento(" - ");
                 pautaControl.adiciona(p);
@@ -523,6 +520,16 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
         modelo.removeAllElements();
         jList1.setModel(modelo);
         jDateChooser1.setDateFormatString("");
+    }
+
+    private Grupo pegaGrupoDoCombo(int codGrupo) {
+        Grupo aux = null;
+        for (Grupo gru : grupoControl.getGrupos()) {
+            if (gru.getCodigo() == codGrupo) {
+                aux = gru;
+            }
+        }
+        return aux;
     }
 
 }

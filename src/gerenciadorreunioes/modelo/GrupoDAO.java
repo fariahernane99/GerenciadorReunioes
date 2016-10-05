@@ -88,4 +88,34 @@ public class GrupoDAO {
         return array;
     }
 
+    public boolean removeTodosAlunosDoGrupo(int gruCodigo) {
+        try {
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            Query query = manager.createQuery("DELETE FROM Aluno_Grupo WHERE alg_gruCodigo = " + gruCodigo + ";");
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    public boolean removeTodosServidoresDoGrupo(int gruCodigo) {
+        try {
+            EntityManager manager = JpaUtil.getEntityManager();
+            EntityTransaction tx = manager.getTransaction();
+            tx.begin();
+            Query query = manager.createQuery("DELETE FROM Servidor_Grupo WHERE seg_gruCodigo = " + gruCodigo + ";");
+            tx.commit();
+            manager.close();
+            JpaUtil.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }

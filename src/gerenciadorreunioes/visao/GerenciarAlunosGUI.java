@@ -269,7 +269,6 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCadastrar;
@@ -323,7 +322,7 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
                 alu.setMatricula(jTextFieldMatricula.getText());
                 alu.setNome(jTextFieldNome.getText());
                 alu.setEmail(jTextFieldEmail.getText());
-                boolean verifica = alunoControl.atualiza(alu);
+                boolean verifica = alunoControl.atualiza(alu, antMatricula);
                 limparCampos();
                 if (verifica) {
                     JOptionPane.showMessageDialog(this, "O aluno foi atualizado com sucesso !!!");
@@ -362,10 +361,9 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
         modelo.removeAllElements();
         jListAlunos.setModel(modelo);
         for (int i = 0; i < arrayNomes.size(); i++) {
-            jListAlunos.removeAll();
             modelo.addElement((String) arrayNomes.get(i));
-            jListAlunos.setModel(modelo);
         }
+        jListAlunos.setModel(modelo);
     }
 
     private Aluno pegaSelecionado() {

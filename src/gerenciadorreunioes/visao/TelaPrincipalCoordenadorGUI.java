@@ -20,12 +20,11 @@ public class TelaPrincipalCoordenadorGUI extends javax.swing.JFrame {
     /**
      * Creates new form TelaPrincipalNova
      */
-
     public TelaPrincipalCoordenadorGUI() {
         initComponents();
         serAux = LoginControl.retornaServidorLogado();
         jLabelCoordenador.setText("Bem vindo, Coordenador " + serAux.getNome() + "!");
-        if (serAux.getSerResponsavelATA() == 0) {
+        if (serAux.getSerResponsavelAta() == 0) {
             jMenuItemRedigirATA.setEnabled(false);
         }
     }
@@ -406,10 +405,9 @@ public class TelaPrincipalCoordenadorGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonSairActionPerformed
 
     private void jMenuSobreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuSobreActionPerformed
-        
+
     }//GEN-LAST:event_jMenuSobreActionPerformed
 
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

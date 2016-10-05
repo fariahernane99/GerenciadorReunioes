@@ -6,16 +6,12 @@
 package gerenciadorreunioes.visao;
 
 import gerenciadorreunioes.controle.AlunoControl;
-import gerenciadorreunioes.controle.AlunoGrupoControl;
 import gerenciadorreunioes.controle.GrupoControl;
 import gerenciadorreunioes.controle.LoginControl;
 import gerenciadorreunioes.controle.ServidorControl;
-import gerenciadorreunioes.controle.ServidorGrupoControl;
 import gerenciadorreunioes.modelo.Aluno;
-import gerenciadorreunioes.modelo.AlunoGrupo;
 import gerenciadorreunioes.modelo.Grupo;
 import gerenciadorreunioes.modelo.Servidor;
-import gerenciadorreunioes.modelo.ServidorGrupo;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
@@ -30,8 +26,6 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     private Grupo grupoAux;
     private ServidorControl servControl = new ServidorControl();
     private Servidor serAux;
-    private ServidorGrupoControl servGrupoControl = new ServidorGrupoControl();
-    private AlunoGrupoControl aluGrupoControl = new AlunoGrupoControl();
     private AlunoControl alunoControl = new AlunoControl();
     private LoginControl loginControl = new LoginControl();
     private DefaultListModel modelo = new DefaultListModel();
@@ -445,8 +439,8 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
             x.setNome(jTextFieldNome.getText());
             x.setDescricao(jTextAreaDescricao.getText());
             x.setSiapeCoordenador(pegaSiapeDoCoordenador((String) jComboBoxCoordenadores.getSelectedItem()));
-            servGrupoControl.removeTodosServidoresDoGrupo(x.getCodigo());
-            aluGrupoControl.removeTodosAlunosDoGrupo(x.getCodigo());
+            grupoControl.removeTodosServidoresDoGrupo(x.getCodigo());
+            grupoControl.removeTodosAlunosDoGrupo(x.getCodigo());
             boolean verifica = grupoControl.atualiza(x);
             if (verifica) {
                 JOptionPane.showMessageDialog(this, "Grupo atualizado com sucesso !!!");
@@ -536,31 +530,25 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     }
 
     private void cadastraCadaParticipanteAoGrupo(String codigo, String nome) {
-        Servidor par = new Servidor();
-        Aluno part = new Aluno();
+        Servidor servidor = new Servidor();
+        Aluno aluno = new Aluno();
         boolean cadastrouServ = false, cadastrouAlu = false;
         for (Servidor ser : arrayServidores) {
             if ((ser.getSiape().equals(codigo)) && (ser.getNome().equals(nome))) {
-                par = ser;
+                servidor = ser;
                 cadastrouServ = true;
             }
         }
         for (Aluno alu : arrayAlunos) {
             if ((alu.getMatricula().equals(codigo)) && (alu.getNome().equals(nome))) {
-                part = alu;
+                aluno = alu;
                 cadastrouAlu = true;
             }
         }
         if (cadastrouServ) {
-            ServidorGrupo ser = new ServidorGrupo();
-            ser.setGrupo(grupoAux);
-            ser.setServidor(par);
-            servGrupoControl.adiciona(ser);
+            servidor.setGrupos(grupoAux);//como associar um grupo à um aluno ?
         } else if (cadastrouAlu) {
-            AlunoGrupo alu = new AlunoGrupo();
-            alu.setGrupo(grupoAux);
-            alu.setAluno(part);
-            aluGrupoControl.adiciona(alu);
+            aluno.setGrupos(grupoAux);
         } else {
             JOptionPane.showMessageDialog(this, "Não foi possível cadastrar o participante de siape/matrícula: " + codigo + "!");
         }
@@ -637,21 +625,19 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     }
 
     private void jogaTodosParticipantesJList(int gruCodigo) {
-        ArrayList<ServidorGrupo> arrayServGrupo = servGrupoControl.getSerGrupos(gruCodigo);
-        ArrayList<AlunoGrupo> arrayAluGrupo = aluGrupoControl.getAluGrupos(gruCodigo);
+        ArrayList<Servidor> arrayServidores = servControl.getServidoresDeUmGrupo(gruCodigo);
+        ArrayList<Aluno> arrayAlunos = alunoControl.getAlunosDeUmGrupo(gruCodigo);
         modelo.removeAllElements();
-        arrayServidores = servControl.lista();
-        for (int i = 0; i < arrayServGrupo.size(); i++) {
+        for (int i = 0; i < arrayServidores.size(); i++) {
             for (Servidor s : arrayServidores) {
-                if (s.getSiape().equals(arrayServGrupo.get(i).getServidor().getSiape())) {
+                if (s.getSiape().equals(arrayServidores.get(i).getSiape())) {
                     modelo.addElement(s.getSiape() + " - " + s.getNome());
                 }
             }
         }
-        arrayAlunos = alunoControl.getAlunos();
-        for (int i = 0; i < arrayAluGrupo.size(); i++) {
+        for (int i = 0; i < arrayAlunos.size(); i++) {
             for (Aluno a : arrayAlunos) {
-                if (a.getMatricula().equals(arrayAluGrupo.get(i).getAluno().getMatricula())) {
+                if (a.getMatricula().equals(arrayAlunos.get(i).getMatricula())) {
                     modelo.addElement(a.getMatricula() + " - " + a.getNome());
                 }
             }

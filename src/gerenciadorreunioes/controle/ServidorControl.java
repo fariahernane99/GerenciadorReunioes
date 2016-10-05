@@ -48,10 +48,6 @@ public class ServidorControl {
         return servidorDao.getServidores();
     }
 
-    public ArrayList<Servidor> lista(String siape) {
-        return servidorDao.getServidoresDeUmGrupo(siape);
-    }
-
     public ArrayList<Servidor> getCoordenadores() {
         return servidorDao.getCoordenadores();
     }
@@ -146,6 +142,10 @@ public class ServidorControl {
             return new String(hexCodes(md.digest(pwd.getBytes())));
         }
         return null;
+    }
+
+    public ArrayList<Servidor> getServidoresDeUmGrupo(int gruCodigo) {
+        return servidorDao.getServidoresDeUmGrupo(gruCodigo);
     }
 
 }

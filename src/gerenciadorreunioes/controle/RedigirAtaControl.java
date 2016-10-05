@@ -21,11 +21,9 @@ public class RedigirAtaControl {
     private ReuniaoControl reuniaoControl = new ReuniaoControl();
     private ArrayList<Pauta> arrayPautas = new ArrayList<>();
 
-
     public ArrayList<ServidorGrupo> retornaServidorGrupo(int codigo) {
         return serv.getServidoresGrupos(codigo);
     }
-
 
     public ArrayList<ServidorGrupo> pesquisaServidor(String siape) {
         segGru = s.getSerGrupos();
@@ -93,7 +91,7 @@ public class RedigirAtaControl {
         }
         return x;
     }
-    
+
     public boolean verificaCampos(String text1) {
         boolean r = false;
         if (text1.equals("")) {

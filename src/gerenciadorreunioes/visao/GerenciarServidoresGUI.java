@@ -345,7 +345,6 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
@@ -388,7 +387,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
             s.setSiape(jTextFieldSiape.getText());
             s.setNome(jTextFieldNome.getText());
             s.setEmail(jTextFieldEmail.getText());
-            s.setFone(jTextFieldFone.getText());
+            s.setTelefone(jTextFieldFone.getText());
             s.setSenha(jPasswordField1.getText());
             s.setArea(jTextFieldArea.getText());
             boolean controle = false;
@@ -396,8 +395,8 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Selecione uma opção de Servidor !!!");
             } else {
                 s.setSerCoordenador(converteBooleanParaInt(jRadioButtonCoordenador));
-                s.setSerDE(converteBooleanParaInt(jRadioButtonDE));
-                s.setSerResponsavelATA(0);
+                s.setSerDe(converteBooleanParaInt(jRadioButtonDE));
+                s.setSerResponsavelAta(0);
                 controle = true;
             }
             if (controle) {
@@ -422,17 +421,17 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
             s.setSiape(jTextFieldSiape.getText());
             s.setNome(jTextFieldNome.getText());
             s.setEmail(jTextFieldEmail.getText());
-            s.setFone(jTextFieldFone.getText());
+            s.setTelefone(jTextFieldFone.getText());
             s.setSenha(jPasswordField1.getText());
             s.setArea(jTextFieldArea.getText());
             if (!(jRadioButtonCoordenador.isSelected()) && !(jRadioButtonDE.isSelected()) && !(jRadioButtonMembro.isSelected())) {
                 JOptionPane.showMessageDialog(this, "Selecione uma opção de Servidor !!!");
             } else {
                 s.setSerCoordenador(converteBooleanParaInt(jRadioButtonCoordenador));
-                s.setSerDE(converteBooleanParaInt(jRadioButtonDE));
-                s.setSerResponsavelATA(0);
+                s.setSerDe(converteBooleanParaInt(jRadioButtonDE));
+                s.setSerResponsavelAta(0);
             }
-            boolean verifica = controleServ.atualiza(s, pegaSiapeAntigo());
+            boolean verifica = controleServ.atualiza(s);
             if (verifica) {
                 JOptionPane.showMessageDialog(null, "O servidor foi atualizado com sucesso !!!");
                 limpaCampos();
@@ -480,7 +479,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
             jTextFieldSiape.setText(aux.getSiape());
             jTextFieldNome.setText(aux.getNome());
             jTextFieldEmail.setText(aux.getEmail());
-            jTextFieldFone.setText(aux.getFone());
+            jTextFieldFone.setText(aux.getTelefone());
             jTextFieldArea.setText(aux.getArea());
             jPasswordField1.setText(aux.getSenha());
             for (Servidor s : arrayServ) {
@@ -489,7 +488,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
                         jRadioButtonCoordenador.setSelected(true);
                         jRadioButtonDE.setSelected(false);
                         jRadioButtonMembro.setSelected(false);
-                    } else if (s.getSerDE() == 1) {
+                    } else if (s.getSerDe() == 1) {
                         jRadioButtonCoordenador.setSelected(false);
                         jRadioButtonDE.setSelected(true);
                         jRadioButtonMembro.setSelected(false);

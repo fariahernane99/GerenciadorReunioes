@@ -13,7 +13,6 @@ import gerenciadorreunioes.modelo.Grupo;
 import gerenciadorreunioes.modelo.Pauta;
 import gerenciadorreunioes.modelo.Reuniao;
 import gerenciadorreunioes.modelo.Servidor;
-import gerenciadorreunioes.modelo.ServidorGrupo;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -24,7 +23,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class RedigirAtaGUI extends javax.swing.JFrame {
 
-    private RedigirAtaControl red = new RedigirAtaControl();
+    private RedigirAtaControl redigirAtaControl = new RedigirAtaControl();
     private PautaControl pautaControl = new PautaControl();
     private Servidor serAux;
     private DefaultTableModel de = new DefaultTableModel();
@@ -61,8 +60,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
     }
 
     public void preencheComboGrupo() {
-        ArrayList<ServidorGrupo> seg = red.pesquisaServidor(serAux.getSiape());
-        ArrayList<Grupo> grupos = red.retornaGrupos(seg);
+        ArrayList<Grupo> grupos = redigirAtaControl.pesquisaGruposDoResponsavelAta(serAux.getSiape());
         jComboBoxGrupos.removeAllItems();
         for (int i = 0; i < grupos.size(); i++) {
             jComboBoxGrupos.addItem(grupos.get(i).getCodigo() + " - " + grupos.get(i).getNome());
@@ -70,14 +68,14 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
     }
 
     public void preencheComboReuniao() {
-        if (jComboBoxGrupos.getSelectedItem().equals(" ")) {
+        if (jComboBoxGrupos.getSelectedItem().equals("")) {
             JOptionPane.showMessageDialog(this, "Selecione um grupo");
         } else {
             String selecionado = (String) jComboBoxGrupos.getSelectedItem();
             String[] pegaCodigo = selecionado.split(" - ");
             codGrupo = Integer.parseInt(pegaCodigo[0]);
             jComboBoxReunioes.removeAllItems();
-            ArrayList<Reuniao> reunioes = red.pesquisaReunioes(codGrupo);
+            ArrayList<Reuniao> reunioes = redigirAtaControl.retornaReunioesDeUmGrupo(codGrupo);
             for (int i = 0; i < reunioes.size(); i++) {
                 jComboBoxReunioes.addItem(reunioes.get(i).getCodigo() + " - " + reunioes.get(i).getNome());
             }
@@ -88,11 +86,10 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         String selecionado = (String) jComboBoxReunioes.getSelectedItem();
         String[] pegaCodigo = selecionado.split(" - ");
         codReuniao = Integer.parseInt(pegaCodigo[0]);
-        ArrayList<ServidorGrupo> ser = red.retornaServidorGrupo(codGrupo);
-        ArrayList<Servidor> servidores = red.servidores(ser);
+        ArrayList<String> participantes = redigirAtaControl.retornaParticipantesDaReuniao(codReuniao);
         de.getDataVector().removeAllElements();
-        for (int i = 0; i < servidores.size(); i++) {
-            de.addRow(new Object[]{servidores.get(i).getSiape() + " - " + servidores.get(i).getNome()});
+        for (int i = 0; i < participantes.size(); i++) {
+            de.addRow(new Object[]{participantes.get(i)});
 
         }
         jTableParticipante.setModel(de);
@@ -102,13 +99,13 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         String selecionado = (String) jComboBoxReunioes.getSelectedItem();
         String[] pegaCodigo = selecionado.split(" - ");
         codReuniao = Integer.parseInt(pegaCodigo[0]);
-        Reuniao r = red.pesquisaCertaReuniao(codReuniao);
+        Reuniao r = redigirAtaControl.pesquisaCertaReuniao(codReuniao);
         codReuniao = r.getCodigo();
         jTextFieldHorarioInicio.setText(r.getHorarioInicio());
     }
 
     public void preencheComboPauta() {
-        Ata a = red.pesquisaAta(codReuniao);
+        Ata a = redigirAtaControl.pesquisaAta(codReuniao);
         codAta = a.getAtaCodigo();
         ArrayList<Pauta> pautas = pautaControl.getPautas(a.getAtaCodigo());
         jComboBoxPontoPauta.removeAllItems();
@@ -119,7 +116,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
     }
 
     public void preencheTabelaPontos() {
-        Ata a = red.pesquisaAta(codReuniao);
+        Ata a = redigirAtaControl.pesquisaAta(codReuniao);
         codAta = a.getAtaCodigo();
         ArrayList<Pauta> pautas = pautaControl.getPautas(a.getAtaCodigo());
         dp.getDataVector().removeAllElements();
@@ -142,14 +139,14 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         String[] pegaTitulo = pauta.split(" - ");
         p.setCodigo(Integer.parseInt(pegaTitulo[0]));
         p.setTitulo(pegaTitulo[1]);
-        boolean flag = red.verificaCamposPauta(jTextAreaDefinicao.getText(), jTextAreaEncaminhamento.getText());
+        boolean flag = redigirAtaControl.verificaCamposPauta(jTextAreaDefinicao.getText(), jTextAreaEncaminhamento.getText());
         if (flag) {
             JOptionPane.showMessageDialog(this, "Preencha os campos de encaminhamento e definição");
         } else {
             p.setDefinicao(jTextAreaDefinicao.getText());
             p.setEncaminhamento(jTextAreaEncaminhamento.getText());
             p.setPau_ataCodigo(codAta);
-            red.atualizaPauta(p);
+            redigirAtaControl.atualizaPauta(p);
             JOptionPane.showMessageDialog(this, "Ponto registrado com sucesso!!");
         }
     }
@@ -161,10 +158,10 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         p.setPau_ataCodigo(codAta);
         p.setEncaminhamento("-");
         p.setDefinicao("-");
-        if (red.verificaCampos(titulo)) {
+        if (redigirAtaControl.verificaCampos(titulo)) {
             JOptionPane.showMessageDialog(this, "Título da pauta vazio, tente novamente.");
         } else {
-            red.adicionaPauta(p);
+            redigirAtaControl.adicionaPauta(p);
             ArrayList<Pauta> array = pautaControl.getPautas(codAta);
             for (Pauta pauta : array) {
                 if (pauta.getTitulo().equals(p.getTitulo())) {
@@ -184,21 +181,21 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         } else {
             String[] pegaCodigo = selecionado.split(" - ");
             int cod = Integer.parseInt(pegaCodigo[0]);
-            Pauta p = red.retornaPauta(cod);
+            Pauta p = redigirAtaControl.retornaPauta(cod);
             jTextAreaDefinicao.setText(p.getDefinicao());
             jTextAreaEncaminhamento.setText(p.getEncaminhamento());
         }
     }
 
     public void finalizarReunião() {
-        boolean flag = red.verificaCamposReuniao(pegaNomeReuniao(), jTextFieldHorarioInicio.getText(), jTextFieldHorarioFim.getText(), jTextFieldLocal.getText());
+        boolean flag = redigirAtaControl.verificaCamposReuniao(pegaNomeReuniao(), jTextFieldHorarioInicio.getText(), jTextFieldHorarioFim.getText(), jTextFieldLocal.getText());
         if (flag) {
             JOptionPane.showMessageDialog(this, "Preencha todos os campos (Horário de início,Horário do fim e local).");
         } else {
             System.out.println(jTextFieldHorarioInicio.getText());
             System.out.println(jTextFieldHorarioFim.getText());
             System.out.println(jTextFieldLocal.getText());
-            red.atualizaReuniao(codReuniao, jTextFieldHorarioInicio.getText(), jTextFieldHorarioFim.getText(), jTextFieldLocal.getText());
+            redigirAtaControl.atualizaReuniao(codReuniao, jTextFieldHorarioInicio.getText(), jTextFieldHorarioFim.getText(), jTextFieldLocal.getText());
             JOptionPane.showMessageDialog(this, "Ata finalizada !!!.");
 
         }
@@ -206,7 +203,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
     }
 
     public void verificaReuniaoSelecionada() {
-        boolean flag = red.verificaCampos(jTextFieldHorarioInicio.getText());
+        boolean flag = redigirAtaControl.verificaCampos(jTextFieldHorarioInicio.getText());
         if (flag) {
             JOptionPane.showMessageDialog(this, "Informe corretamente a reunião e o horário de início desta.");
         } else {

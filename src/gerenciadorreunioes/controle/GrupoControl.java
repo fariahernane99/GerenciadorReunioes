@@ -108,4 +108,7 @@ public class GrupoControl {
         return grupoDao.removeTodosAlunosDoGrupo(codGrupo);
     }
 
+    public ArrayList<Grupo> getGruposDoResponsavelAta(String siape) {
+        return grupoDao.getGruposDoResponsavelAta(siape);
+    }
 }

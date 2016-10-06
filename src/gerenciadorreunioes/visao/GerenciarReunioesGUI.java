@@ -63,7 +63,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
 
     private void atualizaComboResponsavelAta() {
         arrayServidores.removeAll(arrayServidores);
-        ArrayList<Servidor> arrayAux = servControl.getParticipantesDoGrupo(pegaCodigoGrupo());
+        ArrayList<Servidor> arrayAux = servControl.getServidoresParticipantesDoGrupo(pegaCodigoGrupo());
         for (int i = 0; i < arrayAux.size(); i++) {
             arrayServidores.add(arrayAux.get(i).getSiape() + " - " + arrayAux.get(i).getNome());
         }

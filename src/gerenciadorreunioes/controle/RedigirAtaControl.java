@@ -1,26 +1,42 @@
 package gerenciadorreunioes.controle;
 
-import gerenciadorreunioes.modelo.Ata;
-import gerenciadorreunioes.modelo.AtaDAO;
+import gerenciadorreunioes.modelo.Aluno;
 import gerenciadorreunioes.modelo.Grupo;
 import gerenciadorreunioes.modelo.Pauta;
-import gerenciadorreunioes.modelo.PautaDAO;
 import gerenciadorreunioes.modelo.Reuniao;
-import gerenciadorreunioes.modelo.ReuniaoDAO;
 import gerenciadorreunioes.modelo.Servidor;
-import gerenciadorreunioes.modelo.ServidorDAO;
 import java.util.ArrayList;
 
 public class RedigirAtaControl {
 
-    private AtaDAO ataDao = new AtaDAO();
-    private PautaDAO pautaDao = new PautaDAO();
-    private ServidorDAO servidorDao = new ServidorDAO();
+    private AlunoControl alunoControl = new AlunoControl();
+    private ServidorControl servidorControl = new ServidorControl();
     private GrupoControl grupoControl = new GrupoControl();
-    private ReuniaoDAO reuniaoDao = new ReuniaoDAO();
     private ReuniaoControl reuniaoControl = new ReuniaoControl();
     private ArrayList<Pauta> arrayPautas = new ArrayList<>();
 
+    public ArrayList<Grupo> pesquisaGruposDoResponsavelAta(String siape) {
+        return grupoControl.getGruposDoResponsavelAta(siape);
+    }
+
+    public ArrayList<Reuniao> retornaReunioesDeUmGrupo(int codGrupo) {
+        return reuniaoControl.retornaReunioesDeUmGrupo(codGrupo);
+    }
+
+    public ArrayList<String> retornaParticipantesDaReuniao(int reuCodigo) {
+        ArrayList<Servidor> arrayServidores = servidorControl.getServidoresDaReuniao(reuCodigo);
+        ArrayList<Aluno> arrayAlunos = alunoControl.getAlunosDaReuniao(reuCodigo);
+        ArrayList<String> arrayString = new ArrayList<>();
+        for (Servidor ser : arrayServidores) {
+            arrayString.add(ser.getSiape() + " - " + ser.getNome());
+        }
+        for (Aluno alu : arrayAlunos) {
+            arrayString.add(alu.getMatricula() + " - " + alu.getNome());
+        }
+        return arrayString;
+    }
+
+    /*
     public ArrayList<ServidorGrupo> retornaServidorGrupo(int codigo) {
         return serv.getServidoresGrupos(codigo);
     }
@@ -124,5 +140,5 @@ public class RedigirAtaControl {
             retorno = true;
         }
         return retorno;
-    }
+    }*/
 }

@@ -117,5 +117,19 @@ public class GrupoDAO {
             return false;
         }
     }
+    
+    public ArrayList<Grupo> getGruposDoResponsavelAta(String siapeResponsavelAta) {
+        EntityManager manager = JpaUtil.getEntityManager();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        Query query = manager.createQuery("SELECT gruCodigo, gruNome, gruDescricao,"
+                + " gruSiapeCoordenador FROM Grupo JOIN Reuniao WHERE gruCodigo ="
+                + " reu_gruCodigo AND reuSiapeResponsavelAta = '" + siapeResponsavelAta + "';");
+        ArrayList<Grupo> grupos = (ArrayList) query.getResultList();
+        tx.commit();
+        manager.close();
+        JpaUtil.close();
+        return grupos;
+    }
 
 }

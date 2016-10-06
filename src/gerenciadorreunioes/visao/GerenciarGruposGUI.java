@@ -379,7 +379,6 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCadastrar;
@@ -546,9 +545,9 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
             }
         }
         if (cadastrouServ) {
-            servidor.setGrupos(grupoAux);//como associar um grupo à um aluno ?
+            servidor.getGrupos().add(grupoAux);//como associar um grupo à um aluno ?
         } else if (cadastrouAlu) {
-            aluno.setGrupos(grupoAux);
+            aluno.getGrupos().add(grupoAux);
         } else {
             JOptionPane.showMessageDialog(this, "Não foi possível cadastrar o participante de siape/matrícula: " + codigo + "!");
         }

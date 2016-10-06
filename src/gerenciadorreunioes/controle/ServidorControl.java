@@ -60,7 +60,7 @@ public class ServidorControl {
         return servidorDao.getMembrosComuns();
     }
 
-    public ArrayList<Servidor> getParticipantesDoGrupo(int gruCodigo) {
+    public ArrayList<Servidor> getServidoresParticipantesDoGrupo(int gruCodigo) {
         return servidorDao.getParticipantesDoGrupo(gruCodigo);
     }
 
@@ -146,6 +146,10 @@ public class ServidorControl {
 
     public ArrayList<Servidor> getServidoresDeUmGrupo(int gruCodigo) {
         return servidorDao.getServidoresDeUmGrupo(gruCodigo);
+    }
+
+    public ArrayList<Servidor> getServidoresDaReuniao(int reuCodigo) {
+        return servidorDao.getServidoresDaReuniao(reuCodigo);
     }
 
 }

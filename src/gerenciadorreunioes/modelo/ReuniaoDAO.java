@@ -82,4 +82,17 @@ public class ReuniaoDAO {
         return reunioes;
     }
 
+    public ArrayList<Reuniao> retornaReunioesDeUmGrupo(int codGrupo) {
+        EntityManager manager = JpaUtil.getEntityManager();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        Query query = manager.createQuery("SELECT * FROM Reuniao WHERE"
+                + " reu_gruCodigo = " + codGrupo + ";");
+        ArrayList<Reuniao> reunioes = (ArrayList) query.getResultList();
+        tx.commit();
+        manager.close();
+        JpaUtil.close();
+        return reunioes;
+    }
+
 }

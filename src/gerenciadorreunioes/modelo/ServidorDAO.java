@@ -133,4 +133,19 @@ public class ServidorDAO {
         return servidores;
     }
 
+    public ArrayList<Servidor> getServidoresDaReuniao(int reuCodigo) {
+        EntityManager manager = JpaUtil.getEntityManager();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        Query query = manager.createQuery("SELECT serSiape, serNome, serTelefone, serEmail,"
+                + " serSenha, serArea, serDe, serCoordenador, serResponsavelAta  FROM Servidor"
+                + " JOIN Servidor_Grupo JOIN Grupo JOIN Reuniao WHERE serSiape = seg_serSiape AND"
+                + " seg_gruCodigo = gruCodigo AND reu_gruCodigo = gruCodigo AND reuCodigo = " + reuCodigo + ";");
+        ArrayList<Servidor> servidores = (ArrayList) query.getResultList();
+        tx.commit();
+        manager.close();
+        JpaUtil.close();
+        return servidores;
+    }
+
 }

@@ -87,4 +87,8 @@ public class ReuniaoControl {
         return reunioes;
     }
 
+    public ArrayList<Reuniao> retornaReunioesDeUmGrupo(int codGrupo) {
+        return reuniaoDAO.retornaReunioesDeUmGrupo(codGrupo);
+    }
+
 }

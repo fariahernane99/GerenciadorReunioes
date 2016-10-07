@@ -10,7 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -45,7 +45,7 @@ public class Ata implements Serializable {
         this.status = status;
     }
 
-    @ManyToOne
+    @OneToOne
     public Reuniao getReuniao() {
         return reuniao;
     }

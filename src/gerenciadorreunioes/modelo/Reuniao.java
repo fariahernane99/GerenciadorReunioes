@@ -59,7 +59,7 @@ public class Reuniao implements Serializable {
         this.data = data;
     }
 
-    @Column(name = "reuHorarioInicio", nullable = false)
+    @Column(name = "reuHorarioInicio")
     public String getHorarioInicio() {
         return horarioInicio;
     }
@@ -68,7 +68,7 @@ public class Reuniao implements Serializable {
         this.horarioInicio = horarioInicio;
     }
 
-    @Column(name = "reuHorarioFim", nullable = false)
+    @Column(name = "reuHorarioFim")
     public String getHorarioFim() {
         return horarioFim;
     }
@@ -77,7 +77,7 @@ public class Reuniao implements Serializable {
         this.horarioFim = horarioFim;
     }
 
-    @Column(name = "reuLocal", nullable = false)
+    @Column(name = "reuLocal")
     public String getLocal() {
         return local;
     }

@@ -38,7 +38,7 @@ public class Pauta implements Serializable {
         this.codigo = codigo;
     }
 
-    @Column(name = "pauEncaminhamento", nullable = false)
+    @Column(name = "pauEncaminhamento")
     public String getEncaminhamento() {
         return encaminhamento;
     }
@@ -56,7 +56,7 @@ public class Pauta implements Serializable {
         this.titulo = titulo;
     }
 
-    @Column(name = "pauDefinicao", nullable = false)
+    @Column(name = "pauDefinicao")
     public String getDefinicao() {
         return definicao;
     }

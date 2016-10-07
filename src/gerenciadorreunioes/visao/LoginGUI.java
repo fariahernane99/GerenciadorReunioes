@@ -17,7 +17,6 @@ import javax.swing.JOptionPane;
 public class LoginGUI extends javax.swing.JFrame {
 
     private LoginControl loginControle = new LoginControl();
-    
 
     public LoginGUI() {
         initComponents();
@@ -193,8 +192,5 @@ public class LoginGUI extends javax.swing.JFrame {
             }
         }
     }
-    
-   
-    
 
 }

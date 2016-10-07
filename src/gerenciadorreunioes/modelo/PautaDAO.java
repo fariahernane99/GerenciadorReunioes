@@ -89,4 +89,14 @@ public class PautaDAO {
         return array;
     }
 
+    public Pauta getPauta(int cod) {
+        Pauta p = null;
+        for (Pauta pau : getPautas()) {
+            if (pau.getCodigo() == cod) {
+                p = pau;
+            }
+        }
+        return p;
+    }
+
 }

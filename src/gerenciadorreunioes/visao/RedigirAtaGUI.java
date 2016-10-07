@@ -5,9 +5,14 @@
  */
 package gerenciadorreunioes.visao;
 
+import gerenciadorreunioes.controle.AlunoControl;
+import gerenciadorreunioes.controle.AtaControl;
+import gerenciadorreunioes.controle.GrupoControl;
 import gerenciadorreunioes.controle.LoginControl;
 import gerenciadorreunioes.controle.PautaControl;
 import gerenciadorreunioes.controle.RedigirAtaControl;
+import gerenciadorreunioes.controle.ReuniaoControl;
+import gerenciadorreunioes.controle.ServidorControl;
 import gerenciadorreunioes.modelo.Ata;
 import gerenciadorreunioes.modelo.Grupo;
 import gerenciadorreunioes.modelo.Pauta;
@@ -24,7 +29,12 @@ import javax.swing.table.DefaultTableModel;
 public class RedigirAtaGUI extends javax.swing.JFrame {
 
     private RedigirAtaControl redigirAtaControl = new RedigirAtaControl();
+    private AtaControl ataControl = new AtaControl();
+    private AlunoControl alunoControl = new AlunoControl();
     private PautaControl pautaControl = new PautaControl();
+    private ServidorControl servidorControl = new ServidorControl();
+    private GrupoControl grupoControl = new GrupoControl();
+    private ReuniaoControl reuniaoControl = new ReuniaoControl();
     private Servidor serAux;
     private DefaultTableModel de = new DefaultTableModel();
     private DefaultTableModel dp = new DefaultTableModel();
@@ -60,7 +70,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
     }
 
     public void preencheComboGrupo() {
-        ArrayList<Grupo> grupos = redigirAtaControl.pesquisaGruposDoResponsavelAta(serAux.getSiape());
+        ArrayList<Grupo> grupos = grupoControl.pesquisaGruposDoResponsavelAta(serAux.getSiape());
         jComboBoxGrupos.removeAllItems();
         for (int i = 0; i < grupos.size(); i++) {
             jComboBoxGrupos.addItem(grupos.get(i).getCodigo() + " - " + grupos.get(i).getNome());
@@ -75,7 +85,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
             String[] pegaCodigo = selecionado.split(" - ");
             codGrupo = Integer.parseInt(pegaCodigo[0]);
             jComboBoxReunioes.removeAllItems();
-            ArrayList<Reuniao> reunioes = redigirAtaControl.retornaReunioesDeUmGrupo(codGrupo);
+            ArrayList<Reuniao> reunioes = reuniaoControl.retornaReunioesDeUmGrupo(codGrupo);
             for (int i = 0; i < reunioes.size(); i++) {
                 jComboBoxReunioes.addItem(reunioes.get(i).getCodigo() + " - " + reunioes.get(i).getNome());
             }
@@ -99,15 +109,15 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         String selecionado = (String) jComboBoxReunioes.getSelectedItem();
         String[] pegaCodigo = selecionado.split(" - ");
         codReuniao = Integer.parseInt(pegaCodigo[0]);
-        Reuniao r = redigirAtaControl.pesquisaCertaReuniao(codReuniao);
+        Reuniao r = reuniaoControl.getReuniao(codReuniao);
         codReuniao = r.getCodigo();
         jTextFieldHorarioInicio.setText(r.getHorarioInicio());
     }
 
     public void preencheComboPauta() {
-        Ata a = redigirAtaControl.pesquisaAta(codReuniao);
-        codAta = a.getAtaCodigo();
-        ArrayList<Pauta> pautas = pautaControl.getPautas(a.getAtaCodigo());
+        Ata a = ataControl.getAta(codReuniao);
+        codAta = a.getCodigo();
+        ArrayList<Pauta> pautas = pautaControl.getPautas(a.getCodigo());
         jComboBoxPontoPauta.removeAllItems();
         for (int i = 0; i < pautas.size(); i++) {
             jComboBoxPontoPauta.addItem(pautas.get(i).getCodigo() + " - " + pautas.get(i).getTitulo());
@@ -116,9 +126,9 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
     }
 
     public void preencheTabelaPontos() {
-        Ata a = redigirAtaControl.pesquisaAta(codReuniao);
-        codAta = a.getAtaCodigo();
-        ArrayList<Pauta> pautas = pautaControl.getPautas(a.getAtaCodigo());
+        Ata a = ataControl.getAta(codReuniao);
+        codAta = a.getCodigo();
+        ArrayList<Pauta> pautas = pautaControl.getPautas(a.getCodigo());
         dp.getDataVector().removeAllElements();
         for (int i = 0; i < pautas.size(); i++) {
             dp.addRow(new Object[]{pautas.get(i).getCodigo() + " - " + pautas.get(i).getTitulo(), pautas.get(i).getDefinicao(),
@@ -145,8 +155,8 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         } else {
             p.setDefinicao(jTextAreaDefinicao.getText());
             p.setEncaminhamento(jTextAreaEncaminhamento.getText());
-            p.setPau_ataCodigo(codAta);
-            redigirAtaControl.atualizaPauta(p);
+            p.setAta(ataControl.getAta(codAta));
+            pautaControl.atualiza(p);
             JOptionPane.showMessageDialog(this, "Ponto registrado com sucesso!!");
         }
     }
@@ -155,13 +165,13 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         Pauta p = new Pauta();
         String titulo = JOptionPane.showInputDialog("Informe o título do novo ponto de pauta");
         p.setTitulo(titulo);
-        p.setPau_ataCodigo(codAta);
+        p.setAta(ataControl.getAta(codAta));
         p.setEncaminhamento("-");
         p.setDefinicao("-");
         if (redigirAtaControl.verificaCampos(titulo)) {
             JOptionPane.showMessageDialog(this, "Título da pauta vazio, tente novamente.");
         } else {
-            redigirAtaControl.adicionaPauta(p);
+            pautaControl.adiciona(p);
             ArrayList<Pauta> array = pautaControl.getPautas(codAta);
             for (Pauta pauta : array) {
                 if (pauta.getTitulo().equals(p.getTitulo())) {
@@ -181,7 +191,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         } else {
             String[] pegaCodigo = selecionado.split(" - ");
             int cod = Integer.parseInt(pegaCodigo[0]);
-            Pauta p = redigirAtaControl.retornaPauta(cod);
+            Pauta p = pautaControl.getPauta(cod);
             jTextAreaDefinicao.setText(p.getDefinicao());
             jTextAreaEncaminhamento.setText(p.getEncaminhamento());
         }
@@ -192,10 +202,11 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         if (flag) {
             JOptionPane.showMessageDialog(this, "Preencha todos os campos (Horário de início,Horário do fim e local).");
         } else {
-            System.out.println(jTextFieldHorarioInicio.getText());
-            System.out.println(jTextFieldHorarioFim.getText());
-            System.out.println(jTextFieldLocal.getText());
-            redigirAtaControl.atualizaReuniao(codReuniao, jTextFieldHorarioInicio.getText(), jTextFieldHorarioFim.getText(), jTextFieldLocal.getText());
+            Reuniao r = reuniaoControl.getReuniao(codReuniao);
+            r.setHorarioInicio(jTextFieldHorarioInicio.getText());
+            r.setHorarioFim(jTextFieldHorarioFim.getText());
+            r.setLocal(jTextFieldLocal.getText());
+            reuniaoControl.atualiza(r);
             JOptionPane.showMessageDialog(this, "Ata finalizada !!!.");
 
         }

@@ -91,4 +91,8 @@ public class ReuniaoControl {
         return reuniaoDAO.retornaReunioesDeUmGrupo(codGrupo);
     }
 
+    public Reuniao getReuniao(int codReuniao) {
+        return reuniaoDAO.getReuniao(codReuniao);
+    }
+
 }

@@ -1,6 +1,7 @@
 
 import gerenciadorreunioes.jpa.JpaUtil;
 import gerenciadorreunioes.modelo.Aluno;
+import gerenciadorreunioes.modelo.AlunoDAO;
 import java.awt.List;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
@@ -20,8 +21,9 @@ import javax.persistence.Query;
 public class teste {
 
     public static void main(String[] args) {
-
-        Persistence.createEntityManagerFactory("reunioes");
         
+        
+       //Persistence.createEntityManagerFactory("teste");
+
     }
 }

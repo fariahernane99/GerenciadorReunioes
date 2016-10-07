@@ -27,4 +27,8 @@ public class PautaControl {
     public ArrayList<Pauta> getPautas(int codAta) {
         return pautaDAO.getPautas(codAta);
     }
+
+    public Pauta getPauta(int cod) {
+        return pautaDAO.getPauta(cod);
+    }
 }

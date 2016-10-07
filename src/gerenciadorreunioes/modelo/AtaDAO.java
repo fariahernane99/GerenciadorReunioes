@@ -77,4 +77,14 @@ public class AtaDAO {
         return atas;
     }
 
+    public Ata getAtas(int codReuniao) {
+        Ata a = null;
+        for (Ata ata : getAtas()) {
+            if (ata.getReuniao().getCodigo() == codReuniao) {
+                a = ata;
+            }
+        }
+        return a;
+    }
+
 }

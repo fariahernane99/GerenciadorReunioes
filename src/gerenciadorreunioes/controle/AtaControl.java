@@ -44,4 +44,8 @@ public class AtaControl {
         return codAta;
     }
 
+    public Ata getAta(int codReuniao) {
+        return ataDAO.getAtas(codReuniao);
+    }
+
 }

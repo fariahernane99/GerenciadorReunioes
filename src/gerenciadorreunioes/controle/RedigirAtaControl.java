@@ -1,6 +1,7 @@
 package gerenciadorreunioes.controle;
 
 import gerenciadorreunioes.modelo.Aluno;
+import gerenciadorreunioes.modelo.Ata;
 import gerenciadorreunioes.modelo.Grupo;
 import gerenciadorreunioes.modelo.Pauta;
 import gerenciadorreunioes.modelo.Reuniao;
@@ -9,19 +10,12 @@ import java.util.ArrayList;
 
 public class RedigirAtaControl {
 
+    private AtaControl ataControl = new AtaControl();
     private AlunoControl alunoControl = new AlunoControl();
     private ServidorControl servidorControl = new ServidorControl();
     private GrupoControl grupoControl = new GrupoControl();
     private ReuniaoControl reuniaoControl = new ReuniaoControl();
     private ArrayList<Pauta> arrayPautas = new ArrayList<>();
-
-    public ArrayList<Grupo> pesquisaGruposDoResponsavelAta(String siape) {
-        return grupoControl.getGruposDoResponsavelAta(siape);
-    }
-
-    public ArrayList<Reuniao> retornaReunioesDeUmGrupo(int codGrupo) {
-        return reuniaoControl.retornaReunioesDeUmGrupo(codGrupo);
-    }
 
     public ArrayList<String> retornaParticipantesDaReuniao(int reuCodigo) {
         ArrayList<Servidor> arrayServidores = servidorControl.getServidoresDaReuniao(reuCodigo);
@@ -64,7 +58,7 @@ public class RedigirAtaControl {
         return gru;
     }
 
-    public Ata pesquisaAta(int codReuniao) {
+    public Ata getAta(int codReuniao) {
         Ata ata = new Ata();
         for (int i = 0; i < getReunioes().size(); i++) {
             for (int j = 0; j < getAtas().size(); j++) {
@@ -141,4 +135,28 @@ public class RedigirAtaControl {
         }
         return retorno;
     }*/
+    
+    public boolean verificaCamposReuniao(String text0, String text1, String text2, String text3) {
+        boolean retorno = false;
+        if (text0.equals("") || text1.equals("") || text2.equals("") || text3.equals("")) {
+            retorno = true;
+        }
+        return retorno;
+    }
+    
+    public boolean verificaCamposPauta(String text0, String text1) {
+        boolean retorno = false;
+        if (text0.equals("") || text1.equals("")) {
+            retorno = true;
+        }
+        return retorno;
+    }
+
+    public boolean verificaCampos(String titulo) {
+        boolean retorno = false;
+        if (titulo.equals("")) {
+            retorno = true;
+        }
+        return retorno;
+    }
 }

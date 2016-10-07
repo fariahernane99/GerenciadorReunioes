@@ -36,7 +36,7 @@ public class Grupo implements Serializable {
         this.nome = nome;
     }
 
-    @Column(name = "gruDescricao", nullable = false)
+    @Column(name = "gruDescricao")
     public String getDescricao() {
         return descricao;
     }

@@ -95,4 +95,13 @@ public class ReuniaoDAO {
         return reunioes;
     }
 
+    public Reuniao getReuniao(int codReuniao) {
+        Reuniao r = null;
+        for (Reuniao reu : getReunioes()) {
+            if (reu.getCodigo() == codReuniao)
+                r = reu;
+        }
+        return r;
+    }
+
 }

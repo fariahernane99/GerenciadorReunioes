@@ -25,7 +25,6 @@ public class GrupoDAO {
             manager.persist(g);
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -41,7 +40,6 @@ public class GrupoDAO {
             manager.remove(grupo);
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -59,7 +57,6 @@ public class GrupoDAO {
             grupo.setSiapeCoordenador(g.getSiapeCoordenador());
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -74,7 +71,6 @@ public class GrupoDAO {
         ArrayList<Grupo> grupos = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
-        JpaUtil.close();
         return grupos;
     }
 
@@ -96,7 +92,6 @@ public class GrupoDAO {
             Query query = manager.createQuery("DELETE FROM Aluno_Grupo WHERE alg_gruCodigo = " + gruCodigo + ";");
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -111,7 +106,6 @@ public class GrupoDAO {
             Query query = manager.createQuery("DELETE FROM Servidor_Grupo WHERE seg_gruCodigo = " + gruCodigo + ";");
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -128,7 +122,6 @@ public class GrupoDAO {
         ArrayList<Grupo> grupos = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
-        JpaUtil.close();
         return grupos;
     }
 

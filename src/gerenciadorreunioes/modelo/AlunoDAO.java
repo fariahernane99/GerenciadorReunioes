@@ -25,7 +25,6 @@ public class AlunoDAO {
             manager.persist(a);
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -41,7 +40,6 @@ public class AlunoDAO {
             manager.remove(aluno);
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -59,7 +57,6 @@ public class AlunoDAO {
             aluno.setEmail(a.getEmail());
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -74,7 +71,6 @@ public class AlunoDAO {
         ArrayList<Aluno> alunos = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
-        JpaUtil.close();
         return alunos;
     }
 
@@ -88,7 +84,6 @@ public class AlunoDAO {
         ArrayList<Aluno> alunos = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
-        JpaUtil.close();
         return alunos;
     }
 
@@ -102,7 +97,6 @@ public class AlunoDAO {
         ArrayList<Aluno> alunos = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
-        JpaUtil.close();
         return alunos;
     }
 

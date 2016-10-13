@@ -25,7 +25,6 @@ public class ReuniaoDAO {
             manager.persist(r);
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -41,7 +40,6 @@ public class ReuniaoDAO {
             manager.remove(reuniao);
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -63,7 +61,6 @@ public class ReuniaoDAO {
             reuniao.setGrupo(r.getGrupo());
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -78,7 +75,6 @@ public class ReuniaoDAO {
         ArrayList<Reuniao> reunioes = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
-        JpaUtil.close();
         return reunioes;
     }
 
@@ -91,7 +87,6 @@ public class ReuniaoDAO {
         ArrayList<Reuniao> reunioes = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
-        JpaUtil.close();
         return reunioes;
     }
 

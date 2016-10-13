@@ -3,18 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/visao/RedigirAtaGUI.java</file>
-            <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/controle/ReuniaoControl.java</file>
-            <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/modelo/Pauta.java</file>
-            <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/modelo/Reuniao.java</file>
-            <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/modelo/PautaDAO.java</file>
-            <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/modelo/ReuniaoDAO.java</file>
-            <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/controle/GrupoControl.java</file>
+            <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/visao/GerenciarGruposGUI.java</file>
+            <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/modelo/Servidor.java</file>
             <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/modelo/Grupo.java</file>
-            <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/jpa/JpaUtil.java</file>
-            <file>file:/home/alunos/GerenciadorReunioes/src/teste.java</file>
-            <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/controle/PautaControl.java</file>
-            <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/controle/RedigirAtaControl.java</file>
+            <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/visao/LoginGUI.java</file>
         </group>
     </open-files>
 </project-private>

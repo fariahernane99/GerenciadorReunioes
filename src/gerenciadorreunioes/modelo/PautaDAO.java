@@ -25,7 +25,6 @@ public class PautaDAO {
             manager.persist(p);
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -41,7 +40,6 @@ public class PautaDAO {
             manager.remove(pauta);
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -60,7 +58,6 @@ public class PautaDAO {
             pauta.setAta(p.getAta());
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -75,7 +72,6 @@ public class PautaDAO {
         ArrayList<Pauta> pautas = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
-        JpaUtil.close();
         return pautas;
     }
 

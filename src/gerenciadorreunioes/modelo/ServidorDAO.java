@@ -16,7 +16,6 @@ public class ServidorDAO {
             manager.persist(s);
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -32,7 +31,6 @@ public class ServidorDAO {
             manager.remove(servidor);
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -55,7 +53,6 @@ public class ServidorDAO {
             servidor.setTelefone(s.getTelefone());
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -63,14 +60,15 @@ public class ServidorDAO {
     }
 
     public ArrayList<Servidor> getServidores() {
+        System.out.println("c1");
         EntityManager manager = JpaUtil.getEntityManager();
+        System.out.println("c2");
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
         Query query = manager.createQuery("from Servidor");
         ArrayList<Servidor> servidores = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
-        JpaUtil.close();
         return servidores;
     }
 
@@ -95,7 +93,6 @@ public class ServidorDAO {
         ArrayList<Servidor> servidores = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
-        JpaUtil.close();
         return servidores;
     }
 
@@ -129,7 +126,6 @@ public class ServidorDAO {
         ArrayList<Servidor> servidores = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
-        JpaUtil.close();
         return servidores;
     }
 
@@ -144,7 +140,6 @@ public class ServidorDAO {
         ArrayList<Servidor> servidores = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
-        JpaUtil.close();
         return servidores;
     }
 

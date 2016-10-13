@@ -25,7 +25,6 @@ public class AtaDAO {
             manager.persist(a);
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -41,7 +40,6 @@ public class AtaDAO {
             manager.remove(ata);
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -58,7 +56,6 @@ public class AtaDAO {
             ata.setReuniao(a.getReuniao());
             tx.commit();
             manager.close();
-            JpaUtil.close();
             return true;
         } catch (Exception e) {
             return false;
@@ -73,7 +70,6 @@ public class AtaDAO {
         ArrayList<Ata> atas = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
-        JpaUtil.close();
         return atas;
     }
 

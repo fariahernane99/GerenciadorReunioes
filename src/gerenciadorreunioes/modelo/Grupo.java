@@ -1,10 +1,13 @@
 package gerenciadorreunioes.modelo;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -15,6 +18,7 @@ public class Grupo implements Serializable {
     private String nome;
     private String descricao;
     private String siapeCoordenador;
+    private Set<Servidor> servidores = new HashSet<>();
 
     @Id
     @GeneratedValue
@@ -52,6 +56,15 @@ public class Grupo implements Serializable {
 
     public void setSiapeCoordenador(String siapeCoordenador) {
         this.siapeCoordenador = siapeCoordenador;
+    }
+
+    @ManyToMany(mappedBy = "grupos")
+    public Set<Servidor> getServidores() {
+        return servidores;
+    }
+
+    public void setServidores(Set<Servidor> servidores) {
+        this.servidores = servidores;
     }
 
 }

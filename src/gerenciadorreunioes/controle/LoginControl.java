@@ -33,7 +33,7 @@ public class LoginControl {
         senha = criptografar(senha);
         boolean encontrou = false;
         for (Servidor s : arrayServidores) {
-            if ((siape.equals(s.getSiape())) && (s.getSenha().equals(senha))) {
+            if ((siape.equals(s.getSiape())) && (s.getSenha().equalsIgnoreCase(senha))) {
                 servidorAux = s;
                 encontrou = true;
             }

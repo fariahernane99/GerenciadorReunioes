@@ -25,6 +25,7 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
     private ArrayList<Aluno> arrayAlunos;
     private Servidor serAux;
     private String antMatricula = null;
+    private boolean clicouLista = false;
 
     /**
      * Creates new form GerenciarAlunos
@@ -260,6 +261,7 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
         jButtonEditar.setEnabled(true);
         jButtonExcluir.setEnabled(true);
         jButtonCancelar.setEnabled(true);
+        clicouLista = true;
     }//GEN-LAST:event_jListAlunosMouseClicked
 
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
@@ -341,7 +343,11 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
     }
 
     private void cancelar() {
-        if (serAux.getSerCoordenador() == 1) {
+        if (clicouLista) {
+            resetaBotoes();
+            limparCampos();
+            clicouLista = false;
+        } else if (serAux.getSerCoordenador() == 1) {
             new TelaPrincipalCoordenadorGUI().setVisible(true);
             this.dispose();
         } else if (serAux.getSerDe() == 1) {

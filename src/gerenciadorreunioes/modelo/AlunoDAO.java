@@ -80,7 +80,7 @@ public class AlunoDAO {
         tx.begin();
         Query query = manager.createQuery("SELECT aluMatricula, aluNome, aluEmail FROM Aluno"
                 + " JOIN Aluno_Grupo JOIN Grupo WHERE aluMatricula = alg_aluMatricula AND"
-                + " alg_gruCodigo = gruCodigo AND gruCodigo = " + gruCodigo + ";");
+                + " alg_gruCodigo = gruCodigo AND gruCodigo = " + gruCodigo);
         ArrayList<Aluno> alunos = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
@@ -93,7 +93,7 @@ public class AlunoDAO {
         tx.begin();
         Query query = manager.createQuery("SELECT aluMatricula, aluNome, aluEmail FROM Aluno"
                 + " JOIN Aluno_Grupo JOIN Grupo JOIN Reuniao WHERE aluMatricula = alg_aluMatricula AND"
-                + " alg_gruCodigo = gruCodigo AND reu_gruCodigo = gruCodigo AND reuCodigo = " + reuCodigo + ";");
+                + " alg_gruCodigo = gruCodigo AND reu_gruCodigo = gruCodigo AND reuCodigo = " + reuCodigo);
         ArrayList<Aluno> alunos = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();

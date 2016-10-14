@@ -60,9 +60,7 @@ public class ServidorDAO {
     }
 
     public ArrayList<Servidor> getServidores() {
-        System.out.println("c1");
         EntityManager manager = JpaUtil.getEntityManager();
-        System.out.println("c2");
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
         Query query = manager.createQuery("from Servidor");
@@ -70,6 +68,15 @@ public class ServidorDAO {
         tx.commit();
         manager.close();
         return servidores;
+    }
+    
+    public Servidor getServidor(String siape){
+        Servidor serv = null;
+        for (Servidor ser : getServidores()) {
+            if(ser.getSiape().equals(siape))
+                serv = ser;
+        }
+        return serv;
     }
 
     public ArrayList<Servidor> getMembrosComuns() {
@@ -89,7 +96,7 @@ public class ServidorDAO {
         Query query = manager.createQuery("SELECT serSiape, serNome, serTelefone, serEmail,"
                 + " serSenha, serArea, serDe, serCoordenador, serResponsavelAta  FROM Servidor"
                 + " JOIN Servidor_Grupo JOIN Grupo WHERE serSiape = seg_serSiape AND"
-                + " seg_gruCodigo = gruCodigo AND gruCodigo = " + gruCodigo + ";");
+                + " seg_gruCodigo = gruCodigo AND gruCodigo = " + gruCodigo);
         ArrayList<Servidor> servidores = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
@@ -122,7 +129,7 @@ public class ServidorDAO {
         tx.begin();
         Query query = manager.createQuery("SELECT serSiape, serNome, serTelefone, serEmail, serSenha, serArea, serDe, serCoordenador, serResponsavelAta "
                 + "FROM Servidor JOIN Servidor_Grupo JOIN Grupo "
-                + "WHERE serSiape = seg_serSiape AND gruCodigo = seg_gruCodigo AND gruCodigo = " + gruCodigo + ";");
+                + "WHERE serSiape = seg_serSiape AND gruCodigo = seg_gruCodigo AND gruCodigo = " + gruCodigo);
         ArrayList<Servidor> servidores = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
@@ -136,7 +143,7 @@ public class ServidorDAO {
         Query query = manager.createQuery("SELECT serSiape, serNome, serTelefone, serEmail,"
                 + " serSenha, serArea, serDe, serCoordenador, serResponsavelAta  FROM Servidor"
                 + " JOIN Servidor_Grupo JOIN Grupo JOIN Reuniao WHERE serSiape = seg_serSiape AND"
-                + " seg_gruCodigo = gruCodigo AND reu_gruCodigo = gruCodigo AND reuCodigo = " + reuCodigo + ";");
+                + " seg_gruCodigo = gruCodigo AND reu_gruCodigo = gruCodigo AND reuCodigo = " + reuCodigo);
         ArrayList<Servidor> servidores = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();

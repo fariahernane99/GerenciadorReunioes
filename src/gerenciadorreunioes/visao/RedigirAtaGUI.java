@@ -207,8 +207,9 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
             r.setHorarioFim(jTextFieldHorarioFim.getText());
             r.setLocal(jTextFieldLocal.getText());
             reuniaoControl.atualiza(r);
+            serAux.setSerResponsavelAta(0);
+            servidorControl.atualiza(serAux);
             JOptionPane.showMessageDialog(this, "Ata finalizada !!!.");
-
         }
 
     }

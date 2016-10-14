@@ -83,7 +83,7 @@ public class ReuniaoDAO {
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
         Query query = manager.createQuery("SELECT * FROM Reuniao WHERE"
-                + " reu_gruCodigo = " + codGrupo + ";");
+                + " reu_gruCodigo = " + codGrupo);
         ArrayList<Reuniao> reunioes = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();

@@ -13,8 +13,10 @@ import gerenciadorreunioes.modelo.Aluno;
 import gerenciadorreunioes.modelo.Grupo;
 import gerenciadorreunioes.modelo.Servidor;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import org.hibernate.Hibernate;
 
 /**
  *
@@ -24,7 +26,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
 
     private GrupoControl grupoControl = new GrupoControl();
     private Grupo grupoAux;
-    private ServidorControl servControl = new ServidorControl();
+    private ServidorControl servidorControl = new ServidorControl();
     private Servidor serAux;
     private AlunoControl alunoControl = new AlunoControl();
     private LoginControl loginControl = new LoginControl();
@@ -477,7 +479,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     private String pegaSiapeDoCoordenador(String siapeENome) {
         String[] tupla = siapeENome.split(" - ");
         String siape = "";
-        arrayCoordenadores = servControl.getCoordenadores();
+        arrayCoordenadores = servidorControl.getCoordenadores();
         for (Servidor co : arrayCoordenadores) {
             if (co.getSiape().equals(tupla[0])) {
                 siape = co.getSiape();
@@ -529,27 +531,26 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     }
 
     private void cadastraCadaParticipanteAoGrupo(String codigo, String nome) {
-        Servidor servidor = new Servidor();
-        Aluno aluno = new Aluno();
-        boolean cadastrouServ = false, cadastrouAlu = false;
+        Servidor servidor = null;
+        Aluno aluno = null;
+        boolean cadastrouServ = false;
         for (Servidor ser : arrayServidores) {
             if ((ser.getSiape().equals(codigo)) && (ser.getNome().equals(nome))) {
                 servidor = ser;
                 cadastrouServ = true;
             }
         }
-        for (Aluno alu : arrayAlunos) {
-            if ((alu.getMatricula().equals(codigo)) && (alu.getNome().equals(nome))) {
-                aluno = alu;
-                cadastrouAlu = true;
-            }
-        }
         if (cadastrouServ) {
-            servidor.getGrupos().add(grupoAux);//como associar um grupo à um aluno ?
-        } else if (cadastrouAlu) {
-            aluno.getGrupos().add(grupoAux);
+            grupoAux.getAlunos().add(aluno);
+            servidorControl.atualiza(servidor);
         } else {
-            JOptionPane.showMessageDialog(this, "Não foi possível cadastrar o participante de siape/matrícula: " + codigo + "!");
+            for (Aluno alu : arrayAlunos) {
+                if ((alu.getMatricula().equals(codigo)) && (alu.getNome().equals(nome))) {
+                    aluno = alu;
+                }
+                grupoAux.getServidores().add(servidor);
+                alunoControl.atualiza(aluno, aluno.getMatricula());
+            }
         }
     }
 
@@ -573,7 +574,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     private void atualizaComboCoordenadores(Servidor serAux) {
         jComboBoxCoordenadores.removeAllItems();
         if (serAux.getSerDe() == 1) {
-            ArrayList<String> arrayString = servControl.pegaSiapeNomeCoordenadores(serAux);
+            ArrayList<String> arrayString = servidorControl.pegaSiapeNomeCoordenadores(serAux);
             for (String s : arrayString) {
                 jComboBoxCoordenadores.addItem(s);
             }
@@ -584,13 +585,13 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     }
 
     private void preencheVetoresDeServidoresEAlunos() {
-        arrayServidores = servControl.lista();
+        arrayServidores = servidorControl.lista();
         arrayAlunos = alunoControl.getAlunos();
     }
 
     private void atualizaComboServidoresAlunos() {
         jComboBoxParticipantes.removeAllItems();
-        ArrayList<String> arrayString = servControl.pegaSiapeNomeServidores();
+        ArrayList<String> arrayString = servidorControl.pegaSiapeNomeServidores();
         for (String s : arrayString) {
             jComboBoxParticipantes.addItem(s);
         }
@@ -624,19 +625,20 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     }
 
     private void jogaTodosParticipantesJList(int gruCodigo) {
-        ArrayList<Servidor> arrayServidores = servControl.getServidoresDeUmGrupo(gruCodigo);
-        ArrayList<Aluno> arrayAlunos = alunoControl.getAlunosDeUmGrupo(gruCodigo);
+        grupoAux = pegaGrupoSelecionadoNaLista();
+        List<Servidor> vetorServidores = grupoAux.getServidores();
+        List<Aluno> vetorAlunos = grupoAux.getAlunos();
         modelo.removeAllElements();
-        for (int i = 0; i < arrayServidores.size(); i++) {
-            for (Servidor s : arrayServidores) {
-                if (s.getSiape().equals(arrayServidores.get(i).getSiape())) {
+        for (int i = 0; i < vetorServidores.size(); i++) {
+            for (Servidor s : vetorServidores) {
+                if (s.getSiape().equals(vetorServidores.get(i).getSiape())) {
                     modelo.addElement(s.getSiape() + " - " + s.getNome());
                 }
             }
         }
-        for (int i = 0; i < arrayAlunos.size(); i++) {
-            for (Aluno a : arrayAlunos) {
-                if (a.getMatricula().equals(arrayAlunos.get(i).getMatricula())) {
+        for (int i = 0; i < vetorAlunos.size(); i++) {
+            for (Aluno a : vetorAlunos) {
+                if (a.getMatricula().equals(vetorAlunos.get(i).getMatricula())) {
                     modelo.addElement(a.getMatricula() + " - " + a.getNome());
                 }
             }

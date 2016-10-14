@@ -181,29 +181,24 @@ public class TelaPrincipalDeGUI extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonSair))
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButtonSair)))
+                .addGap(24, 24, 24)
+                .addComponent(jLabel2)
                 .addContainerGap(29, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButtonSair, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButtonSair)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
         jMenuGerenciar.setText("Gerenciar");
@@ -318,37 +313,10 @@ public class TelaPrincipalDeGUI extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jMenuItemGerenciarGruposActionPerformed
 
-    private void jButtonGerenciarGruposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerenciarGruposActionPerformed
-        new GerenciarGruposGUI().setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButtonGerenciarGruposActionPerformed
-
-    private void jButtonGerenciarServidoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerenciarServidoresActionPerformed
-        new GerenciarServidoresGUI().setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButtonGerenciarServidoresActionPerformed
-
     private void jMenuItemGerenciarReunioesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGerenciarReunioesActionPerformed
         new GerenciarReunioesGUI().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jMenuItemGerenciarReunioesActionPerformed
-
-    private void jButtonGerenciarReunioesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerenciarReunioesActionPerformed
-        new GerenciarReunioesGUI().setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButtonGerenciarReunioesActionPerformed
-
-    private void jButtonMudarStatusATAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMudarStatusATAActionPerformed
-        JOptionPane.showMessageDialog(this, "Ainda não foi implementado !!!");
-    }//GEN-LAST:event_jButtonMudarStatusATAActionPerformed
-
-    private void jButtonImprimirAtaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImprimirAtaActionPerformed
-        JOptionPane.showMessageDialog(this, "Ainda não foi implementado !!!");
-    }//GEN-LAST:event_jButtonImprimirAtaActionPerformed
-
-    private void jButtonBuscarATAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarATAActionPerformed
-        JOptionPane.showMessageDialog(this, "Ainda não foi implementado !!!");
-    }//GEN-LAST:event_jButtonBuscarATAActionPerformed
 
     private void jMenuItemMudaStatusATAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemMudaStatusATAActionPerformed
         JOptionPane.showMessageDialog(this, "Ainda não foi implementado !!!");
@@ -367,11 +335,6 @@ public class TelaPrincipalDeGUI extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void jButtonGerenciarAlunosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerenciarAlunosActionPerformed
-        new GerenciarAlunosGUI().setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButtonGerenciarAlunosActionPerformed
-
     private void jMenuItemRedigirATAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRedigirATAActionPerformed
         new RedigirAtaGUI().setVisible(true);
         this.dispose();
@@ -385,6 +348,38 @@ public class TelaPrincipalDeGUI extends javax.swing.JFrame {
         this.dispose();
         new LoginGUI().setVisible(true);
     }//GEN-LAST:event_jButtonSairActionPerformed
+
+    private void jButtonBuscarATAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarATAActionPerformed
+        JOptionPane.showMessageDialog(this, "Ainda não foi implementado !!!");
+    }//GEN-LAST:event_jButtonBuscarATAActionPerformed
+
+    private void jButtonImprimirAtaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImprimirAtaActionPerformed
+        JOptionPane.showMessageDialog(this, "Ainda não foi implementado !!!");
+    }//GEN-LAST:event_jButtonImprimirAtaActionPerformed
+
+    private void jButtonMudarStatusATAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMudarStatusATAActionPerformed
+        JOptionPane.showMessageDialog(this, "Ainda não foi implementado !!!");
+    }//GEN-LAST:event_jButtonMudarStatusATAActionPerformed
+
+    private void jButtonGerenciarAlunosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerenciarAlunosActionPerformed
+        new GerenciarAlunosGUI().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButtonGerenciarAlunosActionPerformed
+
+    private void jButtonGerenciarReunioesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerenciarReunioesActionPerformed
+        new GerenciarReunioesGUI().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButtonGerenciarReunioesActionPerformed
+
+    private void jButtonGerenciarServidoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerenciarServidoresActionPerformed
+        new GerenciarServidoresGUI().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButtonGerenciarServidoresActionPerformed
+
+    private void jButtonGerenciarGruposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerenciarGruposActionPerformed
+        new GerenciarGruposGUI().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButtonGerenciarGruposActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

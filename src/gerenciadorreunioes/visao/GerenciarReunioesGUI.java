@@ -73,7 +73,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
         }
     }
 
-    public void listaReunioes() {
+    private void listaReunioes() {
         Grupo aux = reuniaoControl.pesquisaGrupo(serAux.getSiape());
         ArrayList<Reuniao> reunioes = reuniaoControl.reunioes(aux.getCodigo());
         DefaultListModel e = new DefaultListModel();
@@ -84,7 +84,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
         jListReuniões.setModel(e);
     }
 
-    public void deletarReuniao() {
+    private void deletarReuniao() {
         String selecionado = (String) jListReuniões.getSelectedValue();
         String[] pegaCodigo = selecionado.split(" - ");
         int cod = Integer.parseInt(pegaCodigo[0]);
@@ -502,6 +502,9 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
                 p.setEncaminhamento(" - ");
                 pautaControl.adiciona(p);
             }
+            Servidor responsavelAta = servControl.getServidor(pegaCodigoSelecionadoNaCombo());
+            responsavelAta.setSerResponsavelAta(1);
+            servControl.atualiza(responsavelAta);
             JOptionPane.showMessageDialog(this, "Reunião: " + x.getNome() + " cadastrada com sucesso !!!");
         }
     }
@@ -530,6 +533,13 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             }
         }
         return aux;
+    }
+
+    private String pegaCodigoSelecionadoNaCombo() {
+        String selecionado = (String) jComboBoxResponsavelATA.getSelectedItem();
+        String[] pegaCodigo = selecionado.split(" - ");
+        String siape = pegaCodigo[0];
+        return siape;
     }
 
 }

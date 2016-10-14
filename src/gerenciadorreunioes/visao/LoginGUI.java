@@ -1,8 +1,6 @@
 package gerenciadorreunioes.visao;
 
 import gerenciadorreunioes.controle.LoginControl;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import javax.swing.JOptionPane;
 
 /*
@@ -77,7 +75,7 @@ public class LoginGUI extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButtonSair);
-        jButtonSair.setBounds(100, 170, 73, 23);
+        jButtonSair.setBounds(100, 170, 73, 30);
 
         jButtonEntrar.setText("Entrar");
         jButtonEntrar.addActionListener(new java.awt.event.ActionListener() {
@@ -86,7 +84,7 @@ public class LoginGUI extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButtonEntrar);
-        jButtonEntrar.setBounds(20, 170, 63, 23);
+        jButtonEntrar.setBounds(20, 170, 70, 30);
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/logoMenor.png"))); // NOI18N
         jPanel1.add(jLabel3);

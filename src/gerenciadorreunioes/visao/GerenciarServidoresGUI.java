@@ -24,6 +24,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
     private ArrayList<Servidor> arrayServ;
     private Servidor serAux;
     private Servidor aux;
+    private boolean clicouLista = false;
 
     /**
      * Creates new form InserirMembro
@@ -294,8 +295,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
-        new TelaPrincipalDeGUI().setVisible(true);
-        this.dispose();
+        cancelar();
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jButtonCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarActionPerformed
@@ -340,6 +340,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
         jButtonEditar.setEnabled(true);
         jButtonExcluir.setEnabled(true);
         jButtonCancelar.setEnabled(true);
+        clicouLista = true;
     }//GEN-LAST:event_jList1MouseClicked
 
     /**
@@ -437,6 +438,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
                 limpaCampos();
             } else {
                 JOptionPane.showMessageDialog(this, "Não foi possível atualizar esse servidor !!!");
+                limpaCampos();
             }
         }
     }
@@ -449,6 +451,26 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
             limpaCampos();
         } else {
             JOptionPane.showMessageDialog(this, "Não foi possível excluir esse servidor !!!");
+        }
+    }
+    
+    private void cancelar() {
+        if (clicouLista) {
+            resetaBotoes();
+            limpaCampos();
+            clicouLista = false;
+        } else if (serAux.getSerCoordenador() == 1) {
+            new TelaPrincipalCoordenadorGUI().setVisible(true);
+            this.dispose();
+        } else if (serAux.getSerDe() == 1) {
+            new TelaPrincipalDeGUI().setVisible(true);
+            this.dispose();
+        } else if (serAux.getSerResponsavelAta() == 1) {
+            new TelaPrincipalServidorComumGUI(1).setVisible(true);
+            this.dispose();
+        } else {
+            new TelaPrincipalServidorComumGUI().setVisible(true);
+            this.dispose();
         }
     }
 

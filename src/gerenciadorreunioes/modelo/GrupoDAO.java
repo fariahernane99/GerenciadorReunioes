@@ -55,6 +55,8 @@ public class GrupoDAO {
             grupo.setDescricao(g.getDescricao());
             grupo.setNome(g.getNome());
             grupo.setSiapeCoordenador(g.getSiapeCoordenador());
+            grupo.setAlunos(g.getAlunos());
+            grupo.setServidores(g.getServidores());
             tx.commit();
             manager.close();
             return true;
@@ -89,7 +91,7 @@ public class GrupoDAO {
             EntityManager manager = JpaUtil.getEntityManager();
             EntityTransaction tx = manager.getTransaction();
             tx.begin();
-            Query query = manager.createQuery("DELETE FROM Aluno_Grupo WHERE alg_gruCodigo = " + gruCodigo + ";");
+            Query query = manager.createQuery("DELETE FROM Aluno_Grupo WHERE alg_gruCodigo = " + gruCodigo);
             tx.commit();
             manager.close();
             return true;
@@ -97,13 +99,13 @@ public class GrupoDAO {
             return false;
         }
     }
-    
+
     public boolean removeTodosServidoresDoGrupo(int gruCodigo) {
         try {
             EntityManager manager = JpaUtil.getEntityManager();
             EntityTransaction tx = manager.getTransaction();
             tx.begin();
-            Query query = manager.createQuery("DELETE FROM Servidor_Grupo WHERE seg_gruCodigo = " + gruCodigo + ";");
+            Query query = manager.createQuery("DELETE FROM Servidor_Grupo WHERE seg_gruCodigo = " + gruCodigo);
             tx.commit();
             manager.close();
             return true;
@@ -111,18 +113,28 @@ public class GrupoDAO {
             return false;
         }
     }
-    
+
     public ArrayList<Grupo> getGruposDoResponsavelAta(String siapeResponsavelAta) {
         EntityManager manager = JpaUtil.getEntityManager();
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
         Query query = manager.createQuery("SELECT gruCodigo, gruNome, gruDescricao,"
                 + " gruSiapeCoordenador FROM Grupo JOIN Reuniao WHERE gruCodigo ="
-                + " reu_gruCodigo AND reuSiapeResponsavelAta = '" + siapeResponsavelAta + "';");
+                + " reu_gruCodigo AND reuSiapeResponsavelAta = '" + siapeResponsavelAta + "'");
         ArrayList<Grupo> grupos = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
         return grupos;
+    }
+
+    public Grupo getGrupo(int gruCodigo) {
+        Grupo grupo = null;
+        for (Grupo gru : getGrupos()) {
+            if (gru.getCodigo() == gruCodigo) {
+                grupo = gru;
+            }
+        }
+        return grupo;
     }
 
 }

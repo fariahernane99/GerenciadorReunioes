@@ -1,8 +1,6 @@
 package gerenciadorreunioes.modelo;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.*;
 
 @Entity
@@ -18,7 +16,6 @@ public class Servidor implements Serializable {
     private int serResponsavelAta;
     private int serCoordenador;
     private int serDe;
-    private Set<Grupo> grupos = new HashSet<>();
 
     @Id
     @Column(name = "serSiape", nullable = false)
@@ -100,16 +97,6 @@ public class Servidor implements Serializable {
 
     public void setArea(String area) {
         this.area = area;
-    }
-
-    @ManyToMany
-    @JoinTable(name = "Servidor_Grupo", joinColumns = @JoinColumn(name = "seg_serSiape"), inverseJoinColumns = @JoinColumn(name = "seg_gruCodigo"))
-    public Set<Grupo> getGrupos() {
-        return grupos;
-    }
-
-    public void setGrupos(Set<Grupo> grupos) {
-        this.grupos = grupos;
     }
 
 }

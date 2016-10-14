@@ -151,5 +151,9 @@ public class ServidorControl {
     public ArrayList<Servidor> getServidoresDaReuniao(int reuCodigo) {
         return servidorDao.getServidoresDaReuniao(reuCodigo);
     }
+    
+    public Servidor getServidor(String siape){
+        return servidorDao.getServidor(siape);
+    }
 
 }

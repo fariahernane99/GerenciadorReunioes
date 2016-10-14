@@ -1,12 +1,15 @@
 package gerenciadorreunioes.modelo;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -18,7 +21,8 @@ public class Grupo implements Serializable {
     private String nome;
     private String descricao;
     private String siapeCoordenador;
-    private Set<Servidor> servidores = new HashSet<>();
+    private List<Aluno> alunos = new ArrayList<>();
+    private List<Servidor> servidores = new ArrayList<>();
 
     @Id
     @GeneratedValue
@@ -58,12 +62,23 @@ public class Grupo implements Serializable {
         this.siapeCoordenador = siapeCoordenador;
     }
 
-    @ManyToMany(mappedBy = "grupos")
-    public Set<Servidor> getServidores() {
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "Aluno_Grupo", joinColumns = @JoinColumn(name = "alg_aluMatricula"), inverseJoinColumns = @JoinColumn(name = "alg_gruCodigo"))
+    public List<Aluno> getAlunos() {
+        return alunos;
+    }
+
+    public void setAlunos(List<Aluno> alunos) {
+        this.alunos = alunos;
+    }
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "Servidor_Grupo", joinColumns = @JoinColumn(name = "seg_serSiape"), inverseJoinColumns = @JoinColumn(name = "seg_gruCodigo"))
+    public List<Servidor> getServidores() {
         return servidores;
     }
 
-    public void setServidores(Set<Servidor> servidores) {
+    public void setServidores(List<Servidor> servidores) {
         this.servidores = servidores;
     }
 

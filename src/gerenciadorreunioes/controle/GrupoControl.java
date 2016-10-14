@@ -111,4 +111,8 @@ public class GrupoControl {
     public ArrayList<Grupo> pesquisaGruposDoResponsavelAta(String siape) {
         return grupoDao.getGruposDoResponsavelAta(siape);
     }
+
+    public Grupo getGrupo(int gruCodigo) {
+        return grupoDao.getGrupo(gruCodigo);
+    }
 }

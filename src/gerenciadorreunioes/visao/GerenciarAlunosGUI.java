@@ -256,7 +256,6 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
 
     private void jListAlunosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListAlunosMouseClicked
         jogaElementos();
-        antMatricula = pegaAntigaMatricula();
         jButtonCadastrar.setEnabled(false);
         jButtonEditar.setEnabled(true);
         jButtonExcluir.setEnabled(true);
@@ -316,21 +315,16 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
         if (vazio) {
             JOptionPane.showMessageDialog(this, "Nenhum campo pode ficar vazio !!!");
         } else {
-            String v2 = alunoControl.verificaMatricula(antMatricula, jTextFieldMatricula.getText());
-            if (v2.equals("existe")) {
-                JOptionPane.showMessageDialog(this, "Já existe aluno com esta matrícula !!!");
+            Aluno alu = new Aluno();
+            alu.setMatricula(jTextFieldMatricula.getText());
+            alu.setNome(jTextFieldNome.getText());
+            alu.setEmail(jTextFieldEmail.getText());
+            boolean verifica = alunoControl.atualiza(alu);
+            limparCampos();
+            if (verifica) {
+                JOptionPane.showMessageDialog(this, "O aluno foi atualizado com sucesso !!!");
             } else {
-                Aluno alu = new Aluno();
-                alu.setMatricula(jTextFieldMatricula.getText());
-                alu.setNome(jTextFieldNome.getText());
-                alu.setEmail(jTextFieldEmail.getText());
-                boolean verifica = alunoControl.atualiza(alu, antMatricula);
-                limparCampos();
-                if (verifica) {
-                    JOptionPane.showMessageDialog(this, "O aluno foi atualizado com sucesso !!!");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Não foi possível atualizar esse aluno !!!");
-                }
+                JOptionPane.showMessageDialog(this, "Não foi possível atualizar esse aluno !!!");
             }
         }
     }

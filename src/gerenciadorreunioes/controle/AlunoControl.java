@@ -22,8 +22,8 @@ public class AlunoControl {
         return alunoDao.adiciona(x);
     }
 
-    public boolean atualiza(Aluno x, String antMatricula) {
-        return alunoDao.atualizar(x, antMatricula);
+    public boolean atualiza(Aluno x) {
+        return alunoDao.atualizar(x);
     }
 
     public boolean deleta(String matricula) {
@@ -65,26 +65,6 @@ public class AlunoControl {
             igual = true;
         }
         return igual;
-    }
-
-    public String verificaMatricula(String mVelha, String mNova) {
-        String mensagem = null;
-        boolean mesmaMatricula = false;
-        boolean jaExisteMatricula = false;
-        boolean igual = verificaMatriculaIgual(mVelha, mNova);
-        if (igual) {
-            mesmaMatricula = true;
-        } else {
-            jaExisteMatricula = verificaMatriculaExistente(mNova);
-        }
-        if (mesmaMatricula) {
-            mensagem = "igual";
-        } else if (jaExisteMatricula) {
-            mensagem = "existe";
-        } else {
-            mensagem = "";
-        }
-        return mensagem;
     }
 
     public boolean verificaMatriculaExistente(String mNova) {

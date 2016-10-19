@@ -48,7 +48,6 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         atualizaComboCoordenadores(serAux);
         atualizaComboServidoresAlunos();
         resetaBotoes();
-        resetaCampos();
     }
 
     /**
@@ -541,22 +540,24 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
             }
         }
         if (cadastrouServ) {
-            grupoAux.getAlunos().add(aluno);
+            grupoAux.getServidores().add(servidor);
             servidorControl.atualiza(servidor);
         } else {
             for (Aluno alu : arrayAlunos) {
                 if ((alu.getMatricula().equals(codigo)) && (alu.getNome().equals(nome))) {
                     aluno = alu;
                 }
-                grupoAux.getServidores().add(servidor);
-                alunoControl.atualiza(aluno, aluno.getMatricula());
+                grupoAux.getAlunos().add(aluno);
+                alunoControl.atualiza(aluno);
             }
         }
     }
 
     private void jogaElementosNosCampos() {
+        System.out.println("\n\n Entrou no jogaElementosNosCampos()\n\n");
         pegaGrupoSelecionadoNaLista();
         if (jListGrupos.getModel().getSize() > 0) {
+            System.out.println("\n\n jListGrupos.getModel().getSize() > 0 \n\n");
             jTextFieldNome.setText(grupoAux.getNome());
             jTextAreaDescricao.setText(grupoAux.getDescricao());
             jButtonCadastrar.setEnabled(false);
@@ -625,10 +626,22 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     }
 
     private void jogaTodosParticipantesJList(int gruCodigo) {
-        grupoAux = pegaGrupoSelecionadoNaLista();
-        List<Servidor> vetorServidores = grupoAux.getServidores();
-        List<Aluno> vetorAlunos = grupoAux.getAlunos();
-        modelo.removeAllElements();
+        System.out.println("\n\n jogaTodosParticipantesJList \n\n");
+        modelo.removeAllElements()
+        for (Servidor ser : grupoAux.getServidores()) {
+            System.out.println("\n\n----------"
+                    + "--------------"
+                    + "--------------"
+                    + "--------------\n\n" + ser.getSiape() + " - " + ser.getNome());
+            modelo.addElement(ser.getSiape() + " - " + ser.getNome());
+        }
+        for (Aluno alu : grupoAux.getAlunos()) {
+            System.out.println("\n\n----------"
+                    + "--------------"
+                    + "--------------"
+                    + "--------------\n\n" + alu.getMatricula() + " - " + alu.getNome());
+            modelo.addElement(alu.getMatricula() + " - " + alu.getNome());
+        }/*
         for (int i = 0; i < vetorServidores.size(); i++) {
             for (Servidor s : vetorServidores) {
                 if (s.getSiape().equals(vetorServidores.get(i).getSiape())) {
@@ -642,8 +655,9 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
                     modelo.addElement(a.getMatricula() + " - " + a.getNome());
                 }
             }
-        }
+        }*/
         jListParticipantes.setModel(modelo);
+        
     }
 
 }

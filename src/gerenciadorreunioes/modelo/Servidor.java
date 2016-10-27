@@ -1,6 +1,8 @@
 package gerenciadorreunioes.modelo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -16,6 +18,7 @@ public class Servidor implements Serializable {
     private int serResponsavelAta;
     private int serCoordenador;
     private int serDe;
+    private List<Grupo> grupo = new ArrayList<>();
 
     @Id
     @Column(name = "serSiape", nullable = false)
@@ -97,6 +100,15 @@ public class Servidor implements Serializable {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    @ManyToMany(mappedBy = "servidores")
+    public List<Grupo> getGrupo() {
+        return grupo;
+    }
+
+    public void setGrupo(List<Grupo> grupo) {
+        this.grupo = grupo;
     }
 
 }

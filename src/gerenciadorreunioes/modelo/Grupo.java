@@ -3,13 +3,12 @@ package gerenciadorreunioes.modelo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -62,8 +61,7 @@ public class Grupo implements Serializable {
         this.siapeCoordenador = siapeCoordenador;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "Aluno_Grupo", joinColumns = @JoinColumn(name = "alg_aluMatricula"), inverseJoinColumns = @JoinColumn(name = "alg_gruCodigo"))
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     public List<Aluno> getAlunos() {
         return alunos;
     }
@@ -72,8 +70,7 @@ public class Grupo implements Serializable {
         this.alunos = alunos;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "Servidor_Grupo", joinColumns = @JoinColumn(name = "seg_serSiape"), inverseJoinColumns = @JoinColumn(name = "seg_gruCodigo"))
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     public List<Servidor> getServidores() {
         return servidores;
     }

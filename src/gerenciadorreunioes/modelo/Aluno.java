@@ -6,6 +6,8 @@
 package gerenciadorreunioes.modelo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 
 /**
@@ -19,6 +21,7 @@ public class Aluno implements Serializable {
     private String matricula;
     private String nome;
     private String email;
+    private List<Grupo> grupo = new ArrayList<>();
 
     @Id
     @Column(name = "aluMatricula", nullable = false)
@@ -46,5 +49,14 @@ public class Aluno implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @ManyToMany(mappedBy = "alunos")
+    public List<Grupo> getGrupo() {
+        return grupo;
+    }
+
+    public void setGrupo(List<Grupo> grupo) {
+        this.grupo = grupo;
     }
 }

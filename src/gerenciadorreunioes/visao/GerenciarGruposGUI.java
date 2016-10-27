@@ -13,10 +13,8 @@ import gerenciadorreunioes.modelo.Aluno;
 import gerenciadorreunioes.modelo.Grupo;
 import gerenciadorreunioes.modelo.Servidor;
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import org.hibernate.Hibernate;
 
 /**
  *
@@ -35,6 +33,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     private ArrayList<Servidor> arrayServidores;
     private ArrayList<Servidor> arrayCoordenadores;
     private ArrayList<Aluno> arrayAlunos;
+    private boolean clicouLista = false;
 
     /**
      * Creates new form CadastroDeGrupo
@@ -326,8 +325,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCadastrarActionPerformed
 
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
-        loginControl.abreTelaPrincipalDoServidor(serAux.getSiape(), serAux.getSenha());
-        this.dispose();
+        cancelar();
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirActionPerformed
@@ -338,6 +336,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonExcluirActionPerformed
 
     private void jListGruposMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListGruposMouseClicked
+        clicouLista = true;
         jogaElementosNosCampos();
     }//GEN-LAST:event_jListGruposMouseClicked
 
@@ -434,13 +433,15 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         if (vazio) {
             JOptionPane.showMessageDialog(this, "O campo 'nome' não pode ficar vazio !!!");
         } else {
+            pegaGrupoSelecionadoNaLista();
             Grupo x = new Grupo();
-            x.setCodigo(pegaGrupoSelecionadoNaLista().getCodigo());
+            x.setCodigo(grupoAux.getCodigo());
             x.setNome(jTextFieldNome.getText());
             x.setDescricao(jTextAreaDescricao.getText());
             x.setSiapeCoordenador(pegaSiapeDoCoordenador((String) jComboBoxCoordenadores.getSelectedItem()));
             grupoControl.removeTodosServidoresDoGrupo(x.getCodigo());
-            grupoControl.removeTodosAlunosDoGrupo(x.getCodigo());
+            grupoControl.removeTodosAlunosDoGrupo(x.getCodigo())
+                    //está duplicando no bd
             boolean verifica = grupoControl.atualiza(x);
             if (verifica) {
                 JOptionPane.showMessageDialog(this, "Grupo atualizado com sucesso !!!");
@@ -487,7 +488,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         return siape;
     }
 
-    private Grupo pegaGrupoSelecionadoNaLista() {
+    private void pegaGrupoSelecionadoNaLista() {
         String selecionado = (String) jListGrupos.getSelectedValue();
         if (selecionado != null) {
             String[] pegaCodigo = selecionado.split(" - ");
@@ -499,7 +500,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
                 }
             }
         }
-        return grupoAux;
+        System.out.println(grupoAux.getNome());
     }
 
     private void insereParticipante() {
@@ -524,7 +525,9 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
 
     private void cadastraTodosOsParticipantes() {
         for (int i = 0; i < jListParticipantes.getModel().getSize(); i++) {
+            System.out.println("Tamanho do model dos participantes: " + jListParticipantes.getModel().getSize());
             String[] elemento = jListParticipantes.getModel().getElementAt(i).split(" - ");
+            System.out.println("\n\n" + elemento[0] + "\n" + elemento[1]);
             cadastraCadaParticipanteAoGrupo(elemento[0], elemento[1]);
         }
     }
@@ -541,14 +544,14 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         }
         if (cadastrouServ) {
             grupoAux.getServidores().add(servidor);
-            servidorControl.atualiza(servidor);
+            grupoControl.atualiza(grupoAux);
         } else {
             for (Aluno alu : arrayAlunos) {
                 if ((alu.getMatricula().equals(codigo)) && (alu.getNome().equals(nome))) {
                     aluno = alu;
+                    grupoAux.getAlunos().add(aluno);
+                    grupoControl.atualiza(grupoAux);
                 }
-                grupoAux.getAlunos().add(aluno);
-                alunoControl.atualiza(aluno);
             }
         }
     }
@@ -627,20 +630,17 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
 
     private void jogaTodosParticipantesJList(int gruCodigo) {
         System.out.println("\n\n jogaTodosParticipantesJList \n\n");
-        modelo.removeAllElements()
+        modelo.removeAllElements();
+        System.out.println("\n\n" + modelo.size() + "\n\n");
         for (Servidor ser : grupoAux.getServidores()) {
-            System.out.println("\n\n----------"
-                    + "--------------"
-                    + "--------------"
-                    + "--------------\n\n" + ser.getSiape() + " - " + ser.getNome());
+            System.out.println("\n\n SSSSSSSSSSSSSSSSSSSSS \n\n" + ser.getSiape() + " - " + ser.getNome());
             modelo.addElement(ser.getSiape() + " - " + ser.getNome());
+            System.out.println("\n\n" + modelo.size() + "\n\n");
         }
         for (Aluno alu : grupoAux.getAlunos()) {
-            System.out.println("\n\n----------"
-                    + "--------------"
-                    + "--------------"
-                    + "--------------\n\n" + alu.getMatricula() + " - " + alu.getNome());
+            System.out.println("\n\n AAAAAAAAAAAAAAAAAAAAA \n\n" + alu.getMatricula() + " - " + alu.getNome());
             modelo.addElement(alu.getMatricula() + " - " + alu.getNome());
+            System.out.println("\n\n" + modelo.size() + "\n\n");
         }/*
         for (int i = 0; i < vetorServidores.size(); i++) {
             for (Servidor s : vetorServidores) {
@@ -657,7 +657,31 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
             }
         }*/
         jListParticipantes.setModel(modelo);
-        
+
+    }
+
+    private void cancelar() {
+        if (clicouLista) {
+            resetaBotoes();
+            limpaCombosLista();
+            modelo.removeAllElements();
+            jListParticipantes.setModel(modelo);
+            jTextFieldNome.setText("");
+            jTextAreaDescricao.setText("");
+            clicouLista = false;
+        } else if (serAux.getSerCoordenador() == 1) {
+            new TelaPrincipalCoordenadorGUI().setVisible(true);
+            this.dispose();
+        } else if (serAux.getSerDe() == 1) {
+            new TelaPrincipalDeGUI().setVisible(true);
+            this.dispose();
+        } else if (serAux.getSerResponsavelAta() == 1) {
+            new TelaPrincipalServidorComumGUI(1).setVisible(true);
+            this.dispose();
+        } else {
+            new TelaPrincipalServidorComumGUI().setVisible(true);
+            this.dispose();
+        }
     }
 
 }

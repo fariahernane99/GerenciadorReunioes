@@ -25,13 +25,10 @@ public class LoginControl {
     private ArrayList<Servidor> arrayServidores = new ArrayList();
     private static MessageDigest md = null;
 
-    public LoginControl() {
-        arrayServidores = servidorDAO.getServidores();
-    }
-
     public boolean verificaLogin(String siape, String senha) {
         senha = criptografar(senha);
         boolean encontrou = false;
+        arrayServidores = servidorDAO.getServidores();
         for (Servidor s : arrayServidores) {
             if ((siape.equals(s.getSiape())) && (s.getSenha().equalsIgnoreCase(senha))) {
                 servidorAux = s;
@@ -45,7 +42,6 @@ public class LoginControl {
         boolean achou = false;
         boolean encontrou = verificaLogin(siape, senha);
         if (encontrou) {
-            //se o servidor for da Diretoria de Ensino abre a tela da DE
             if (servidorAux.getSerDe() == 1) {
                 TelaPrincipalDeGUI telaPrincipal = new TelaPrincipalDeGUI();
                 telaPrincipal.setVisible(true);

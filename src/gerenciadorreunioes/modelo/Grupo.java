@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -62,6 +64,7 @@ public class Grupo implements Serializable {
     }
 
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinTable(name = "Aluno_Grupo", joinColumns = @JoinColumn(name = "gruCodigo"), inverseJoinColumns = @JoinColumn(name = "aluMatricula"))
     public List<Aluno> getAlunos() {
         return alunos;
     }
@@ -71,6 +74,7 @@ public class Grupo implements Serializable {
     }
 
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinTable(name = "Servidor_Grupo", joinColumns = @JoinColumn(name = "gruCodigo"), inverseJoinColumns = @JoinColumn(name = "serSiape"))
     public List<Servidor> getServidores() {
         return servidores;
     }

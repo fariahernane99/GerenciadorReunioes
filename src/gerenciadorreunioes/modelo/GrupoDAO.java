@@ -54,8 +54,11 @@ public class GrupoDAO {
             Grupo grupo = manager.find(Grupo.class, g.getCodigo());
             grupo.setDescricao(g.getDescricao());
             grupo.setNome(g.getNome());
-            grupo.setSiapeCoordenador(g.getSiapeCoordenador());
-            grupo.setAlunos(g.getAlunos());
+            grupo.setSiapeCoordenador(g.getSiapeCoordenador());           
+            grupo.setAlunos(g.getAlunos());                        
+            for (Servidor object : g.getServidores()) {
+               
+            }
             grupo.setServidores(g.getServidores());
             tx.commit();
             manager.close();

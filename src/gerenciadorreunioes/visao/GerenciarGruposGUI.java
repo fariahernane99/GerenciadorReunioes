@@ -439,9 +439,6 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
             x.setNome(jTextFieldNome.getText());
             x.setDescricao(jTextAreaDescricao.getText());
             x.setSiapeCoordenador(pegaSiapeDoCoordenador((String) jComboBoxCoordenadores.getSelectedItem()));
-            grupoControl.removeTodosServidoresDoGrupo(x.getCodigo());
-            grupoControl.removeTodosAlunosDoGrupo(x.getCodigo())
-                    //está duplicando no bd
             boolean verifica = grupoControl.atualiza(x);
             if (verifica) {
                 JOptionPane.showMessageDialog(this, "Grupo atualizado com sucesso !!!");
@@ -524,18 +521,23 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     }
 
     private void cadastraTodosOsParticipantes() {
+        grupoControl.removeTodosServidoresDoGrupo(grupoAux.getCodigo());
+        grupoControl.removeTodosAlunosDoGrupo(grupoAux.getCodigo());      
+        grupoAux.getServidores().removeAll(grupoAux.getServidores());  
         for (int i = 0; i < jListParticipantes.getModel().getSize(); i++) {
             System.out.println("Tamanho do model dos participantes: " + jListParticipantes.getModel().getSize());
             String[] elemento = jListParticipantes.getModel().getElementAt(i).split(" - ");
             System.out.println("\n\n" + elemento[0] + "\n" + elemento[1]);
             cadastraCadaParticipanteAoGrupo(elemento[0], elemento[1]);
         }
+        grupoControl.atualiza(grupoAux);
     }
 
     private void cadastraCadaParticipanteAoGrupo(String codigo, String nome) {
         Servidor servidor = null;
         Aluno aluno = null;
         boolean cadastrouServ = false;
+        
         for (Servidor ser : arrayServidores) {
             if ((ser.getSiape().equals(codigo)) && (ser.getNome().equals(nome))) {
                 servidor = ser;
@@ -543,14 +545,12 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
             }
         }
         if (cadastrouServ) {
-            grupoAux.getServidores().add(servidor);
-            grupoControl.atualiza(grupoAux);
+            grupoAux.getServidores().add(servidor);         
         } else {
             for (Aluno alu : arrayAlunos) {
                 if ((alu.getMatricula().equals(codigo)) && (alu.getNome().equals(nome))) {
                     aluno = alu;
                     grupoAux.getAlunos().add(aluno);
-                    grupoControl.atualiza(grupoAux);
                 }
             }
         }

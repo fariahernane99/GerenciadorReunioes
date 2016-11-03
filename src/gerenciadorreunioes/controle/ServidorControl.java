@@ -22,9 +22,9 @@ public class ServidorControl {
     private ArrayList<Servidor> arrayCoordenadores;
     private static MessageDigest md = null;
 
-    public boolean verificaCampos(String text, String text0, String text1, String text2, String text3, String text4) {
+    public boolean verificaCampos(String text, String text0, String text1, String text2, String text3) {
         boolean verifica = false;
-        if ((text.equals("")) || (text0.equals("")) || (text1.equals("")) || (text2.equals("")) || (text3.equals("")) || (text4.equals(""))) {
+        if ((text.equals("")) || (text0.equals("")) || (text1.equals("")) || (text2.equals("")) || (text3.equals(""))) {
             verifica = true;
         }
         return verifica;

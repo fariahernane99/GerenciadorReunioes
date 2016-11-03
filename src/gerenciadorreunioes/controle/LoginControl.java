@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class LoginControl {
 
     private static Servidor servidorAux;
+    private static String senhaNova;
     private ServidorDAO servidorDAO = new ServidorDAO();
     private ArrayList<Servidor> arrayServidores = new ArrayList();
     private static MessageDigest md = null;
@@ -63,7 +64,11 @@ public class LoginControl {
     public static Servidor retornaServidorLogado() {
         return servidorAux;
     }
-    
+
+    public static String retornaSenhaNova() {
+        return senhaNova;
+    }
+
     static {
         //Try catch referente ao algoritmo do MD5 e seus possiveis erros
         try {
@@ -72,26 +77,27 @@ public class LoginControl {
             ex.printStackTrace();
         }
     }
- 
-    
-  private static char[] hexCodes(byte[] text) {
+
+    private static char[] hexCodes(byte[] text) {
         char[] hexOutput = new char[text.length * 2];
         String hexString;
- 
+
         for (int i = 0; i < text.length; i++) {
             hexString = "00" + Integer.toHexString(text[i]);
-            hexString.toUpperCase().getChars(hexString.length() -2,
-            hexString.length(), hexOutput, i * 2);
+            hexString.toUpperCase().getChars(hexString.length() - 2,
+                    hexString.length(), hexOutput, i * 2);
         }
         return hexOutput;
     }
- 
-  
-public static String criptografar(String pwd) {
+
+    public static String criptografar(String pwd) {
         if (md != null) {
             return new String(hexCodes(md.digest(pwd.getBytes())));
         }
         return null;
     }
 
+    public static void preencheSenhaNova(String senha) {
+        senhaNova = senha;
+    }
 }

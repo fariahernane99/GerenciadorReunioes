@@ -497,7 +497,6 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
                 }
             }
         }
-        System.out.println(grupoAux.getNome());
     }
 
     private void insereParticipante() {
@@ -522,12 +521,11 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
 
     private void cadastraTodosOsParticipantes() {
         grupoControl.removeTodosServidoresDoGrupo(grupoAux.getCodigo());
-        grupoControl.removeTodosAlunosDoGrupo(grupoAux.getCodigo());      
-        grupoAux.getServidores().removeAll(grupoAux.getServidores());  
+        grupoControl.removeTodosAlunosDoGrupo(grupoAux.getCodigo());
+        grupoAux.getServidores().removeAll(grupoAux.getServidores());
+        grupoAux.getAlunos().removeAll(grupoAux.getAlunos());
         for (int i = 0; i < jListParticipantes.getModel().getSize(); i++) {
-            System.out.println("Tamanho do model dos participantes: " + jListParticipantes.getModel().getSize());
             String[] elemento = jListParticipantes.getModel().getElementAt(i).split(" - ");
-            System.out.println("\n\n" + elemento[0] + "\n" + elemento[1]);
             cadastraCadaParticipanteAoGrupo(elemento[0], elemento[1]);
         }
         grupoControl.atualiza(grupoAux);
@@ -537,7 +535,6 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         Servidor servidor = null;
         Aluno aluno = null;
         boolean cadastrouServ = false;
-        
         for (Servidor ser : arrayServidores) {
             if ((ser.getSiape().equals(codigo)) && (ser.getNome().equals(nome))) {
                 servidor = ser;
@@ -545,7 +542,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
             }
         }
         if (cadastrouServ) {
-            grupoAux.getServidores().add(servidor);         
+            grupoAux.getServidores().add(servidor);
         } else {
             for (Aluno alu : arrayAlunos) {
                 if ((alu.getMatricula().equals(codigo)) && (alu.getNome().equals(nome))) {
@@ -557,10 +554,8 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     }
 
     private void jogaElementosNosCampos() {
-        System.out.println("\n\n Entrou no jogaElementosNosCampos()\n\n");
         pegaGrupoSelecionadoNaLista();
         if (jListGrupos.getModel().getSize() > 0) {
-            System.out.println("\n\n jListGrupos.getModel().getSize() > 0 \n\n");
             jTextFieldNome.setText(grupoAux.getNome());
             jTextAreaDescricao.setText(grupoAux.getDescricao());
             jButtonCadastrar.setEnabled(false);
@@ -629,33 +624,13 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     }
 
     private void jogaTodosParticipantesJList(int gruCodigo) {
-        System.out.println("\n\n jogaTodosParticipantesJList \n\n");
         modelo.removeAllElements();
-        System.out.println("\n\n" + modelo.size() + "\n\n");
         for (Servidor ser : grupoAux.getServidores()) {
-            System.out.println("\n\n SSSSSSSSSSSSSSSSSSSSS \n\n" + ser.getSiape() + " - " + ser.getNome());
             modelo.addElement(ser.getSiape() + " - " + ser.getNome());
-            System.out.println("\n\n" + modelo.size() + "\n\n");
         }
         for (Aluno alu : grupoAux.getAlunos()) {
-            System.out.println("\n\n AAAAAAAAAAAAAAAAAAAAA \n\n" + alu.getMatricula() + " - " + alu.getNome());
             modelo.addElement(alu.getMatricula() + " - " + alu.getNome());
-            System.out.println("\n\n" + modelo.size() + "\n\n");
-        }/*
-        for (int i = 0; i < vetorServidores.size(); i++) {
-            for (Servidor s : vetorServidores) {
-                if (s.getSiape().equals(vetorServidores.get(i).getSiape())) {
-                    modelo.addElement(s.getSiape() + " - " + s.getNome());
-                }
-            }
         }
-        for (int i = 0; i < vetorAlunos.size(); i++) {
-            for (Aluno a : vetorAlunos) {
-                if (a.getMatricula().equals(vetorAlunos.get(i).getMatricula())) {
-                    modelo.addElement(a.getMatricula() + " - " + a.getNome());
-                }
-            }
-        }*/
         jListParticipantes.setModel(modelo);
 
     }

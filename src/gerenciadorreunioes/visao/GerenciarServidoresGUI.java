@@ -56,13 +56,13 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jTextFieldFone = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
         jLabel8 = new javax.swing.JLabel();
         jTextFieldArea = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jRadioButtonCoordenador = new javax.swing.JRadioButton();
         jRadioButtonDE = new javax.swing.JRadioButton();
         jRadioButtonMembro = new javax.swing.JRadioButton();
+        jButtonGerenciarSenha = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
@@ -114,30 +114,36 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
             }
         });
 
+        jButtonGerenciarSenha.setText("Cadastrar Senha");
+        jButtonGerenciarSenha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonGerenciarSenhaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTextFieldEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTextFieldNome, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTextFieldSiape, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTextFieldFone, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPasswordField1, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTextFieldArea, javax.swing.GroupLayout.Alignment.LEADING))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel5)
+                    .addComponent(jTextFieldEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                    .addComponent(jLabel4)
+                    .addComponent(jTextFieldNome)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel7)
+                    .addComponent(jTextFieldSiape)
+                    .addComponent(jTextFieldFone)
+                    .addComponent(jTextFieldArea)
                     .addComponent(jRadioButtonCoordenador)
                     .addComponent(jLabel9)
                     .addComponent(jRadioButtonDE)
-                    .addComponent(jRadioButtonMembro))
+                    .addComponent(jRadioButtonMembro)
+                    .addComponent(jButtonGerenciarSenha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(64, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -162,8 +168,8 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonGerenciarSenha)
+                .addGap(4, 4, 4)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextFieldArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -336,12 +342,20 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
 
     private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
         jogaElementosNosCampos();
+        jButtonGerenciarSenha.setText("Editar Senha");
         jButtonCadastrar.setEnabled(false);
         jButtonEditar.setEnabled(true);
         jButtonExcluir.setEnabled(true);
         jButtonCancelar.setEnabled(true);
         clicouLista = true;
     }//GEN-LAST:event_jList1MouseClicked
+
+    private void jButtonGerenciarSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerenciarSenhaActionPerformed
+        // chamar a tela de gerenciar senha
+        // saber quando por parametro ou nao
+        // quando é cadastro ou edição
+        gamba
+    }//GEN-LAST:event_jButtonGerenciarSenhaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -353,6 +367,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButtonCancelar;
     private javax.swing.JButton jButtonEditar;
     private javax.swing.JButton jButtonExcluir;
+    private javax.swing.JButton jButtonGerenciarSenha;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -364,7 +379,6 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JRadioButton jRadioButtonCoordenador;
     private javax.swing.JRadioButton jRadioButtonDE;
     private javax.swing.JRadioButton jRadioButtonMembro;
@@ -378,7 +392,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
 
     private void cadastra() {
         boolean vazio = controleServ.verificaCampos(jTextFieldNome.getText(), jTextFieldSiape.getText(),
-                jTextFieldArea.getText(), jTextFieldEmail.getText(), jTextFieldFone.getText(), jPasswordField1.getText());
+                jTextFieldArea.getText(), jTextFieldEmail.getText(), jTextFieldFone.getText());
         if (vazio) {
             JOptionPane.showMessageDialog(null, "Nenhum campo pode ficar vazio!");
         } else if (controleServ.verificaCadastro(jTextFieldSiape.getText())) {
@@ -389,7 +403,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
             s.setNome(jTextFieldNome.getText());
             s.setEmail(jTextFieldEmail.getText());
             s.setTelefone(jTextFieldFone.getText());
-            s.setSenha(jPasswordField1.getText());
+            s.setSenha(LoginControl.criptografar(LoginControl.retornaSenhaNova()));
             s.setArea(jTextFieldArea.getText());
             boolean controle = false;
             if (!(jRadioButtonCoordenador.isSelected()) && !(jRadioButtonDE.isSelected()) && !(jRadioButtonMembro.isSelected())) {
@@ -414,7 +428,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
 
     private void edita() {
         boolean vazio = controleServ.verificaCampos(jTextFieldNome.getText(), jTextFieldSiape.getText(),
-                jTextFieldArea.getText(), jTextFieldEmail.getText(), jTextFieldFone.getText(), jPasswordField1.getText());
+                jTextFieldArea.getText(), jTextFieldEmail.getText(), jTextFieldFone.getText());
         if (vazio) {
             JOptionPane.showMessageDialog(this, "Nenhum campo pode ficar vazio !!!");
         } else {
@@ -423,7 +437,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
             s.setNome(jTextFieldNome.getText());
             s.setEmail(jTextFieldEmail.getText());
             s.setTelefone(jTextFieldFone.getText());
-            s.setSenha(jPasswordField1.getText());
+            s.setSenha(LoginControl.criptografar(LoginControl.retornaSenhaNova()));
             s.setArea(jTextFieldArea.getText());
             if (!(jRadioButtonCoordenador.isSelected()) && !(jRadioButtonDE.isSelected()) && !(jRadioButtonMembro.isSelected())) {
                 JOptionPane.showMessageDialog(this, "Selecione uma opção de Servidor !!!");
@@ -453,7 +467,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Não foi possível excluir esse servidor !!!");
         }
     }
-    
+
     private void cancelar() {
         if (clicouLista) {
             resetaBotoes();
@@ -503,7 +517,6 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
             jTextFieldEmail.setText(aux.getEmail());
             jTextFieldFone.setText(aux.getTelefone());
             jTextFieldArea.setText(aux.getArea());
-            jPasswordField1.setText(aux.getSenha());
             for (Servidor s : arrayServ) {
                 if (s.getSiape().equals(aux.getSiape())) {
                     if (s.getSerCoordenador() == 1) {
@@ -548,6 +561,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
     }
 
     private void resetaBotoes() {
+        jButtonGerenciarSenha.setText("Cadastrar Senha");
         jButtonCadastrar.setEnabled(true);
         jButtonEditar.setEnabled(false);
         jButtonExcluir.setEnabled(false);
@@ -564,7 +578,6 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
         jTextFieldNome.setText("");
         jTextFieldEmail.setText("");
         jTextFieldFone.setText("");
-        jPasswordField1.setText("");
         jTextFieldArea.setText("");
     }
 

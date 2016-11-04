@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -54,7 +55,7 @@ public class GrupoDAO {
             Grupo grupo = manager.find(Grupo.class, g.getCodigo());
             grupo.setDescricao(g.getDescricao());
             grupo.setNome(g.getNome());
-            grupo.setSiapeCoordenador(g.getSiapeCoordenador());           
+            grupo.setSiapeCoordenador(g.getSiapeCoordenador());
             grupo.setAlunos(g.getAlunos());
             grupo.setServidores(g.getServidores());
             tx.commit();

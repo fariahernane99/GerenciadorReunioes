@@ -249,7 +249,10 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonEditarActionPerformed
 
     private void jButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirActionPerformed
-        exclui();
+        int i = JOptionPane.showConfirmDialog(this, "Você tem certeza que quer excluir esse aluno?");
+        if (i == 0) {
+            exclui();
+        }
         listarAlunos();
         resetaBotoes();
     }//GEN-LAST:event_jButtonExcluirActionPerformed

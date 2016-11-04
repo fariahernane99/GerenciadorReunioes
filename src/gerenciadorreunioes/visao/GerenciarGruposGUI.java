@@ -329,7 +329,10 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirActionPerformed
-        excluiGrupo();
+        int i = JOptionPane.showConfirmDialog(this, "Você tem certeza que quer excluir esse grupo?");
+        if (i == 0) {
+            excluiGrupo();
+        }
         listaGrupos();
         resetaBotoes();
         resetaCampos();
@@ -434,12 +437,10 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "O campo 'nome' não pode ficar vazio !!!");
         } else {
             pegaGrupoSelecionadoNaLista();
-            Grupo x = new Grupo();
-            x.setCodigo(grupoAux.getCodigo());
-            x.setNome(jTextFieldNome.getText());
-            x.setDescricao(jTextAreaDescricao.getText());
-            x.setSiapeCoordenador(pegaSiapeDoCoordenador((String) jComboBoxCoordenadores.getSelectedItem()));
-            boolean verifica = grupoControl.atualiza(x);
+            grupoAux.setNome(jTextFieldNome.getText());
+            grupoAux.setDescricao(jTextAreaDescricao.getText());
+            grupoAux.setSiapeCoordenador(pegaSiapeDoCoordenador((String) jComboBoxCoordenadores.getSelectedItem()));
+            boolean verifica = grupoControl.atualiza(grupoAux);
             if (verifica) {
                 JOptionPane.showMessageDialog(this, "Grupo atualizado com sucesso !!!");
             } else {
@@ -451,9 +452,9 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     private void excluiGrupo() {
         boolean excluiu = grupoControl.deleta(pegaCodigoGrupo());
         if (excluiu) {
-            JOptionPane.showMessageDialog(this, "Excluído com sucesso!!!");
+            JOptionPane.showMessageDialog(this, "Excluído com sucesso !!!");
         } else {
-            JOptionPane.showMessageDialog(this, "Não foi possível excluir!!!");
+            JOptionPane.showMessageDialog(this, "Não foi possível excluir !!!");
         }
     }
 
@@ -558,6 +559,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         if (jListGrupos.getModel().getSize() > 0) {
             jTextFieldNome.setText(grupoAux.getNome());
             jTextAreaDescricao.setText(grupoAux.getDescricao());
+            colocaCoordenadorGrupoPrimeiroNaLista(grupoAux.getSiapeCoordenador());
             jButtonCadastrar.setEnabled(false);
             jButtonEditar.setEnabled(true);
             jButtonExcluir.setEnabled(true);
@@ -580,7 +582,6 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         } else {
             jComboBoxCoordenadores.addItem(serAux.getSiape() + " - " + serAux.getNome());
         }
-
     }
 
     private void preencheVetoresDeServidoresEAlunos() {
@@ -632,7 +633,18 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
             modelo.addElement(alu.getMatricula() + " - " + alu.getNome());
         }
         jListParticipantes.setModel(modelo);
+    }
 
+    private void colocaCoordenadorGrupoPrimeiroNaLista(String siape) {
+        jComboBoxCoordenadores.removeAllItems();
+        jComboBoxCoordenadores.addItem(servidorControl.retornaSiapeNomeEmString(siape));
+        for (String ser : servidorControl.pegaSiapeNomeCoordenadores(serAux)) {
+            //separando siape do nome
+            String[] tupla = ser.split(" - ");
+            if (!siape.equals(tupla[0])) {
+                jComboBoxCoordenadores.addItem(ser);
+            }
+        }
     }
 
     private void cancelar() {

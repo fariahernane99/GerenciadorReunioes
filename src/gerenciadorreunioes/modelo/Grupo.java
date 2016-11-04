@@ -64,7 +64,7 @@ public class Grupo implements Serializable {
     }
 
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinTable(name = "Aluno_Grupo", joinColumns = @JoinColumn(name = "gruCodigo"), inverseJoinColumns = @JoinColumn(name = "aluMatricula"))
+    @JoinTable(name = "Aluno_Grupo", joinColumns = @JoinColumn(name = "alg_gruCodigo"), inverseJoinColumns = @JoinColumn(name = "alg_aluMatricula"))
     public List<Aluno> getAlunos() {
         return alunos;
     }
@@ -74,7 +74,7 @@ public class Grupo implements Serializable {
     }
 
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinTable(name = "Servidor_Grupo", joinColumns = @JoinColumn(name = "gruCodigo"), inverseJoinColumns = @JoinColumn(name = "serSiape"))
+    @JoinTable(name = "Servidor_Grupo", joinColumns = @JoinColumn(name = "seg_gruCodigo"), inverseJoinColumns = @JoinColumn(name = "seg_serSiape"))
     public List<Servidor> getServidores() {
         return servidores;
     }

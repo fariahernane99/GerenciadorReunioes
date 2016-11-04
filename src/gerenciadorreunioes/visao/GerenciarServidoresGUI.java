@@ -22,8 +22,8 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
     private DefaultListModel modelo = new DefaultListModel();
     private ServidorControl controleServ = new ServidorControl();
     private ArrayList<Servidor> arrayServ;
+    private Servidor coordenador;
     private Servidor serAux;
-    private Servidor aux;
     private boolean clicouLista = false;
 
     /**
@@ -31,7 +31,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
      */
     public GerenciarServidoresGUI() {
         initComponents();
-        serAux = LoginControl.retornaServidorLogado();
+        coordenador = LoginControl.retornaServidorLogado();
         listaServidores();
         resetaBotoes();
     }
@@ -224,7 +224,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
             }
         });
 
-        jButtonExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/dialog-close.png"))); // NOI18N
+        jButtonExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/deletar-foto_318-77143.jpg"))); // NOI18N
         jButtonExcluir.setText("Excluir");
         jButtonExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -329,7 +329,10 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButtonDEActionPerformed
 
     private void jButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirActionPerformed
-        exclui();
+        int i = JOptionPane.showConfirmDialog(this, "Você tem certeza que quer excluir esse servidor?");
+        if (i == 0) {
+            exclui();
+        }
         listaServidores();
         resetaBotoes();
     }//GEN-LAST:event_jButtonExcluirActionPerformed
@@ -342,7 +345,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
 
     private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
         jogaElementosNosCampos();
-        jButtonGerenciarSenha.setText("Editar Senha");
+        jButtonGerenciarSenha.setText("Alterar Senha");
         jButtonCadastrar.setEnabled(false);
         jButtonEditar.setEnabled(true);
         jButtonExcluir.setEnabled(true);
@@ -354,7 +357,11 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
         // chamar a tela de gerenciar senha
         // saber quando por parametro ou nao
         // quando é cadastro ou edição
-        gamba
+        if (clicouLista) {
+            new GerenciarSenhaGUI(coordenador).setVisible(true);
+        } else {
+            new GerenciarSenhaGUI().setVisible(true);
+        }
     }//GEN-LAST:event_jButtonGerenciarSenhaActionPerformed
 
     /**
@@ -473,13 +480,13 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
             resetaBotoes();
             limpaCampos();
             clicouLista = false;
-        } else if (serAux.getSerCoordenador() == 1) {
+        } else if (coordenador.getSerCoordenador() == 1) {
             new TelaPrincipalCoordenadorGUI().setVisible(true);
             this.dispose();
-        } else if (serAux.getSerDe() == 1) {
+        } else if (coordenador.getSerDe() == 1) {
             new TelaPrincipalDeGUI().setVisible(true);
             this.dispose();
-        } else if (serAux.getSerResponsavelAta() == 1) {
+        } else if (coordenador.getSerResponsavelAta() == 1) {
             new TelaPrincipalServidorComumGUI(1).setVisible(true);
             this.dispose();
         } else {
@@ -495,10 +502,10 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
         arrayServ = controleServ.lista();
         for (Servidor s : arrayServ) {
             if (s.getSiape().equals(siape)) {
-                aux = s;
+                serAux = s;
             }
         }
-        return aux;
+        return serAux;
     }
 
     private int converteBooleanParaInt(JRadioButton r) {
@@ -511,14 +518,14 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
 
     private void jogaElementosNosCampos() {
         if (jList1.getModel().getSize() > 0) {
-            aux = pegaServidorSelecionadoNaLista();
-            jTextFieldSiape.setText(aux.getSiape());
-            jTextFieldNome.setText(aux.getNome());
-            jTextFieldEmail.setText(aux.getEmail());
-            jTextFieldFone.setText(aux.getTelefone());
-            jTextFieldArea.setText(aux.getArea());
+            serAux = pegaServidorSelecionadoNaLista();
+            jTextFieldSiape.setText(serAux.getSiape());
+            jTextFieldNome.setText(serAux.getNome());
+            jTextFieldEmail.setText(serAux.getEmail());
+            jTextFieldFone.setText(serAux.getTelefone());
+            jTextFieldArea.setText(serAux.getArea());
             for (Servidor s : arrayServ) {
-                if (s.getSiape().equals(aux.getSiape())) {
+                if (s.getSiape().equals(serAux.getSiape())) {
                     if (s.getSerCoordenador() == 1) {
                         jRadioButtonCoordenador.setSelected(true);
                         jRadioButtonDE.setSelected(false);
@@ -542,7 +549,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
 
     private void listaServidores() {
         modelo.removeAllElements();
-        if (serAux.getSerCoordenador() == 1) {
+        if (coordenador.getSerCoordenador() == 1) {
             arrayServ = controleServ.getMembrosComuns();
         } else {
             arrayServ = controleServ.lista();
@@ -566,7 +573,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
         jButtonEditar.setEnabled(false);
         jButtonExcluir.setEnabled(false);
         jButtonCancelar.setEnabled(true);
-        if (serAux.getSerCoordenador() == 1) {
+        if (coordenador.getSerCoordenador() == 1) {
             jRadioButtonCoordenador.setEnabled(false);
             jRadioButtonDE.setEnabled(false);
             jRadioButtonMembro.setSelected(true);

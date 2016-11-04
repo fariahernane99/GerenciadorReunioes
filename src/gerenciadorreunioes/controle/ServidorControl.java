@@ -49,7 +49,7 @@ public class ServidorControl {
     }
 
     public ArrayList<Servidor> getCoordenadores() {
-        return servidorDao.getCoordenadores();
+        return servidorDao.getDeCoordenadores();
     }
 
     public ArrayList<Servidor> getServidoresDE() {
@@ -71,29 +71,34 @@ public class ServidorControl {
         }
         return arrayString;
     }
+    
+    public String retornaSiapeNomeEmString(String siape){
+        Servidor s = servidorDao.getServidor(siape);
+        return s.getSiape() + " - " + s.getNome();
+    }
 
     public ArrayList<String> pegaSiapeNomeCoordenadores(Servidor serAux) {
-        ArrayList<String> nomeGrupos = new ArrayList<>();
-        ArrayList<Servidor> arrayDe = servidorDao.getServidoresDE();
-        arrayServidores = servidorDao.getCoordenadores();
-        for (int i = 0; i < arrayDe.size(); i++) {
-            if (arrayDe.get(i).equals(serAux)) {
-                nomeGrupos.add(arrayDe.get(i).getSiape() + " - " + arrayDe.get(i).getNome());
-            }
-        }
+        ArrayList<String> nomeServidores = new ArrayList<>();
+        arrayServidores = servidorDao.getDeCoordenadores();
+        // for responsavel por deixar o servidor logado em primeiro na lista
         for (int i = 0; i < arrayServidores.size(); i++) {
             if (arrayServidores.get(i).equals(serAux)) {
-                nomeGrupos.add(arrayServidores.get(i).getSiape() + " - " + arrayServidores.get(i).getNome());
+                nomeServidores.add(arrayServidores.get(i).getSiape() + " - " + arrayServidores.get(i).getNome());
             }
         }
-        for (int i = 0; i < arrayDe.size(); i++) {
-            nomeGrupos.add(arrayDe.get(i).getSiape() + " - " + arrayDe.get(i).getNome());
-        }
-
+        // for responsavel por deixar os servidores da DE em seguida na lista
         for (int i = 0; i < arrayServidores.size(); i++) {
-            nomeGrupos.add(arrayServidores.get(i).getSiape() + " - " + arrayServidores.get(i).getNome());
+            if ((!arrayServidores.get(i).equals(serAux)) && (arrayServidores.get(i).getSerDe() == 1)) {
+                nomeServidores.add(arrayServidores.get(i).getSiape() + " - " + arrayServidores.get(i).getNome());
+            }
         }
-        return nomeGrupos;
+        // for responsavel por deixar os demais coordenadores em seguida na lista
+        for (int i = 0; i < arrayServidores.size(); i++) {
+            if ((!arrayServidores.get(i).equals(serAux)) && (arrayServidores.get(i).getSerCoordenador() == 1)) {
+                nomeServidores.add(arrayServidores.get(i).getSiape() + " - " + arrayServidores.get(i).getNome());
+            }
+        }
+        return nomeServidores;
     }
 
     public ArrayList<String> pegaSiapeNomeServidores() {

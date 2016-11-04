@@ -16,11 +16,13 @@ import gerenciadorreunioes.modelo.Grupo;
 import gerenciadorreunioes.modelo.Pauta;
 import gerenciadorreunioes.modelo.Reuniao;
 import gerenciadorreunioes.modelo.Servidor;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import javax.swing.ListModel;
 
 /**
  *
@@ -74,6 +76,9 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
     }
 
     private void listaReunioes() {
+        // não está listando
+        //caçar mais erros
+        a
         Grupo aux = reuniaoControl.pesquisaGrupo(serAux.getSiape());
         ArrayList<Reuniao> reunioes = reuniaoControl.reunioes(aux.getCodigo());
         DefaultListModel e = new DefaultListModel();
@@ -471,8 +476,15 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
     }
 
     private void cadastraReuniao() {
-        String data = new SimpleDateFormat("dd/MM/yyyy").format(jDateChooser1.getDate());
-        boolean vazio = reuniaoControl.verificaCampos(jList1.getModel().getSize(), data, jTextFieldHora.getText(), jTextFieldLocal.getText());
+        String data = new SimpleDateFormat("yyyy-MM-dd").format(jDateChooser1.getDate());
+        Date date = null;
+        try {
+            DateFormat dateFor = new SimpleDateFormat("yyyy-MM-dd");
+            date = (Date) dateFor.parse(data);
+        } catch (ParseException e) {
+
+        }
+        boolean vazio = reuniaoControl.verificaCampos(jList1.getModel().getSize(), data.toString(), jTextFieldHora.getText(), jTextFieldLocal.getText());
         if (vazio) {
             JOptionPane.showMessageDialog(this, "Nenhum campo pode ficar vazio !!!");
         } else {
@@ -482,7 +494,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             String nome = pegaNome[1];
             String n = jTextFieldHora.getText() + " - " + nome + " - " + data;
             x.setNome(n);
-            x.setData(data);
+            x.setData(date);
             x.setHorarioInicio(jTextFieldHora.getText());
             x.setHorarioFim("-");
             x.setLocal(jTextFieldLocal.getText());

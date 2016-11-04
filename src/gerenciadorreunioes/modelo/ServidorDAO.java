@@ -1,5 +1,6 @@
 package gerenciadorreunioes.modelo;
 
+import gerenciadorreunioes.controle.GrupoControl;
 import gerenciadorreunioes.jpa.JpaUtil;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
@@ -103,10 +104,10 @@ public class ServidorDAO {
         return servidores;
     }
 
-    public ArrayList<Servidor> getCoordenadores() {
+    public ArrayList<Servidor> getDeCoordenadores() {
         ArrayList<Servidor> array = new ArrayList<>();
         for (Servidor ser : getServidores()) {
-            if (ser.getSerCoordenador() == 1) {
+            if ((ser.getSerCoordenador() == 1) || (ser.getSerDe() == 1)) {
                 array.add(ser);
             }
         }
@@ -124,15 +125,12 @@ public class ServidorDAO {
     }
 
     public ArrayList<Servidor> getParticipantesDoGrupo(int gruCodigo) {
-        EntityManager manager = JpaUtil.getEntityManager();
-        EntityTransaction tx = manager.getTransaction();
-        tx.begin();
-        Query query = manager.createQuery("SELECT serSiape, serNome, serTelefone, serEmail, serSenha, serArea, serDe, serCoordenador, serResponsavelAta "
-                + "FROM Servidor JOIN Servidor_Grupo JOIN Grupo "
-                + "WHERE serSiape = seg_serSiape AND gruCodigo = seg_gruCodigo AND gruCodigo = " + gruCodigo);
-        ArrayList<Servidor> servidores = (ArrayList) query.getResultList();
-        tx.commit();
-        manager.close();
+        GrupoControl grupoControl = new GrupoControl();
+        Grupo grupo =  grupoControl.getGrupo(gruCodigo);
+        ArrayList<Servidor> servidores = new ArrayList<>();
+        for (Servidor ser : grupo.getServidores()) {
+            servidores.add(ser);
+        }
         return servidores;
     }
 

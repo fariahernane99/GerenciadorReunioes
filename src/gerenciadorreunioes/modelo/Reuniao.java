@@ -6,6 +6,7 @@
 package gerenciadorreunioes.modelo;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -25,7 +27,7 @@ public class Reuniao implements Serializable {
 
     private int codigo;
     private String nome;
-    private String data;
+    private Date data;
     private String horarioInicio;
     private String horarioFim;
     private String local;
@@ -53,14 +55,15 @@ public class Reuniao implements Serializable {
     }
 
     @Column(name = "reuData", nullable = false)
-    public String getData() {
+    @Temporal(javax.persistence.TemporalType.DATE)
+    public Date getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(Date data) {
         this.data = data;
     }
-
+    
     @Column(name = "reuHorarioInicio")
     public String getHorarioInicio() {
         return horarioInicio;

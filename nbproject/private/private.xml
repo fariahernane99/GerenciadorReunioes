@@ -4,6 +4,7 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/modelo/ServidorDAO.java</file>
+            <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/visao/GerenciarGruposGUI.java</file>
             <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/visao/GerenciarReunioesGUI.java</file>
             <file>file:/home/alunos/GerenciadorReunioes/src/gerenciadorreunioes/controle/ServidorControl.java</file>
         </group>

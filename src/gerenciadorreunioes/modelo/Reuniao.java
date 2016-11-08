@@ -31,7 +31,7 @@ public class Reuniao implements Serializable {
     private String horarioInicio;
     private String horarioFim;
     private String local;
-    private int siapeResponsavelAta;
+    private String siapeResponsavelAta;
     private Grupo grupo;
 
     @Id
@@ -63,7 +63,7 @@ public class Reuniao implements Serializable {
     public void setData(Date data) {
         this.data = data;
     }
-    
+
     @Column(name = "reuHorarioInicio")
     public String getHorarioInicio() {
         return horarioInicio;
@@ -92,11 +92,11 @@ public class Reuniao implements Serializable {
     }
 
     @Column(name = "reuSiapeResponsavelAta", nullable = false)
-    public int getSiapeResponsavelAta() {
+    public String getSiapeResponsavelAta() {
         return siapeResponsavelAta;
     }
 
-    public void setSiapeResponsavelAta(int siapeResponsavelAta) {
+    public void setSiapeResponsavelAta(String siapeResponsavelAta) {
         this.siapeResponsavelAta = siapeResponsavelAta;
     }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-11-08T12:16:47 -->
+<!-- 2016-12-01T09:43:39 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Funfa" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b14a168b-5e97-4de4-a485-71f89dde89c4">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="background.image.path" value="C:\Users\Alunos\Desktop\logo.jpg"/>
@@ -39,9 +39,9 @@
 	<subDataset name="Table" uuid="4dfec5d3-f59c-4b5f-b414-9a8ce10793c9">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Reunioes"/>
-		<parameter name="gruCodigo" class="java.lang.String"/>
+		<parameter name="serSiape" class="java.lang.String"/>
 		<queryString>
-			<![CDATA[select ataStatus,gruNome,reuData FROM Ata JOIN Reuniao JOIN Grupo ON ataStatus='Concluída' AND gruCodigo=$P{gruCodigo} AND gruCodigo=reu_gruCodigo GROUP BY reuData]]>
+			<![CDATA[select ataStatus,gruNome,reuData FROM Ata JOIN Reuniao JOIN Grupo JOIN Servidor_Grupo JOIN Servidor ON ataStatus='Concluída' AND serSiape=$P{serSiape} AND gruCodigo=reu_gruCodigo AND serSiape=seg_serSiape AND gruCodigo=seg_gruCodigo AND ata_reuCodigo=reuCodigo GROUP BY reuData]]>
 		</queryString>
 		<field name="ataStatus" class="java.lang.String">
 			<fieldDescription><![CDATA[]]></fieldDescription>
@@ -49,7 +49,7 @@
 		<field name="gruNome" class="java.lang.String">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
-		<field name="reuData" class="java.lang.String">
+		<field name="reuData" class="java.sql.Date">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
 		<group name="gruNome">
@@ -62,16 +62,19 @@
 			<groupExpression><![CDATA[$F{reuData}]]></groupExpression>
 		</group>
 	</subDataset>
-	<parameter name="gruCodigo" class="java.lang.Integer"/>
+	<parameter name="serSiape" class="java.lang.String"/>
 	<parameter name="dataInicio" class="java.util.Date"/>
 	<parameter name="dataFim" class="java.util.Date"/>
 	<queryString>
-		<![CDATA[select ataStatus,gruCodigo,gruNome,reuData FROM Reuniao JOIN Ata JOIN Grupo ON ataStatus='Concluída' AND gruCodigo=$P{gruCodigo} AND gruCodigo=reu_gruCodigo AND reuData BETWEEN $P{dataInicio}  AND $P{dataFim}]]>
+		<![CDATA[select ataStatus,serSiape,serNome,gruNome,reuData FROM Reuniao JOIN Ata JOIN Grupo JOIN Servidor_Grupo JOIN Servidor ON ataStatus='Concluída' AND serSiape=$P{serSiape} AND serSiape=seg_serSiape AND gruCodigo=seg_gruCodigo AND gruCodigo=reu_gruCodigo AND ata_reuCodigo=reuCodigo AND reuData BETWEEN $P{dataInicio}  AND $P{dataFim}]]>
 	</queryString>
 	<field name="ataStatus" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="gruCodigo" class="java.lang.Integer">
+	<field name="serSiape" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="serNome" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="gruNome" class="java.lang.String">
@@ -84,10 +87,10 @@
 		<groupExpression><![CDATA[$F{gruNome}]]></groupExpression>
 	</group>
 	<background>
-		<band height="550" splitType="Stretch">
+		<band height="580" splitType="Stretch">
 			<image>
-				<reportElement positionType="Float" x="0" y="40" width="544" height="510" uuid="56a8e5d8-2ef4-4186-986a-19c75ca2c27a"/>
-				<imageExpression><![CDATA["C:/Users/Alunos/Desktop/logo.jpg"]]></imageExpression>
+				<reportElement x="0" y="190" width="550" height="390" uuid="9ad69d33-a03b-493a-9c10-1e410815fce6"/>
+				<imageExpression><![CDATA["C:/Users/Alunos/Desktop/GerenciadorReunioes/src/icon/logo.png"]]></imageExpression>
 			</image>
 		</band>
 	</background>
@@ -101,21 +104,21 @@
 			<textField>
 				<reportElement x="0" y="20" width="550" height="20" uuid="86a8af4b-86a3-4c2b-af3f-5a53159794f4"/>
 				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA["Grupo: " + $F{gruNome}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Servidor: " + $F{serNome}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
 	<pageHeader>
 		<band height="280" splitType="Stretch">
 			<componentElement>
-				<reportElement x="-3" y="80" width="560" height="200" uuid="b5a4f07a-5b3d-4f0f-9d88-becfeecb5f8e">
+				<reportElement isPrintRepeatedValues="false" mode="Transparent" x="-3" y="80" width="560" height="200" backcolor="#FFFFFF" uuid="b5a4f07a-5b3d-4f0f-9d88-becfeecb5f8e">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="Table" uuid="c93c2296-50b9-4df7-8def-61255b36e132">
-						<datasetParameter name="gruCodigo">
-							<datasetParameterExpression><![CDATA[$F{gruCodigo}]]></datasetParameterExpression>
+					<datasetRun subDataset="Table" uuid="e063102b-8f03-48a1-980b-b4a009701ffa">
+						<datasetParameter name="serSiape">
+							<datasetParameterExpression><![CDATA[$F{serSiape}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
@@ -135,7 +138,7 @@
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
 								<reportElement x="0" y="0" width="210" height="30" uuid="5e56a3ba-46ce-48a0-aeb9-040be0dbf93d"/>
-								<textElement>
+								<textElement textAlignment="Center">
 									<font size="13"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{gruNome}]]></textFieldExpression>
@@ -156,9 +159,9 @@
 						<jr:tableFooter style="Table_TH" height="30" rowSpan="1"/>
 						<jr:columnFooter style="Table_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table_TD" height="30">
-							<textField>
+							<textField pattern="dd/MM/yyyy">
 								<reportElement x="0" y="0" width="170" height="30" uuid="e9aab410-7dda-4a13-be4f-e2f8d1a4b04c"/>
-								<textElement>
+								<textElement textAlignment="Center">
 									<font size="13"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{reuData}]]></textFieldExpression>
@@ -181,7 +184,7 @@
 						<jr:detailCell style="Table_TD" height="30">
 							<textField>
 								<reportElement x="0" y="0" width="180" height="30" uuid="09ec6a15-f262-4aa0-9fca-c4daecffbeef"/>
-								<textElement>
+								<textElement textAlignment="Center">
 									<font size="13"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{ataStatus}]]></textFieldExpression>

@@ -9,6 +9,7 @@ import gerenciadorreunioes.modelo.Grupo;
 import gerenciadorreunioes.modelo.GrupoDAO;
 import gerenciadorreunioes.modelo.Reuniao;
 import gerenciadorreunioes.modelo.ReuniaoDAO;
+import gerenciadorreunioes.modelo.Servidor;
 import java.util.ArrayList;
 
 /**
@@ -19,6 +20,8 @@ public class ReuniaoControl {
 
     private ReuniaoDAO reuniaoDAO = new ReuniaoDAO();
     private GrupoDAO gruDao = new GrupoDAO();
+    private ArrayList<Servidor> serv = new ArrayList<>();
+    private Reuniao r = new Reuniao();
 
     public boolean deleta(int codigo) {
         return reuniaoDAO.deleta(codigo);
@@ -42,7 +45,7 @@ public class ReuniaoControl {
 
     public int codReuniao(String nome) {
         int codReuniao = 0;
-        ArrayList<Reuniao> arrayReunioes = getReunioes();
+        ArrayList<Reuniao> arrayReunioes = ReuniaoControl.this.getReunioes();
         for (int i = 0; i < arrayReunioes.size(); i++) {
             if (arrayReunioes.get(i).getNome().equals(nome)) {
                 codReuniao = arrayReunioes.get(i).getCodigo();
@@ -77,10 +80,10 @@ public class ReuniaoControl {
         return x;
     }
 
-    public ArrayList<Reuniao> reunioes(int codGru) {
+    public ArrayList<Reuniao> getReunioes(int codGrupo) {
         ArrayList<Reuniao> reunioes = new ArrayList<Reuniao>();
         for (int i = 0; i < getReunioes().size(); i++) {
-            if (codGru == getReunioes().get(i).getCodigo()) {
+            if (codGrupo == getReunioes().get(i).getCodigo()) {
                 reunioes.add(getReunioes().get(i));
             }
         }
@@ -93,6 +96,26 @@ public class ReuniaoControl {
 
     public Reuniao getReuniao(int codReuniao) {
         return reuniaoDAO.getReuniao(codReuniao);
+    }
+    
+    public ArrayList<Servidor> getEmails(int codGrupo) {
+        return reuniaoDAO.getEmailServidoresDeUmGrupo(codGrupo);
+    }
+    
+    public void setServidoresDaReuniao(int codGrupo) {
+        serv = reuniaoDAO.retornaServidoresReuniao(codGrupo);
+    }
+    
+    public Reuniao retornaReuniao(){
+        return r;
+    } 
+    
+    public ArrayList<String> getServidoresDaReuniao() {
+        ArrayList<String> servidores = new ArrayList<>();
+        for (int i = 0; i < serv.size(); i++) {
+           servidores.add(serv.get(i).getNome());
+        }
+       return servidores;
     }
 
 }

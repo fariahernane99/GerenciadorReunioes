@@ -1,7 +1,7 @@
 package gerenciadorreunioes.modelo;
 
 import gerenciadorreunioes.controle.GrupoControl;
-import gerenciadorreunioes.jpa.JpaUtil;
+import gerenciadorreunioes.conexoes.JpaUtil;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -70,18 +70,21 @@ public class ServidorDAO {
         manager.close();
         return servidores;
     }
-    
-    public Servidor getServidor(String siape){
+
+    public Servidor getServidor(String siape) {
         Servidor serv = null;
         for (Servidor ser : getServidores()) {
-            if(ser.getSiape().equals(siape))
+            if (ser.getSiape().equals(siape)) {
                 serv = ser;
+            }
         }
         return serv;
     }
 
-    public ArrayList<Servidor> getMembrosComuns() {
+    public ArrayList<Servidor> getMembrosComuns(Servidor serAux) {
         ArrayList<Servidor> array = new ArrayList<>();
+        serAux = getServidor(serAux.getSiape());
+        array.add(serAux);
         for (Servidor ser : getServidores()) {
             if ((ser.getSerCoordenador() == 0) && (ser.getSerDe() == 0)) {
                 array.add(ser);
@@ -126,7 +129,7 @@ public class ServidorDAO {
 
     public ArrayList<Servidor> getParticipantesDoGrupo(int gruCodigo) {
         GrupoControl grupoControl = new GrupoControl();
-        Grupo grupo =  grupoControl.getGrupo(gruCodigo);
+        Grupo grupo = grupoControl.getGrupo(gruCodigo);
         ArrayList<Servidor> servidores = new ArrayList<>();
         for (Servidor ser : grupo.getServidores()) {
             servidores.add(ser);
@@ -146,6 +149,20 @@ public class ServidorDAO {
         tx.commit();
         manager.close();
         return servidores;
+    }
+
+    public int getCodGrupo(String serSiape) {
+        EntityManager manager = JpaUtil.getEntityManager();
+        EntityTransaction tx = manager.getTransaction();
+        tx.begin();
+        Query query = manager.createQuery("SELECT gruCodigo FROM Grupo JOIN Servidor_Grupo JOIN Servidor WHERE"
+                + " serSiape = seg_serSiape AND seg_gruCodigo = gruCodigo AND"
+                + " serSiape = " + serSiape);
+        ArrayList<Integer> cod = (ArrayList) query.getResultList();
+        int codGrupo = cod.get(0);
+        tx.commit();
+        manager.close();
+        return codGrupo;
     }
 
 }

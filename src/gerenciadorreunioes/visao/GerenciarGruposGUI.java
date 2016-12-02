@@ -585,7 +585,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     }
 
     private void preencheVetoresDeServidoresEAlunos() {
-        arrayServidores = servidorControl.lista();
+        arrayServidores = servidorControl.getServidores();
         arrayAlunos = alunoControl.getAlunos();
     }
 

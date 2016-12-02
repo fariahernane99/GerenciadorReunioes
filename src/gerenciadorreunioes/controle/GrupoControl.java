@@ -115,4 +115,5 @@ public class GrupoControl {
     public Grupo getGrupo(int gruCodigo) {
         return grupoDao.getGrupo(gruCodigo);
     }
+    
 }

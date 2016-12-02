@@ -211,7 +211,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButtonEditar" min="-2" pref="97" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jButtonExcluir" min="-2" pref="95" max="-2" attributes="0"/>
+                  <Component id="jButtonExcluir" min="-2" pref="107" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButtonCancelar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>

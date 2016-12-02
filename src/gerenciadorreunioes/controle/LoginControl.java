@@ -5,6 +5,7 @@
  */
 package gerenciadorreunioes.controle;
 
+import gerenciadorreunioes.modelo.GrupoDAO;
 import gerenciadorreunioes.modelo.Servidor;
 import gerenciadorreunioes.modelo.ServidorDAO;
 import gerenciadorreunioes.visao.TelaPrincipalDeGUI;
@@ -21,17 +22,17 @@ import java.util.ArrayList;
 public class LoginControl {
 
     private static Servidor servidorAux;
-    private static String senhaNova;
-    private ServidorDAO servidorDAO = new ServidorDAO();
+    private GrupoDAO grupoDao = new GrupoDAO();
+    private ServidorDAO servidorDao = new ServidorDAO();
     private ArrayList<Servidor> arrayServidores = new ArrayList();
     private static MessageDigest md = null;
 
     public boolean verificaLogin(String siape, String senha) {
         senha = criptografar(senha);
         boolean encontrou = false;
-        arrayServidores = servidorDAO.getServidores();
+        arrayServidores = servidorDao.getServidores();
         for (Servidor s : arrayServidores) {
-            if ((siape.equals(s.getSiape())) && (s.getSenha().equalsIgnoreCase(senha))) {
+            if ((siape.equals(s.getSiape())) && (s.getSenha().equals(senha))) {
                 servidorAux = s;
                 encontrou = true;
             }
@@ -65,10 +66,6 @@ public class LoginControl {
         return servidorAux;
     }
 
-    public static String retornaSenhaNova() {
-        return senhaNova;
-    }
-
     static {
         //Try catch referente ao algoritmo do MD5 e seus possiveis erros
         try {
@@ -84,7 +81,7 @@ public class LoginControl {
 
         for (int i = 0; i < text.length; i++) {
             hexString = "00" + Integer.toHexString(text[i]);
-            hexString.toUpperCase().getChars(hexString.length() - 2,
+            hexString.toLowerCase().getChars(hexString.length() - 2,
                     hexString.length(), hexOutput, i * 2);
         }
         return hexOutput;
@@ -97,7 +94,4 @@ public class LoginControl {
         return null;
     }
 
-    public static void preencheSenhaNova(String senha) {
-        senhaNova = senha;
-    }
 }

@@ -6,6 +6,7 @@
 package gerenciadorreunioes.visao;
 
 import gerenciadorreunioes.controle.LoginControl;
+import gerenciadorreunioes.controle.ServidorControl;
 import gerenciadorreunioes.modelo.Servidor;
 import javax.swing.JOptionPane;
 
@@ -15,25 +16,30 @@ import javax.swing.JOptionPane;
  */
 public class GerenciarSenhaGUI extends javax.swing.JFrame {
 
-    private Servidor ser;
-    private String senha;
+    private GerenciarServidoresGUI telaServidor;
+    private ServidorControl servidorControl;
+    private Servidor servidor;
     private int tipo;
 
-    public String getSenha() {
-        return senha;
-    }
-
-    public GerenciarSenhaGUI() {
+    public GerenciarSenhaGUI(Servidor serAux, GerenciarServidoresGUI telaServidor) {
         initComponents();
-        tipo = 0;
-        jLabelSenhaAtual.setVisible(false);
-        jPasswordFieldSenhaAtual.setVisible(false);
-    }
-
-    public GerenciarSenhaGUI(Servidor ser) {
-        initComponents();
-        tipo = 1;
-        this.ser = ser;
+        servidorControl = new ServidorControl();
+        this.telaServidor = telaServidor;
+        this.servidor = serAux;
+        for (Servidor serv : servidorControl.getServidores()) {
+            // se o servidor já existe (está cadastrado no banco)
+            if (serv.getSiape().equals(serAux.getSiape())) {
+                tipo = 1;
+            }
+        }
+        if (tipo != 1) {
+            tipo = 0;
+            jLabelSenhaAtual.setVisible(false);
+            jPasswordFieldSenhaAtual.setVisible(false);
+        }
+        servidor.setSerCoordenador(0);
+        servidor.setSerDe(0);
+        servidor.setSerResponsavelAta(0);
     }
 
     /**
@@ -52,10 +58,9 @@ public class GerenciarSenhaGUI extends javax.swing.JFrame {
         jPasswordFieldSenhaNova = new javax.swing.JPasswordField();
         jLabelSenhaAtual = new javax.swing.JLabel();
         jPasswordFieldSenhaAtual = new javax.swing.JPasswordField();
-        jButtonCancelar = new javax.swing.JButton();
         jButtonConfirmar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Gerenciar Senha", 2, 0, new java.awt.Font("Dialog", 0, 18))); // NOI18N
         jPanel1.setLayout(null);
@@ -84,10 +89,7 @@ public class GerenciarSenhaGUI extends javax.swing.JFrame {
         jPanel1.add(jPasswordFieldSenhaAtual);
         jPasswordFieldSenhaAtual.setBounds(10, 190, 360, 28);
 
-        jButtonCancelar.setText("Cancelar");
-        jPanel1.add(jButtonCancelar);
-        jButtonCancelar.setBounds(210, 240, 120, 30);
-
+        jButtonConfirmar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/download (1).jpg"))); // NOI18N
         jButtonConfirmar.setText("Confirmar");
         jButtonConfirmar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -95,7 +97,7 @@ public class GerenciarSenhaGUI extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButtonConfirmar);
-        jButtonConfirmar.setBounds(60, 240, 120, 30);
+        jButtonConfirmar.setBounds(150, 240, 120, 36);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -121,15 +123,16 @@ public class GerenciarSenhaGUI extends javax.swing.JFrame {
 
     private void jButtonConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarActionPerformed
         confirmaMudanca();
-        this.dispose();
     }//GEN-LAST:event_jButtonConfirmarActionPerformed
 
     private void confirmaMudanca() {
         if (tipo == 0) {
             boolean igual = verificaSenhasIguais();
             if (igual) {
-                senha = jPasswordFieldSenhaNova.getText();
-                LoginControl.preencheSenhaNova(senha);
+                servidor.setSenha(LoginControl.criptografar(jPasswordFieldSenhaNova.getText()));
+                servidorControl.adiciona(servidor);
+                telaServidor.setVisible(true);
+                this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "As Senhas Não Correspondem !!!");
             }
@@ -137,9 +140,11 @@ public class GerenciarSenhaGUI extends javax.swing.JFrame {
             boolean igual = verificaSenhaAtual();
             if (igual) {
                 boolean correspondem = verificaSenhasIguais();
-                if (correspondem){
-                    senha = jPasswordFieldSenhaNova.getText();
-                    LoginControl.preencheSenhaNova(senha);
+                if (correspondem) {
+                    servidor.setSenha(LoginControl.criptografar(jPasswordFieldSenhaNova.getText()));
+                    servidorControl.atualiza(servidor);
+                    telaServidor.setVisible(true);
+                    this.dispose();
                 } else {
                     JOptionPane.showMessageDialog(this, "As Senhas Não Correspondem !!!");
                 }
@@ -149,43 +154,7 @@ public class GerenciarSenhaGUI extends javax.swing.JFrame {
         }
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GerenciarSenhaGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GerenciarSenhaGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GerenciarSenhaGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GerenciarSenhaGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GerenciarSenhaGUI().setVisible(true);
-            }
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonCancelar;
     private javax.swing.JButton jButtonConfirmar;
     private javax.swing.JLabel jLabelConfirmarSenha;
     private javax.swing.JLabel jLabelSenhaAtual;
@@ -208,8 +177,10 @@ public class GerenciarSenhaGUI extends javax.swing.JFrame {
 
     private boolean verificaSenhaAtual() {
         boolean igual = false;
-        String senhaAtualBanco = ser.getSenha();
+        String senhaAtualBanco = servidor.getSenha();
         String senhaAtualTextArea = LoginControl.criptografar(jPasswordFieldSenhaAtual.getText());
+        System.out.println("\n\n " + senhaAtualBanco
+        + "\n\n " + senhaAtualTextArea);
         if (senhaAtualBanco.equals(senhaAtualTextArea)) {
             igual = true;
         }

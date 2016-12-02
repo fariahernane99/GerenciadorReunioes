@@ -23,7 +23,8 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
     private DefaultListModel modelo = new DefaultListModel();
     private ArrayList<String> arrayNomes;
     private ArrayList<Aluno> arrayAlunos;
-    private Servidor serAux;
+    private Servidor coordenador;
+    private Aluno alunoAux;
     private String antMatricula = null;
     private boolean clicouLista = false;
 
@@ -33,7 +34,7 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
     public GerenciarAlunosGUI() {
         initComponents();
         listarAlunos();
-        serAux = LoginControl.retornaServidorLogado();
+        coordenador = LoginControl.retornaServidorLogado();
         resetaBotoes();
     }
 
@@ -184,7 +185,7 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonCancelar)
                 .addContainerGap())
@@ -318,6 +319,10 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
         if (vazio) {
             JOptionPane.showMessageDialog(this, "Nenhum campo pode ficar vazio !!!");
         } else {
+            if (!jTextFieldMatricula.getText().equals(antMatricula)) {
+                JOptionPane.showMessageDialog(this, "A matrícula do aluno não pode ser alterada !!!");
+                jTextFieldMatricula.setText(antMatricula);
+            }
             Aluno alu = new Aluno();
             alu.setMatricula(jTextFieldMatricula.getText());
             alu.setNome(jTextFieldNome.getText());
@@ -344,13 +349,13 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
             resetaBotoes();
             limparCampos();
             clicouLista = false;
-        } else if (serAux.getSerCoordenador() == 1) {
+        } else if (coordenador.getSerCoordenador() == 1) {
             new TelaPrincipalCoordenadorGUI().setVisible(true);
             this.dispose();
-        } else if (serAux.getSerDe() == 1) {
+        } else if (coordenador.getSerDe() == 1) {
             new TelaPrincipalDeGUI().setVisible(true);
             this.dispose();
-        } else if (serAux.getSerResponsavelAta() == 1) {
+        } else if (coordenador.getSerResponsavelAta() == 1) {
             new TelaPrincipalServidorComumGUI(1).setVisible(true);
             this.dispose();
         } else {
@@ -378,6 +383,7 @@ public class GerenciarAlunosGUI extends javax.swing.JFrame {
         for (int i = 0; i < arrayAlunos.size(); i++) {
             if (matricula.equals(arrayAlunos.get(i).getMatricula())) {
                 aux = arrayAlunos.get(i);
+                antMatricula = arrayAlunos.get(i).getMatricula();
             }
         }
         return aux;

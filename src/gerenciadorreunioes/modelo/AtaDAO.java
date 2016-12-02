@@ -5,7 +5,7 @@
  */
 package gerenciadorreunioes.modelo;
 
-import gerenciadorreunioes.jpa.JpaUtil;
+import gerenciadorreunioes.conexoes.JpaUtil;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -73,7 +73,7 @@ public class AtaDAO {
         return atas;
     }
 
-    public Ata getAtas(int codReuniao) {
+    public Ata getAta(int codReuniao) {
         Ata a = null;
         for (Ata ata : getAtas()) {
             if (ata.getReuniao().getCodigo() == codReuniao) {

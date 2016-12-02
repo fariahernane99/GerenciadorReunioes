@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
+<!-- 2016-11-08T12:16:47 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Funfa" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b14a168b-5e97-4de4-a485-71f89dde89c4">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="background.image.path" value="C:\Users\Alunos\Desktop\logo.jpg"/>
+	<property name="background.image.x" value="33"/>
+	<property name="background.image.y" value="207"/>
+	<property name="background.image.widht" value="546"/>
+	<property name="background.image.height" value="353"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Reunioes"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#F5F9FC">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table" uuid="4dfec5d3-f59c-4b5f-b414-9a8ce10793c9">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Reunioes"/>
+		<parameter name="gruCodigo" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select ataStatus,gruNome,reuData FROM Ata JOIN Reuniao JOIN Grupo ON ataStatus='Concluída' AND gruCodigo=$P{gruCodigo} AND gruCodigo=reu_gruCodigo GROUP BY reuData]]>
+		</queryString>
+		<field name="ataStatus" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="gruNome" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="reuData" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<group name="gruNome">
+			<groupExpression><![CDATA[$F{gruNome}]]></groupExpression>
+		</group>
+		<group name="ataStatus">
+			<groupExpression><![CDATA[$F{ataStatus}]]></groupExpression>
+		</group>
+		<group name="reuData">
+			<groupExpression><![CDATA[$F{reuData}]]></groupExpression>
+		</group>
+	</subDataset>
+	<parameter name="gruCodigo" class="java.lang.Integer"/>
+	<parameter name="dataInicio" class="java.util.Date"/>
+	<parameter name="dataFim" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[select ataStatus,gruCodigo,gruNome,reuData FROM Reuniao JOIN Ata JOIN Grupo ON ataStatus='Concluída' AND gruCodigo=$P{gruCodigo} AND gruCodigo=reu_gruCodigo AND reuData BETWEEN $P{dataInicio}  AND $P{dataFim}]]>
+	</queryString>
+	<field name="ataStatus" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="gruCodigo" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="gruNome" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="reuData" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<group name="gruNome">
+		<groupExpression><![CDATA[$F{gruNome}]]></groupExpression>
+	</group>
+	<background>
+		<band height="550" splitType="Stretch">
+			<image>
+				<reportElement positionType="Float" x="0" y="40" width="544" height="510" uuid="56a8e5d8-2ef4-4186-986a-19c75ca2c27a"/>
+				<imageExpression><![CDATA["C:/Users/Alunos/Desktop/logo.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<title>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="550" height="20" uuid="3adda767-8640-40e8-824b-477072fe3001"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[RELATÓRIO DE ATAS CONCLUÍDAS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="20" width="550" height="20" uuid="86a8af4b-86a3-4c2b-af3f-5a53159794f4"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA["Grupo: " + $F{gruNome}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="280" splitType="Stretch">
+			<componentElement>
+				<reportElement x="-3" y="80" width="560" height="200" uuid="b5a4f07a-5b3d-4f0f-9d88-becfeecb5f8e">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Table" uuid="c93c2296-50b9-4df7-8def-61255b36e132">
+						<datasetParameter name="gruCodigo">
+							<datasetParameterExpression><![CDATA[$F{gruCodigo}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="210" uuid="bc0f99d8-a940-4a85-870c-109f09475d76">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="210" height="30" uuid="e3d0039a-b309-4046-b4ba-8377ebb3efc0"/>
+								<textElement textAlignment="Center">
+									<font size="14" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Nome do Grupo participante]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:tableFooter style="Table_TH" height="30" rowSpan="1"/>
+						<jr:columnFooter style="Table_CH" height="30" rowSpan="1"/>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="210" height="30" uuid="5e56a3ba-46ce-48a0-aeb9-040be0dbf93d"/>
+								<textElement>
+									<font size="13"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{gruNome}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="170" uuid="39dac078-0819-4c45-a50f-0ea56190205f">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="170" height="30" uuid="92f03d79-84c2-4120-ad6e-55bae7ac4196"/>
+								<textElement textAlignment="Center">
+									<font size="14" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Data da reunião]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:tableFooter style="Table_TH" height="30" rowSpan="1"/>
+						<jr:columnFooter style="Table_CH" height="30" rowSpan="1"/>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="170" height="30" uuid="e9aab410-7dda-4a13-be4f-e2f8d1a4b04c"/>
+								<textElement>
+									<font size="13"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{reuData}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="180" uuid="e30399fd-1451-4571-9371-be522e20543c">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="180" height="30" uuid="bf6ce8f8-ffbf-464b-b1ba-5ca8d6117d23"/>
+								<textElement textAlignment="Center">
+									<font size="14" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Status da ATA]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:tableFooter style="Table_TH" height="30" rowSpan="1"/>
+						<jr:columnFooter style="Table_CH" height="30" rowSpan="1"/>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="180" height="30" uuid="09ec6a15-f262-4aa0-9fca-c4daecffbeef"/>
+								<textElement>
+									<font size="13"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{ataStatus}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement x="9" y="24" width="100" height="30" uuid="d427249e-cfb0-4d62-804f-2f5254f3457b"/>
+				<text><![CDATA[Período selecionado: ]]></text>
+			</staticText>
+			<textField pattern="dd&apos;/&apos;MM&apos;/&apos;Y">
+				<reportElement x="110" y="24" width="60" height="30" uuid="00d0ec85-90bb-43c3-8c24-5945bd019898"/>
+				<textFieldExpression><![CDATA[$P{dataInicio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd&apos;/&apos;MM&apos;/&apos;Y">
+				<reportElement x="190" y="24" width="90" height="30" uuid="fa5cbb2f-a844-4f1b-a401-0d4364d46a8e"/>
+				<textFieldExpression><![CDATA[$P{dataFim}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="170" y="24" width="5" height="30" uuid="b38b03c3-4a64-447a-a490-5de0ce7b5f0b"/>
+				<text><![CDATA[a]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="468" splitType="Stretch">
+			<textField>
+				<reportElement x="490" y="430" width="100" height="15" uuid="3047e840-08e0-40dc-aeef-0f280212dce4"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd &apos;de&apos; MMMM &apos;de&apos; YYYY">
+				<reportElement x="0" y="437" width="180" height="20" uuid="3c2627fe-15e8-41e4-87b2-cfccb29f82c8"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -5,7 +5,7 @@
  */
 package gerenciadorreunioes.modelo;
 
-import gerenciadorreunioes.jpa.JpaUtil;
+import gerenciadorreunioes.conexoes.JpaUtil;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -136,5 +136,4 @@ public class GrupoDAO {
         }
         return grupo;
     }
-
 }

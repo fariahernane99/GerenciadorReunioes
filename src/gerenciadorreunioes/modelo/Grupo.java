@@ -63,7 +63,7 @@ public class Grupo implements Serializable {
         this.siapeCoordenador = siapeCoordenador;
     }
 
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinTable(name = "Aluno_Grupo", joinColumns = @JoinColumn(name = "alg_gruCodigo"), inverseJoinColumns = @JoinColumn(name = "alg_aluMatricula"))
     public List<Aluno> getAlunos() {
         return alunos;
@@ -73,7 +73,7 @@ public class Grupo implements Serializable {
         this.alunos = alunos;
     }
 
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinTable(name = "Servidor_Grupo", joinColumns = @JoinColumn(name = "seg_gruCodigo"), inverseJoinColumns = @JoinColumn(name = "seg_serSiape"))
     public List<Servidor> getServidores() {
         return servidores;

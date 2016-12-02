@@ -54,19 +54,23 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         dp.addColumn("Encaminhamento");
         de.addColumn("Participante");
         de.addColumn("Presença");
-        desabilitaTable();
-        preencheComboGrupo();
-    }
-
-    public void desabilitaTable() {
         jTabbedPane1.setEnabledAt(1, false);
+        ataControl.codReuniao(codReuniao);
+        this.preencheComboGrupo();
+        this.responsavel();
     }
+    
 
     public String pegaNomeReuniao() {
         String selecionado = (String) jComboBoxReunioes.getSelectedItem();
         String[] pegaCodigo = selecionado.split(" - ");
         codReuniao = Integer.parseInt(pegaCodigo[0]);
+        reuniaoControl.getReuniao(codReuniao);
         return selecionado;
+    }
+    
+    public void responsavel(){
+        ataControl.pegaResponsavel(serAux);
     }
 
     public void preencheComboGrupo() {
@@ -84,6 +88,8 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
             String selecionado = (String) jComboBoxGrupos.getSelectedItem();
             String[] pegaCodigo = selecionado.split(" - ");
             codGrupo = Integer.parseInt(pegaCodigo[0]);
+            reuniaoControl.setServidoresDaReuniao(codGrupo);
+            reuniaoControl.setServidoresDaReuniao(codGrupo);
             jComboBoxReunioes.removeAllItems();
             ArrayList<Reuniao> reunioes = reuniaoControl.retornaReunioesDeUmGrupo(codGrupo);
             for (int i = 0; i < reunioes.size(); i++) {
@@ -234,6 +240,20 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
             pesquisaReuniaoSelecionada();
         }
     }
+    
+    public void pegaPontosPauta(){
+        int row = jTablePontos.getRowCount();
+        ArrayList<Pauta> pontos = new ArrayList<>();
+        for(int i=0;i<row;i++){
+        Pauta pauta = new Pauta();
+        pauta.setTitulo((String) jTablePontos.getValueAt(i, 1));
+        pauta.setDefinicao((String) jTablePontos.getValueAt(i, 2));
+        pauta.setEncaminhamento((String) jTablePontos.getValueAt(i, 3));
+        pontos.add(pauta);
+       }
+       pautaControl.pegaPontosPauta(pontos);
+   }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.

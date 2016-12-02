@@ -20,20 +20,23 @@ import javax.swing.JRadioButton;
 public class GerenciarServidoresGUI extends javax.swing.JFrame {
 
     private DefaultListModel modelo = new DefaultListModel();
-    private ServidorControl controleServ = new ServidorControl();
+    private ServidorControl servidorControl = new ServidorControl();
     private ArrayList<Servidor> arrayServ;
     private Servidor coordenador;
     private Servidor serAux;
     private boolean clicouLista = false;
+    private boolean clicouSenha = false;
 
     /**
      * Creates new form InserirMembro
      */
     public GerenciarServidoresGUI() {
         initComponents();
+        serAux = new Servidor();
         coordenador = LoginControl.retornaServidorLogado();
         listaServidores();
         resetaBotoes();
+
     }
 
     /**
@@ -72,7 +75,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
         jButtonEditar = new javax.swing.JButton();
         jButtonCancelar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastro de Membros", 2, 2));
 
@@ -354,14 +357,24 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jList1MouseClicked
 
     private void jButtonGerenciarSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerenciarSenhaActionPerformed
-        // chamar a tela de gerenciar senha
-        // saber quando por parametro ou nao
-        // quando é cadastro ou edição
-        if (clicouLista) {
-            new GerenciarSenhaGUI(coordenador).setVisible(true);
+        String senha = "";
+        if (!clicouLista) {
+            senha = "";
         } else {
-            new GerenciarSenhaGUI().setVisible(true);
+            senha = servidorControl.getServidor(serAux.getSiape()).getSenha();
         }
+        serAux = new Servidor();
+        serAux.setSiape(jTextFieldSiape.getText());
+        serAux.setNome(jTextFieldNome.getText());
+        serAux.setEmail(jTextFieldEmail.getText());
+        serAux.setSenha(senha);
+        serAux.setTelefone(jTextFieldFone.getText());
+        serAux.setArea(jTextFieldArea.getText());
+
+        clicouSenha = true;
+        // não está editando, só cadastrando
+        new GerenciarSenhaGUI(serAux, this).setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_jButtonGerenciarSenhaActionPerformed
 
     /**
@@ -398,64 +411,69 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void cadastra() {
-        boolean vazio = controleServ.verificaCampos(jTextFieldNome.getText(), jTextFieldSiape.getText(),
+        boolean vazio = servidorControl.verificaCampos(jTextFieldNome.getText(), jTextFieldSiape.getText(),
                 jTextFieldArea.getText(), jTextFieldEmail.getText(), jTextFieldFone.getText());
         if (vazio) {
-            JOptionPane.showMessageDialog(null, "Nenhum campo pode ficar vazio!");
-        } else if (controleServ.verificaCadastro(jTextFieldSiape.getText())) {
-            JOptionPane.showMessageDialog(null, "Já existe um servidor com esse siape !!!");
+            JOptionPane.showMessageDialog(this, "Nenhum campo pode ficar vazio !!!");
         } else {
-            Servidor s = new Servidor();
-            s.setSiape(jTextFieldSiape.getText());
-            s.setNome(jTextFieldNome.getText());
-            s.setEmail(jTextFieldEmail.getText());
-            s.setTelefone(jTextFieldFone.getText());
-            s.setSenha(LoginControl.criptografar(LoginControl.retornaSenhaNova()));
-            s.setArea(jTextFieldArea.getText());
-            boolean controle = false;
-            if (!(jRadioButtonCoordenador.isSelected()) && !(jRadioButtonDE.isSelected()) && !(jRadioButtonMembro.isSelected())) {
-                JOptionPane.showMessageDialog(this, "Selecione uma opção de Servidor !!!");
+            boolean encontrou = servidorControl.verificaCadastro(jTextFieldSiape.getText());
+            if (encontrou) {
+                JOptionPane.showMessageDialog(this, "Já existe um servidor com esse siape !!!");
             } else {
-                s.setSerCoordenador(converteBooleanParaInt(jRadioButtonCoordenador));
-                s.setSerDe(converteBooleanParaInt(jRadioButtonDE));
-                s.setSerResponsavelAta(0);
-                controle = true;
-            }
-            if (controle) {
-                boolean verifica = controleServ.adiciona(s);
-                if (verifica) {
-                    JOptionPane.showMessageDialog(null, "O membro foi adicionado com sucesso !!!");
-                    limpaCampos();
+                serAux.setSiape(jTextFieldSiape.getText());
+                serAux.setNome(jTextFieldNome.getText());
+                serAux.setEmail(jTextFieldEmail.getText());
+                serAux.setTelefone(jTextFieldFone.getText());
+                serAux.setArea(jTextFieldArea.getText());
+                boolean controle = false;
+                if (!(jRadioButtonCoordenador.isSelected()) && !(jRadioButtonDE.isSelected()) && !(jRadioButtonMembro.isSelected())) {
+                    JOptionPane.showMessageDialog(this, "Selecione uma opção de Servidor !!!");
                 } else {
-                    JOptionPane.showMessageDialog(this, "Não foi possível cadastrar esse servidor !!!");
+                    serAux.setSerCoordenador(converteBooleanParaInt(jRadioButtonCoordenador));
+                    serAux.setSerDe(converteBooleanParaInt(jRadioButtonDE));
+                    serAux.setSerResponsavelAta(0);
+                    controle = true;
+                }
+                if (!clicouSenha) {
+                    JOptionPane.showMessageDialog(this, "É preciso cadastrar ou editar a senha !!!");
+                } else if (controle) {
+                    boolean verifica = servidorControl.atualiza(serAux);
+                    if (verifica) {
+                        JOptionPane.showMessageDialog(this, "O membro foi adicionado com sucesso !!!");
+                        limpaCampos();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Não foi possível cadastrar esse servidor !!!");
+                    }
                 }
             }
         }
     }
 
     private void edita() {
-        boolean vazio = controleServ.verificaCampos(jTextFieldNome.getText(), jTextFieldSiape.getText(),
+        boolean vazio = servidorControl.verificaCampos(jTextFieldNome.getText(), jTextFieldSiape.getText(),
                 jTextFieldArea.getText(), jTextFieldEmail.getText(), jTextFieldFone.getText());
         if (vazio) {
             JOptionPane.showMessageDialog(this, "Nenhum campo pode ficar vazio !!!");
         } else {
-            Servidor s = new Servidor();
-            s.setSiape(jTextFieldSiape.getText());
-            s.setNome(jTextFieldNome.getText());
-            s.setEmail(jTextFieldEmail.getText());
-            s.setTelefone(jTextFieldFone.getText());
-            s.setSenha(LoginControl.criptografar(LoginControl.retornaSenhaNova()));
-            s.setArea(jTextFieldArea.getText());
+            if (!jTextFieldSiape.getText().equals(serAux.getSiape())) {
+                JOptionPane.showMessageDialog(this, "O siape do servidor não pode ser alterado !!!");
+                jTextFieldSiape.setText(serAux.getSiape());
+            }
+            serAux.setSiape(jTextFieldSiape.getText());
+            serAux.setNome(jTextFieldNome.getText());
+            serAux.setEmail(jTextFieldEmail.getText());
+            serAux.setTelefone(jTextFieldFone.getText());
+            serAux.setArea(jTextFieldArea.getText());
             if (!(jRadioButtonCoordenador.isSelected()) && !(jRadioButtonDE.isSelected()) && !(jRadioButtonMembro.isSelected())) {
                 JOptionPane.showMessageDialog(this, "Selecione uma opção de Servidor !!!");
             } else {
-                s.setSerCoordenador(converteBooleanParaInt(jRadioButtonCoordenador));
-                s.setSerDe(converteBooleanParaInt(jRadioButtonDE));
-                s.setSerResponsavelAta(0);
+                serAux.setSerCoordenador(converteBooleanParaInt(jRadioButtonCoordenador));
+                serAux.setSerDe(converteBooleanParaInt(jRadioButtonDE));
+                serAux.setSerResponsavelAta(0);
             }
-            boolean verifica = controleServ.atualiza(s);
+            boolean verifica = servidorControl.atualiza(serAux);
             if (verifica) {
-                JOptionPane.showMessageDialog(null, "O servidor foi atualizado com sucesso !!!");
+                JOptionPane.showMessageDialog(this, "O servidor foi atualizado com sucesso !!!");
                 limpaCampos();
             } else {
                 JOptionPane.showMessageDialog(this, "Não foi possível atualizar esse servidor !!!");
@@ -465,8 +483,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
     }
 
     private void exclui() {
-        String cod = pegaSiapeAntigo();
-        boolean add = controleServ.deleta(cod);
+        boolean add = servidorControl.deleta(serAux.getSiape());
         if (add) {
             JOptionPane.showMessageDialog(null, "O membro foi excluído com sucesso com sucesso !!!");
             limpaCampos();
@@ -476,9 +493,12 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
     }
 
     private void cancelar() {
+        clicouSenha = false;
         if (clicouLista) {
             resetaBotoes();
             limpaCampos();
+            serAux = new Servidor();
+            serAux = null;
             clicouLista = false;
         } else if (coordenador.getSerCoordenador() == 1) {
             new TelaPrincipalCoordenadorGUI().setVisible(true);
@@ -499,7 +519,7 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
         String selecionado = (String) jList1.getSelectedValue();
         String[] pegaCodigo = selecionado.split(" - ");
         String siape = pegaCodigo[0];
-        arrayServ = controleServ.lista();
+        arrayServ = servidorControl.getServidores();
         for (Servidor s : arrayServ) {
             if (s.getSiape().equals(siape)) {
                 serAux = s;
@@ -550,21 +570,14 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
     private void listaServidores() {
         modelo.removeAllElements();
         if (coordenador.getSerCoordenador() == 1) {
-            arrayServ = controleServ.getMembrosComuns();
+            arrayServ = servidorControl.getMembrosComuns(coordenador);
         } else {
-            arrayServ = controleServ.lista();
+            arrayServ = servidorControl.getServidores();
         }
         for (Servidor s : arrayServ) {
             modelo.addElement(s.getSiape() + " - " + s.getNome());
         }
         jList1.setModel(modelo);
-    }
-
-    private String pegaSiapeAntigo() {
-        String selecionado = (String) jList1.getSelectedValue();
-        String[] pegaCodigo = selecionado.split(" - ");
-        String siape = pegaCodigo[0];
-        return siape;
     }
 
     private void resetaBotoes() {

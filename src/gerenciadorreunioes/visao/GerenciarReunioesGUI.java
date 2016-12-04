@@ -1,5 +1,6 @@
 package gerenciadorreunioes.visao;
 
+import gerenciadorreunioes.controle.AlunoControl;
 import gerenciadorreunioes.controle.AtaControl;
 import gerenciadorreunioes.controle.EnviarEmailControl;
 import gerenciadorreunioes.controle.GrupoControl;
@@ -7,6 +8,7 @@ import gerenciadorreunioes.controle.LoginControl;
 import gerenciadorreunioes.controle.PautaControl;
 import gerenciadorreunioes.controle.ReuniaoControl;
 import gerenciadorreunioes.controle.ServidorControl;
+import gerenciadorreunioes.modelo.Aluno;
 import gerenciadorreunioes.modelo.Ata;
 import gerenciadorreunioes.modelo.Grupo;
 import gerenciadorreunioes.modelo.Pauta;
@@ -18,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.DefaultListModel;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import org.apache.commons.mail.EmailException;
 
@@ -28,17 +31,17 @@ import org.apache.commons.mail.EmailException;
 public class GerenciarReunioesGUI extends javax.swing.JFrame {
 
     private GrupoControl grupoControl = new GrupoControl();
-    private ServidorControl servControl = new ServidorControl();
+    private ServidorControl servidorControl = new ServidorControl();
     private DefaultListModel modelo = new DefaultListModel();
     private ArrayList<String> arrayGrupos = grupoControl.pegaCodigoNomeGrupos();
     private ArrayList<String> arrayServidores = new ArrayList<>();
+    private AlunoControl alunoControl = new AlunoControl();
     private AtaControl ataControl = new AtaControl();
     private PautaControl pautaControl = new PautaControl();
     private EnviarEmailControl enviaEmail = new EnviarEmailControl();
     private ReuniaoControl reuniaoControl = new ReuniaoControl();
     private LoginControl loginControl = new LoginControl();
     private Servidor coordenador;
-    private Grupo grupoAux;
     private Reuniao reuniaoAntiga;
     private boolean clicouLista = false;
 
@@ -69,31 +72,31 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
 
     private void atualizaComboResponsavelAta() {
         arrayServidores.removeAll(arrayServidores);
-        a
-        // não está rodando
-        ArrayList<Servidor> arrayAux = servControl.getServidoresParticipantesDoGrupo(pegaCodigoGrupo());
+        ArrayList<Servidor> arrayAux = servidorControl.getServidoresParticipantesDoGrupo(pegaCodigoGrupo());
         for (int i = 0; i < arrayAux.size(); i++) {
             arrayServidores.add(arrayAux.get(i).getSiape() + " - " + arrayAux.get(i).getNome());
         }
-        jComboBoxResponsavelATA.removeAllItems();
+        jComboBoxResponsavelAta.removeAllItems();
         for (int i = 0; i < arrayServidores.size(); i++) {
-            jComboBoxResponsavelATA.addItem(arrayServidores.get(i));
+            jComboBoxResponsavelAta.addItem(arrayServidores.get(i));
         }
     }
 
     private void listaReunioes() {
         ArrayList<Reuniao> reunioes = new ArrayList<>();
         for (Grupo gru : grupoControl.getGrupos(coordenador.getSiape())) {
-            for (Reuniao reu : reuniaoControl.getReunioes(gru.getCodigo())) {
-                reunioes.add(reu);
+            if (reuniaoControl.getReunioes(gru.getCodigo()).size() > 0) {
+                for (Reuniao reu : reuniaoControl.getReunioes(gru.getCodigo())) {
+                    reunioes.add(reu);
+                }
             }
+            DefaultListModel e = new DefaultListModel();
+            jListReunioes.removeAll();
+            for (int i = 0; i < reunioes.size(); i++) {
+                e.addElement(reunioes.get(i).getCodigo() + " - " + reunioes.get(i).getNome());
+            }
+            jListReunioes.setModel(e);
         }
-        DefaultListModel e = new DefaultListModel();
-        jListReunioes.removeAll();
-        for (int i = 0; i < reunioes.size(); i++) {
-            e.addElement(reunioes.get(i).getCodigo() + " - " + reunioes.get(i).getNome());
-        }
-        jListReunioes.setModel(e);
     }
 
     private void deletarReuniao() {
@@ -105,7 +108,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Reunião deletada com sucesso");
             enviaEmail(2);
         } else {
-            JOptionPane.showMessageDialog(this, "Não foi possível deltar esta reunião, tente novamente");
+            JOptionPane.showMessageDialog(this, "Não foi possível deletar esta reunião, tente novamente");
         }
     }
 
@@ -136,7 +139,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
         jButtonCadastrarPonto = new javax.swing.JButton();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jTextFieldLocal = new javax.swing.JTextField();
-        jComboBoxResponsavelATA = new javax.swing.JComboBox<>();
+        jComboBoxResponsavelAta = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         jListReunioes = new javax.swing.JList<>();
         jButtonExcluirReuniao = new javax.swing.JButton();
@@ -145,9 +148,11 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jButtonAlterarReuniao = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Gerenciar Reuniões - Gerenciador de Reuniões");
+        setResizable(false);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastrar Reunião", 2, 0, new java.awt.Font("Arial", 0, 18))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastrar Reunião", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 18))); // NOI18N
 
         jLabel1.setText("Selecione um grupo para participar da reunião:");
 
@@ -164,7 +169,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
 
         jLabel2.setText("Pontos de pauta:");
 
-        jButtonNovoPonto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/i54.jpg"))); // NOI18N
+        jButtonNovoPonto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/pauta.jpg"))); // NOI18N
         jButtonNovoPonto.setText("Novo");
         jButtonNovoPonto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -172,7 +177,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             }
         });
 
-        jButtonExcluirPonto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/deletar-foto_318-77143.jpg"))); // NOI18N
+        jButtonExcluirPonto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/deletar.jpg"))); // NOI18N
         jButtonExcluirPonto.setText("Excluir Ponto de Pauta");
         jButtonExcluirPonto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -201,6 +206,12 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
 
         jLabel6.setText("Horário da Reunião(HH:MM):");
 
+        jTextFieldHora.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldHoraActionPerformed(evt);
+            }
+        });
+
         jLabel7.setText("Local da Reunião:");
 
         jButtonCadastrarPonto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/gravar.PNG"))); // NOI18N
@@ -218,7 +229,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jListReunioes);
 
-        jButtonExcluirReuniao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/deletar-foto_318-77143.jpg"))); // NOI18N
+        jButtonExcluirReuniao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/deletar.jpg"))); // NOI18N
         jButtonExcluirReuniao.setText("Excluir Reunião");
         jButtonExcluirReuniao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -226,7 +237,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             }
         });
 
-        jButtonCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/dialog-close.png"))); // NOI18N
+        jButtonCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/sair.png"))); // NOI18N
         jButtonCancelar.setText("Cancelar");
         jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -234,7 +245,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             }
         });
 
-        jButtonConcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/download (1).jpg"))); // NOI18N
+        jButtonConcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/confirmar.jpg"))); // NOI18N
         jButtonConcluir.setText("Concluir Reunião");
         jButtonConcluir.setToolTipText("");
         jButtonConcluir.addActionListener(new java.awt.event.ActionListener() {
@@ -258,45 +269,49 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButtonExcluirPonto))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel1)
-                        .addComponent(jComboBoxGrupoParticipante, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jButtonNovoPonto)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jButtonCadastrarPonto))
-                        .addComponent(jTextFieldNovoPonto)
-                        .addComponent(jScrollPane1))
-                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBoxResponsavelATA, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(49, 49, 49)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextFieldHora)
-                    .addComponent(jTextFieldLocal)
-                    .addComponent(jScrollPane2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButtonConcluir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonAlterarReuniao, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jComboBoxResponsavelAta, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jButtonExcluirPonto)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addComponent(jLabel2)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jButtonNovoPonto)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jButtonCadastrarPonto))
+                                        .addComponent(jScrollPane1)))))
+                        .addGap(26, 26, 26))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel5))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBoxGrupoParticipante, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldNovoPonto, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldHora)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldLocal)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButtonExcluirReuniao, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonExcluirReuniao, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jButtonCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButtonConcluir, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonAlterarReuniao, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -304,14 +319,14 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jComboBoxGrupoParticipante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
@@ -324,18 +339,14 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonExcluirPonto)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBoxResponsavelATA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButtonExcluirPonto))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel6)
-                        .addGap(8, 8, 8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextFieldHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(9, 9, 9)
+                        .addGap(11, 11, 11)
                         .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextFieldLocal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -344,22 +355,35 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
                         .addGap(15, 15, 15)
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE))
-                    .addComponent(jButtonExcluirReuniao, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(43, Short.MAX_VALUE))
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBoxResponsavelAta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButtonExcluirReuniao)
+                            .addComponent(jButtonCancelar))))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 18, Short.MAX_VALUE))
         );
 
         pack();
@@ -381,18 +405,16 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jComboBoxGrupoParticipanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxGrupoParticipanteActionPerformed
-        atualizaComboResponsavelAta();
-        grupoAux = pegaGrupoDoCombo(pegaCodigoGrupo());
+
     }//GEN-LAST:event_jComboBoxGrupoParticipanteActionPerformed
 
     private void jButtonCadastrarPontoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarPontoActionPerformed
         cadastraPontoPauta();
-        resetaBotoesCampos();
     }//GEN-LAST:event_jButtonCadastrarPontoActionPerformed
 
     private void jButtonExcluirPontoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirPontoActionPerformed
         excluiPontoPauta();
-        resetaBotoesCampos();
+        resetaBotoes();
     }//GEN-LAST:event_jButtonExcluirPontoActionPerformed
 
     private void jButtonConcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConcluirActionPerformed
@@ -402,21 +424,26 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonConcluirActionPerformed
 
     private void jListPontosPautaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListPontosPautaMouseClicked
-        jButtonExcluirPonto.setEnabled(true);
+        if (jListPontosPauta.getModel().getSize() > 0) {
+            jButtonExcluirPonto.setEnabled(true);
+        }
     }//GEN-LAST:event_jListPontosPautaMouseClicked
 
     private void jComboBoxGrupoParticipanteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxGrupoParticipanteMouseClicked
-
+        atualizaComboResponsavelAta();
     }//GEN-LAST:event_jComboBoxGrupoParticipanteMouseClicked
 
     private void jButtonExcluirReuniaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirReuniaoActionPerformed
         deletarReuniao();
         listaReunioes();
+        resetaBotoes();
+        limpaCampos();
     }//GEN-LAST:event_jButtonExcluirReuniaoActionPerformed
 
     private void jListReunioesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListReunioesMouseClicked
         clicouLista = true;
         jogaElementosNosCampos();
+        jButtonCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/cancelar.PNG")));
     }//GEN-LAST:event_jListReunioesMouseClicked
 
     private void jButtonAlterarReuniaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAlterarReuniaoActionPerformed
@@ -424,6 +451,10 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
         limpaCampos();
         listaReunioes();
     }//GEN-LAST:event_jButtonAlterarReuniaoActionPerformed
+
+    private void jTextFieldHoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldHoraActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldHoraActionPerformed
 
     /**
      * @param args the command line arguments
@@ -438,7 +469,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButtonExcluirReuniao;
     private javax.swing.JButton jButtonNovoPonto;
     private javax.swing.JComboBox<String> jComboBoxGrupoParticipante;
-    private javax.swing.JComboBox<String> jComboBoxResponsavelATA;
+    private javax.swing.JComboBox<String> jComboBoxResponsavelAta;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -463,7 +494,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
         if (pontoPauta.equals("")) {
             JOptionPane.showMessageDialog(this, "Não é permitido cadastrar um Ponto de Pauta vazio !!!");
         } else {
-            modelo.addElement(jTextFieldNovoPonto.getText());
+            modelo.addElement(pontoPauta);
             jListPontosPauta.setModel(modelo);
         }
         jTextFieldNovoPonto.setText("");
@@ -479,7 +510,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
     }
 
     private String separaCodigo() {
-        String selecionado = (String) jComboBoxResponsavelATA.getSelectedItem();
+        String selecionado = (String) jComboBoxResponsavelAta.getSelectedItem();
         String[] pegaSiape = selecionado.split(" - ");
         String siape = pegaSiape[0];
         return siape;
@@ -506,7 +537,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             date = (Date) dateFor.parse(data);
         } catch (ParseException e) {
         }
-        boolean vazio = reuniaoControl.verificaCampos(jListPontosPauta.getModel().getSize(), data.toString(), jTextFieldHora.getText(), jTextFieldLocal.getText());
+        boolean vazio = reuniaoControl.verificaCampos(jListPontosPauta.getModel().getSize(), data, jTextFieldHora.getText(), jTextFieldLocal.getText());
         if (vazio) {
             JOptionPane.showMessageDialog(this, "Nenhum campo pode ficar vazio !!!");
         } else {
@@ -521,16 +552,16 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             x.setHorarioFim("-");
             x.setLocal(jTextFieldLocal.getText());
             x.setSiapeResponsavelAta(separaCodigo());
-            x.setGrupo(grupoAux);
+            x.setGrupo(pegaGrupoDoCombo(pegaCodigoGrupo()));
             reuniaoControl.adiciona(x);
             Ata a = new Ata();
             a.setStatus("Aberta");
             a.setReuniao(x);
             ataControl.adiciona(a);
             cadastraTodosOsPontos(x);
-            Servidor responsavelAta = servControl.getServidor(pegaCodigoSelecionadoNaCombo());
+            Servidor responsavelAta = servidorControl.getServidor(pegaCodigoSelecionadoNaCombo());
             responsavelAta.setSerResponsavelAta(1);
-            servControl.atualiza(responsavelAta);
+            servidorControl.atualiza(responsavelAta);
             JOptionPane.showMessageDialog(this, "Reunião: " + x.getNome() + " cadastrada com sucesso !!!");
             enviaEmail(0);
         }
@@ -545,10 +576,11 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
         } catch (ParseException e) {
             e.getMessage();
         }
-        boolean vazio = reuniaoControl.verificaCampos(jListPontosPauta.getModel().getSize(), data.toString(), jTextFieldHora.getText(), jTextFieldLocal.getText());
+        boolean vazio = reuniaoControl.verificaCampos(jListPontosPauta.getModel().getSize(), data, jTextFieldHora.getText(), jTextFieldLocal.getText());
         if (vazio) {
             JOptionPane.showMessageDialog(this, "Nenhum campo pode ficar vazio !!!");
         } else {
+            JOptionPane.showMessageDialog(this, data);
             Reuniao x = reuniaoAntiga;
             String selecionado = (String) jComboBoxGrupoParticipante.getSelectedItem();
             String[] pegaNome = selecionado.split(" - ");
@@ -560,26 +592,24 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             x.setHorarioFim("-");
             x.setLocal(jTextFieldLocal.getText());
             x.setSiapeResponsavelAta(separaCodigo());
-            x.setGrupo(grupoAux);
+            x.setGrupo(pegaGrupoDoCombo(pegaCodigoGrupo()));
             reuniaoControl.atualiza(x);
             cadastraTodosOsPontos(x);
-            Servidor responsavelAta = servControl.getServidor(pegaCodigoSelecionadoNaCombo());
+            Servidor responsavelAta = servidorControl.getServidor(pegaCodigoSelecionadoNaCombo());
             responsavelAta.setSerResponsavelAta(1);
-            servControl.atualiza(responsavelAta);
-            JOptionPane.showMessageDialog(this, "Reunião: " + x.getNome() + " cadastrada com sucesso !!!");
+            servidorControl.atualiza(responsavelAta);
+            JOptionPane.showMessageDialog(this, "Reunião: " + x.getNome() + " editada com sucesso !!!");
             enviaEmail(1);
         }
     }
 
     private void cancelar() {
         if (clicouLista) {
-            resetaBotoesCampos();
+            resetaBotoes();
+            limpaCampos();
             clicouLista = false;
-        } else if (coordenador.getSerCoordenador() == 1) {
+        } else if (coordenador.getSerCoordenador() == 1 || coordenador.getSerDe() == 1) {
             new TelaPrincipalCoordenadorGUI().setVisible(true);
-            this.dispose();
-        } else if (coordenador.getSerDe() == 1) {
-            new TelaPrincipalDeGUI().setVisible(true);
             this.dispose();
         } else if (coordenador.getSerResponsavelAta() == 1) {
             new TelaPrincipalServidorComumGUI(1).setVisible(true);
@@ -592,7 +622,6 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
 
     private int pegaCodigoGrupo() {
         String s = (String) jComboBoxGrupoParticipante.getSelectedItem();
-        JOptionPane.showMessageDialog(this, s);
         String[] pegaCodigo = s.split(" - ");
         int codigo = Integer.parseInt(pegaCodigo[0]);
         return codigo;
@@ -618,7 +647,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
     }
 
     private String pegaCodigoSelecionadoNaCombo() {
-        String selecionado = (String) jComboBoxResponsavelATA.getSelectedItem();
+        String selecionado = (String) jComboBoxResponsavelAta.getSelectedItem();
         String[] pegaCodigo = selecionado.split(" - ");
         String siape = pegaCodigo[0];
         return siape;
@@ -642,21 +671,18 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             jButtonCadastrarPonto.setEnabled(false);
         } else {
             JOptionPane.showMessageDialog(this, "Sem informação !!!");
-            resetaBotoesCampos();
+            resetaBotoes();
+            limpaCampos();
         }
     }
 
-    private void resetaBotoesCampos() {
-        modelo.removeAllElements();
-        jListPontosPauta.setModel(modelo);
-        jTextFieldNovoPonto.setText("");
-        jTextFieldHora.setText("");
-        jTextFieldLocal.setText("");
+    private void resetaBotoes() {
         jButtonNovoPonto.setEnabled(true);
         jButtonCadastrarPonto.setEnabled(false);
         jButtonExcluirPonto.setEnabled(false);
         jButtonAlterarReuniao.setEnabled(false);
         jButtonExcluirReuniao.setEnabled(false);
+        jButtonCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/sair.PNG")));
     }
 
     private Reuniao pegaReuniaoSelecionadaNaLista() {
@@ -681,7 +707,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
         //pega o código da reuniao, pesquisa a ata dessa reuniao, pesquisa os pontos de pauta dessa ata
         ArrayList<Pauta> arrayPontos = pautaControl.getPautas(ataControl.getAta(reuniaoSelecionada.getCodigo()).getCodigo());
         for (Pauta pau : arrayPontos) {
-            modelo.addElement(pau.getDefinicao());
+            modelo.addElement(pau.getTitulo());
         }
         jListPontosPauta.setModel(modelo);
     }
@@ -698,12 +724,12 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
     }
 
     private void preencheResponsavelAta(Reuniao reuniaoSelecionada) {
-        jComboBoxResponsavelATA.removeAllItems();
+        jComboBoxResponsavelAta.removeAllItems();
         String siape = reuniaoSelecionada.getSiapeResponsavelAta();
-        jComboBoxResponsavelATA.addItem(siape + " - " + servControl.getServidor(siape));
+        jComboBoxResponsavelAta.addItem(siape + " - " + servidorControl.getServidor(siape).getNome());
         for (Servidor ser : reuniaoSelecionada.getGrupo().getServidores()) {
             if (!(ser.getSiape().equals(siape))) {
-                jComboBoxResponsavelATA.addItem(ser.getSiape() + " - " + ser.getNome());
+                jComboBoxResponsavelAta.addItem(ser.getSiape() + " - " + ser.getNome());
             }
         }
     }
@@ -715,8 +741,8 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             pautaControl.deleta(pau.getCodigo());
         }
         ArrayList<String> titulos = pegaPontos();
-        Pauta p = new Pauta();
         for (int i = 0; i < titulos.size(); i++) {
+            Pauta p = new Pauta();
             p.setTitulo(titulos.get(i));
             p.setAta(ataControl.getAta(reuniao.getCodigo()));
             p.setDefinicao(" - ");
@@ -726,30 +752,36 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
     }
 
     private void enviaEmail(int op) {
-        try {
-            String senha = JOptionPane.showInputDialog("Atenção: será enviado uma mensagem aos demais participantes do seu grupo através de seu email cadastrado no sistema, por favor informe a senha do seu email:");
-            EnviarEmailControl email = new EnviarEmailControl();
-            int codigo = pegaCodigoGrupo();
-            Grupo aux = pegaGrupoDoCombo(codigo);
-            ArrayList<Servidor> emails = reuniaoControl.getEmails(codigo);
-            String mensagem = null;
-            if (op == 0) { // opção de cadastro
-                mensagem = "Uma reunião foi marcada para seu grupo de " + aux.getNome() + " às " + jTextFieldHora.getText() + " horas"
-                        + " do dia " + retornaData() + ". Informe ao coordenador se você poderá comparecer.";
-            } else if (op == 1) { // opção de atualização
-                String data = new SimpleDateFormat("dd-MM-yyyy").format(reuniaoAntiga.getData());
-                mensagem = "A reunião que estava  marcada para seu grupo de " + reuniaoAntiga.getNome() + " às " + reuniaoAntiga.getHorarioInicio() + " horas"
-                        + " do dia " + data + " foi REMARCADA para às " + jTextFieldHora.getText() + " horas do dia " + retornaData() + ". Informe ao coordenador se você poderá comparecer.";
-            } else if (op == 2) { // opção de atualização
-                String data = new SimpleDateFormat("dd-MM-yyyy").format(reuniaoAntiga.getData());
-                mensagem = "A reunião que estava  marcada para seu grupo de " + reuniaoAntiga.getNome() + " às " + reuniaoAntiga.getHorarioInicio() + " horas"
-                        + " do dia " + data + " foi CANCELADA.";
+        String senha = "";
+        senha = JOptionPane.showInputDialog(
+                "Atenção: será enviado uma mensagem aos demais participantes do seu grupo através \n"
+                + "de seu email cadastrado no sistema, por favor informe a senha do seu email: ", "");
+        if (!senha.equals("")) {
+            try {
+                EnviarEmailControl email = new EnviarEmailControl();
+                int codigo = pegaCodigoGrupo();
+                Grupo aux = pegaGrupoDoCombo(codigo);
+                ArrayList<Servidor> emailsServidores = servidorControl.getServidoresParticipantesDoGrupo(pegaCodigoGrupo());
+                ArrayList<Aluno> emailsAlunos = alunoControl.getAlunosParticipantesDoGrupo(pegaCodigoGrupo());
+                String mensagem = null;
+                if (op == 0) { // opção de cadastro
+                    mensagem = "Uma reunião foi marcada para seu grupo de " + aux.getNome() + " às " + jTextFieldHora.getText() + " horas"
+                            + " do dia " + retornaData() + ". Informe ao coordenador se você poderá comparecer.";
+                } else if (op == 1) { // opção de atualização
+                    String data = new SimpleDateFormat("dd-MM-yyyy").format(reuniaoAntiga.getData());
+                    mensagem = "A reunião que estava  marcada para seu grupo de " + reuniaoAntiga.getGrupo().getNome() + " às " + reuniaoAntiga.getHorarioInicio() + " horas"
+                            + " do dia " + data + " foi REMARCADA para às " + jTextFieldHora.getText() + " horas do dia " + retornaData() + ". Informe ao coordenador se você poderá comparecer.";
+                } else if (op == 2) { // opção de atualização
+                    String data = new SimpleDateFormat("dd-MM-yyyy").format(reuniaoAntiga.getData());
+                    mensagem = "A reunião que estava  marcada para seu grupo de " + reuniaoAntiga.getGrupo().getNome() + " às " + reuniaoAntiga.getHorarioInicio() + " horas"
+                            + " do dia " + data + " foi CANCELADA.";
+                }
+                email.email(emailsServidores, emailsAlunos, senha, mensagem, coordenador);
+            } catch (Exception e) {
+                e.getMessage();
             }
-            for (int i = 0; i < emails.size(); i++) {
-                email.email(emails, senha, mensagem, coordenador.getEmail());
-            }
-        } catch (EmailException e) {
-            e.getMessage();
+        } else {
+            JOptionPane.showMessageDialog(this, "Não foi possível mandar o email, mas a reunião foi cadastrada !!!");
         }
     }
 }

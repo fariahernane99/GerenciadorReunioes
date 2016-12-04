@@ -77,6 +77,10 @@ public class AlunoControl {
         return jaExisteMatricula;
     }
 
+    public ArrayList<Aluno> getAlunosParticipantesDoGrupo(int gruCodigo) {
+        return alunoDao.getAlunosParticipantesDoGrupo(gruCodigo);
+    }
+
     public ArrayList<Aluno> getAlunosDeUmGrupo(int gruCodigo) {
         return alunoDao.getAlunosDeUmGrupo(gruCodigo);
     }

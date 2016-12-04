@@ -8,7 +8,6 @@ package gerenciadorreunioes.controle;
 import gerenciadorreunioes.modelo.GrupoDAO;
 import gerenciadorreunioes.modelo.Servidor;
 import gerenciadorreunioes.modelo.ServidorDAO;
-import gerenciadorreunioes.visao.TelaPrincipalDeGUI;
 import gerenciadorreunioes.visao.TelaPrincipalCoordenadorGUI;
 import gerenciadorreunioes.visao.TelaPrincipalServidorComumGUI;
 import java.security.MessageDigest;
@@ -21,19 +20,23 @@ import java.util.ArrayList;
  */
 public class LoginControl {
 
-    private static Servidor servidorAux;
+    private static Servidor servidorLogado;
     private GrupoDAO grupoDao = new GrupoDAO();
     private ServidorDAO servidorDao = new ServidorDAO();
     private ArrayList<Servidor> arrayServidores = new ArrayList();
     private static MessageDigest md = null;
 
+    public void geraBD(){
+        servidorDao.getDeCoordenadores();
+    }
+    
     public boolean verificaLogin(String siape, String senha) {
         senha = criptografar(senha);
         boolean encontrou = false;
         arrayServidores = servidorDao.getServidores();
         for (Servidor s : arrayServidores) {
             if ((siape.equals(s.getSiape())) && (s.getSenha().equals(senha))) {
-                servidorAux = s;
+                servidorLogado = s;
                 encontrou = true;
             }
         }
@@ -44,13 +47,10 @@ public class LoginControl {
         boolean achou = false;
         boolean encontrou = verificaLogin(siape, senha);
         if (encontrou) {
-            if (servidorAux.getSerDe() == 1) {
-                TelaPrincipalDeGUI telaPrincipal = new TelaPrincipalDeGUI();
-                telaPrincipal.setVisible(true);
-            } else if (servidorAux.getSerCoordenador() == 1) {
+            if (servidorLogado.getSerCoordenador() == 1 || servidorLogado.getSerDe() == 1) {
                 TelaPrincipalCoordenadorGUI telaPrincipal = new TelaPrincipalCoordenadorGUI();
                 telaPrincipal.setVisible(true);
-            } else if (servidorAux.getSerResponsavelAta() == 1) {
+            } else if (servidorLogado.getSerResponsavelAta() == 1) {
                 TelaPrincipalServidorComumGUI telaPrincipal = new TelaPrincipalServidorComumGUI(1);
                 telaPrincipal.setVisible(true);
             } else {
@@ -63,7 +63,7 @@ public class LoginControl {
     }
 
     public static Servidor retornaServidorLogado() {
-        return servidorAux;
+        return servidorLogado;
     }
 
     static {

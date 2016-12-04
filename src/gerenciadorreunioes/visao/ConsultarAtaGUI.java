@@ -63,7 +63,8 @@ public class ConsultarAtaGUI extends javax.swing.JFrame {
         jRadioButtonConcluida = new javax.swing.JRadioButton();
         jRadioButtonFechada = new javax.swing.JRadioButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Consultar Ata - Gerenciador de Reuniões");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Consultar ATAs", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 18))); // NOI18N
 
@@ -189,6 +190,7 @@ public class ConsultarAtaGUI extends javax.swing.JFrame {
             status="Fechada";
             GeraRelatório.geraAtasFechadas(data1,data2,codGrupo);
         }
+        
     }//GEN-LAST:event_jButtonConsultarActionPerformed
 
     private void jRadioButtonConcluidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonConcluidaActionPerformed

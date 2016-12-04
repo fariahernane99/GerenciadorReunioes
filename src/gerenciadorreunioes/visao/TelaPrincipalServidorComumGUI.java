@@ -23,7 +23,7 @@ public class TelaPrincipalServidorComumGUI extends javax.swing.JFrame {
      */
     public TelaPrincipalServidorComumGUI() {
         initComponents();
-        jMenuItemRedigirATA.setEnabled(false);
+        jMenuItemRedigirAta.setEnabled(false);
     }
 
     public TelaPrincipalServidorComumGUI(int i) {
@@ -39,59 +39,43 @@ public class TelaPrincipalServidorComumGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel3 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
         jToolBar2 = new javax.swing.JToolBar();
         jButtonImprimirAta = new javax.swing.JButton();
-        jButtonMudaStatusATA = new javax.swing.JButton();
+        jButtonBuscarAta = new javax.swing.JButton();
         jButtonSair = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabelCoordenador = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuATAs = new javax.swing.JMenu();
-        jMenuItemMudarStatusATA = new javax.swing.JMenuItem();
-        jMenuItemImprimirATA = new javax.swing.JMenuItem();
-        jMenuItemRedigirATA = new javax.swing.JMenuItem();
+        jMenuItemImprimirAta = new javax.swing.JMenuItem();
+        jMenuItemConsultaAta = new javax.swing.JMenuItem();
+        jMenuItemRedigirAta = new javax.swing.JMenuItem();
         jMenuSobre = new javax.swing.JMenu();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Gerenciador de Reuniões");
-
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/logo.png"))); // NOI18N
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(48, 48, 48)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 19, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(70, Short.MAX_VALUE))
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Tela Principal de Servidor - Gerenciador de Reuniões");
+        setResizable(false);
 
         jToolBar2.setRollover(true);
 
-        jButtonImprimirAta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/imprimir-simbolo-interface-de-uma-maquina-impressora_318-67390.jpg"))); // NOI18N
+        jButtonImprimirAta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/imprimir.jpg"))); // NOI18N
         jButtonImprimirAta.setFocusable(false);
         jButtonImprimirAta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonImprimirAta.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar2.add(jButtonImprimirAta);
 
-        jButtonMudaStatusATA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/images.png"))); // NOI18N
-        jButtonMudaStatusATA.setFocusable(false);
-        jButtonMudaStatusATA.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButtonMudaStatusATA.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButtonMudaStatusATA.addActionListener(new java.awt.event.ActionListener() {
+        jButtonBuscarAta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/buscar.png"))); // NOI18N
+        jButtonBuscarAta.setToolTipText("Consultar Ata");
+        jButtonBuscarAta.setFocusable(false);
+        jButtonBuscarAta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonBuscarAta.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonBuscarAta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonMudaStatusATAActionPerformed(evt);
+                jButtonBuscarAtaActionPerformed(evt);
             }
         });
-        jToolBar2.add(jButtonMudaStatusATA);
+        jToolBar2.add(jButtonBuscarAta);
 
         jButtonSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/sair.png"))); // NOI18N
         jButtonSair.setText("SAIR");
@@ -101,31 +85,43 @@ public class TelaPrincipalServidorComumGUI extends javax.swing.JFrame {
             }
         });
 
+        jPanel2.setLayout(null);
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/logo.png"))); // NOI18N
+        jPanel2.add(jLabel2);
+        jLabel2.setBounds(30, 40, 480, 260);
+
+        jLabelCoordenador.setFont(new java.awt.Font("MS Reference Sans Serif", 0, 18)); // NOI18N
+        jLabelCoordenador.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelCoordenador.setText("BEM VINDO, COORDENADOR!");
+        jPanel2.add(jLabelCoordenador);
+        jLabelCoordenador.setBounds(0, 10, 540, 23);
+
         jMenuATAs.setText("ATAs");
 
-        jMenuItemMudarStatusATA.setText("Mudar Status da ATA");
-        jMenuItemMudarStatusATA.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemImprimirAta.setText("Imprimir ATA");
+        jMenuItemImprimirAta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemMudarStatusATAActionPerformed(evt);
+                jMenuItemImprimirAtaActionPerformed(evt);
             }
         });
-        jMenuATAs.add(jMenuItemMudarStatusATA);
+        jMenuATAs.add(jMenuItemImprimirAta);
 
-        jMenuItemImprimirATA.setText("Imprimir ATA");
-        jMenuItemImprimirATA.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemConsultaAta.setText("Consulltar ATA");
+        jMenuItemConsultaAta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemImprimirATAActionPerformed(evt);
+                jMenuItemConsultaAtaActionPerformed(evt);
             }
         });
-        jMenuATAs.add(jMenuItemImprimirATA);
+        jMenuATAs.add(jMenuItemConsultaAta);
 
-        jMenuItemRedigirATA.setText("Redigir ATA");
-        jMenuItemRedigirATA.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemRedigirAta.setText("Redigir ATA");
+        jMenuItemRedigirAta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemRedigirATAActionPerformed(evt);
+                jMenuItemRedigirAtaActionPerformed(evt);
             }
         });
-        jMenuATAs.add(jMenuItemRedigirATA);
+        jMenuATAs.add(jMenuItemRedigirAta);
 
         jMenuBar1.add(jMenuATAs);
 
@@ -144,13 +140,10 @@ public class TelaPrincipalServidorComumGUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(12, 12, 12)
+                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonSair))
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 537, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -159,54 +152,56 @@ public class TelaPrincipalServidorComumGUI extends javax.swing.JFrame {
                     .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonSair))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItemImprimirATAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemImprimirATAActionPerformed
+    private void jMenuItemImprimirAtaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemImprimirAtaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemImprimirATAActionPerformed
+    }//GEN-LAST:event_jMenuItemImprimirAtaActionPerformed
 
     private void jMenuSobreMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuSobreMouseClicked
          JOptionPane.showMessageDialog(this, "Desenvolvido por World Systems \n Desenvolvedores: Hernane Marcos de Faria Júnior \n Igor Ribeiro da Silva \n Técnico em Informática III - IFMG Formiga");
     }//GEN-LAST:event_jMenuSobreMouseClicked
 
-    private void jMenuItemMudarStatusATAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemMudarStatusATAActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemMudarStatusATAActionPerformed
-
-    private void jButtonMudaStatusATAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMudaStatusATAActionPerformed
+    private void jMenuItemRedigirAtaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRedigirAtaActionPerformed
         new RedigirAtaGUI().setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_jButtonMudaStatusATAActionPerformed
-
-    private void jMenuItemRedigirATAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRedigirATAActionPerformed
-        new RedigirAtaGUI().setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jMenuItemRedigirATAActionPerformed
+    }//GEN-LAST:event_jMenuItemRedigirAtaActionPerformed
 
     private void jButtonSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSairActionPerformed
-        this.dispose();
         new LoginGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButtonSairActionPerformed
+
+    private void jButtonBuscarAtaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarAtaActionPerformed
+        new ConsultarAtaGUI().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButtonBuscarAtaActionPerformed
+
+    private void jMenuItemConsultaAtaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemConsultaAtaActionPerformed
+        new ConsultarAtaGUI().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenuItemConsultaAtaActionPerformed
 
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonBuscarAta;
     private javax.swing.JButton jButtonImprimirAta;
-    private javax.swing.JButton jButtonMudaStatusATA;
     private javax.swing.JButton jButtonSair;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabelCoordenador;
     private javax.swing.JMenu jMenuATAs;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItemImprimirATA;
-    private javax.swing.JMenuItem jMenuItemMudarStatusATA;
-    private javax.swing.JMenuItem jMenuItemRedigirATA;
+    private javax.swing.JMenuItem jMenuItemConsultaAta;
+    private javax.swing.JMenuItem jMenuItemImprimirAta;
+    private javax.swing.JMenuItem jMenuItemRedigirAta;
     private javax.swing.JMenu jMenuSobre;
-    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JToolBar jToolBar2;
     // End of variables declaration//GEN-END:variables
 

@@ -6,6 +6,7 @@
 package gerenciadorreunioes.modelo;
 
 import gerenciadorreunioes.conexoes.JpaUtil;
+import gerenciadorreunioes.controle.GrupoControl;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -37,6 +38,13 @@ public class AlunoDAO {
             EntityTransaction tx = manager.getTransaction();
             tx.begin();
             Aluno aluno = manager.find(Aluno.class, matricula);
+            GrupoControl grupoControl = new GrupoControl();
+            for (int i = 0; i < grupoControl.getGrupos().size(); i++) {
+                if (grupoControl.getGrupos().get(i).getAlunos().contains(aluno)) {
+                    grupoControl.getGrupos().get(i).getAlunos().remove(aluno);
+                    grupoControl.atualiza(grupoControl.getGrupos().get(i));
+                }
+            }
             manager.remove(aluno);
             tx.commit();
             manager.close();
@@ -70,6 +78,16 @@ public class AlunoDAO {
         ArrayList<Aluno> alunos = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();
+        return alunos;
+    }
+
+    public ArrayList<Aluno> getAlunosParticipantesDoGrupo(int gruCodigo) {
+        GrupoControl grupoControl = new GrupoControl();
+        Grupo grupo = grupoControl.getGrupo(gruCodigo);
+        ArrayList<Aluno> alunos = new ArrayList<>();
+        for (Aluno alu : grupo.getAlunos()) {
+            alunos.add(alu);
+        }
         return alunos;
     }
 

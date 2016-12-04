@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -104,22 +105,7 @@ public class ReuniaoDAO {
         EntityTransaction tx = manager.getTransaction();
         tx.begin();
         Query query = manager.createQuery("SELECT * FROM Servidor JOIN Servidor_Grupo JOIN Grupo WHERE"
-                + " gruCodigo = " + codGrupo + " AND gruCodigo=seg_gruCodigo AND seg_serSiape=serSiape");
-        ArrayList<Servidor> servidores = (ArrayList) query.getResultList();
-        tx.commit();
-        manager.close();
-        return servidores;
-    }
-    
-    
-     public ArrayList<Servidor> getEmailServidoresDeUmGrupo(int gruCodigo) {
-        EntityManager manager = JpaUtil.getEntityManager();
-        EntityTransaction tx = manager.getTransaction();
-        tx.begin();
-        Query query = manager.createQuery("SELECT serSiape, serNome, serTelefone, serEmail,"
-                + " serSenha, serArea, serDe, serCoordenador, serResponsavelAta  FROM Servidor"
-                + " JOIN Servidor_Grupo JOIN Grupo WHERE serSiape = seg_serSiape AND"
-                + " seg_gruCodigo = gruCodigo AND gruCodigo = " + gruCodigo);
+                + " gruCodigo = " + codGrupo + " AND gruCodigo=seg_gruCodigo AND seg_serSiape = serSiape");
         ArrayList<Servidor> servidores = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();

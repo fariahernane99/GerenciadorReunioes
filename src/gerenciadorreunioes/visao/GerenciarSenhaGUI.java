@@ -30,10 +30,12 @@ public class GerenciarSenhaGUI extends javax.swing.JFrame {
             // se o servidor já existe (está cadastrado no banco)
             if (serv.getSiape().equals(serAux.getSiape())) {
                 tipo = 1;
+                this.setTitle("Alterando Senha - Gerenciador de Reuniões");
             }
         }
         if (tipo != 1) {
             tipo = 0;
+            this.setTitle("Cadastrando Senha - Gerenciador de Reuniões");
             jLabelSenhaAtual.setVisible(false);
             jPasswordFieldSenhaAtual.setVisible(false);
         }
@@ -61,19 +63,21 @@ public class GerenciarSenhaGUI extends javax.swing.JFrame {
         jButtonConfirmar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Gerenciar Senha - - Gerenciador de Reuniões");
+        setResizable(false);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Gerenciar Senha", 2, 0, new java.awt.Font("Dialog", 0, 18))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Gerenciar Senha", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 18))); // NOI18N
         jPanel1.setLayout(null);
 
         jLabelConfirmarSenha.setText("Confirme a nova senha:");
         jPanel1.add(jLabelConfirmarSenha);
-        jLabelConfirmarSenha.setBounds(10, 110, 360, 18);
+        jLabelConfirmarSenha.setBounds(10, 110, 360, 14);
 
         jLabelSenhaNova.setText("Digite a nova senha:");
         jPanel1.add(jLabelSenhaNova);
-        jLabelSenhaNova.setBounds(10, 50, 360, 18);
+        jLabelSenhaNova.setBounds(10, 50, 360, 14);
         jPanel1.add(jPasswordFieldConfirmarSenha);
-        jPasswordFieldConfirmarSenha.setBounds(10, 130, 360, 28);
+        jPasswordFieldConfirmarSenha.setBounds(10, 130, 360, 20);
 
         jPasswordFieldSenhaNova.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -81,15 +85,15 @@ public class GerenciarSenhaGUI extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jPasswordFieldSenhaNova);
-        jPasswordFieldSenhaNova.setBounds(10, 70, 360, 28);
+        jPasswordFieldSenhaNova.setBounds(10, 70, 360, 20);
 
         jLabelSenhaAtual.setText("Digite a senha atual:");
         jPanel1.add(jLabelSenhaAtual);
-        jLabelSenhaAtual.setBounds(10, 170, 360, 18);
+        jLabelSenhaAtual.setBounds(10, 170, 360, 14);
         jPanel1.add(jPasswordFieldSenhaAtual);
-        jPasswordFieldSenhaAtual.setBounds(10, 190, 360, 28);
+        jPasswordFieldSenhaAtual.setBounds(10, 190, 360, 20);
 
-        jButtonConfirmar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/download (1).jpg"))); // NOI18N
+        jButtonConfirmar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/confirmar.jpg"))); // NOI18N
         jButtonConfirmar.setText("Confirmar");
         jButtonConfirmar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -97,21 +101,22 @@ public class GerenciarSenhaGUI extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButtonConfirmar);
-        jButtonConfirmar.setBounds(150, 240, 120, 36);
+        jButtonConfirmar.setBounds(130, 220, 120, 30);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 11, Short.MAX_VALUE))
         );
 
         pack();

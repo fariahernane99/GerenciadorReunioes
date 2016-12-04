@@ -11,6 +11,7 @@ import gerenciadorreunioes.modelo.Reuniao;
 import gerenciadorreunioes.modelo.ReuniaoDAO;
 import gerenciadorreunioes.modelo.Servidor;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -81,10 +82,10 @@ public class ReuniaoControl {
     }
 
     public ArrayList<Reuniao> getReunioes(int codGrupo) {
-        ArrayList<Reuniao> reunioes = new ArrayList<Reuniao>();
-        for (int i = 0; i < getReunioes().size(); i++) {
-            if (codGrupo == getReunioes().get(i).getCodigo()) {
-                reunioes.add(getReunioes().get(i));
+        ArrayList<Reuniao> reunioes = new ArrayList<>();
+        for (Reuniao reu : this.getReunioes()) {
+            if (reu.getGrupo().getCodigo() == codGrupo){
+                reunioes.add(reu);
             }
         }
         return reunioes;
@@ -97,25 +98,21 @@ public class ReuniaoControl {
     public Reuniao getReuniao(int codReuniao) {
         return reuniaoDAO.getReuniao(codReuniao);
     }
-    
-    public ArrayList<Servidor> getEmails(int codGrupo) {
-        return reuniaoDAO.getEmailServidoresDeUmGrupo(codGrupo);
-    }
-    
+
     public void setServidoresDaReuniao(int codGrupo) {
         serv = reuniaoDAO.retornaServidoresReuniao(codGrupo);
     }
-    
-    public Reuniao retornaReuniao(){
+
+    public Reuniao retornaReuniao() {
         return r;
-    } 
-    
+    }
+
     public ArrayList<String> getServidoresDaReuniao() {
         ArrayList<String> servidores = new ArrayList<>();
         for (int i = 0; i < serv.size(); i++) {
-           servidores.add(serv.get(i).getNome());
+            servidores.add(serv.get(i).getNome());
         }
-       return servidores;
+        return servidores;
     }
 
 }

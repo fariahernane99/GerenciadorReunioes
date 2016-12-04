@@ -25,7 +25,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     private GrupoControl grupoControl = new GrupoControl();
     private Grupo grupoAux;
     private ServidorControl servidorControl = new ServidorControl();
-    private Servidor serAux;
+    private Servidor coordenador;
     private AlunoControl alunoControl = new AlunoControl();
     private LoginControl loginControl = new LoginControl();
     private DefaultListModel modelo = new DefaultListModel();
@@ -42,9 +42,9 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         initComponents();
         limpaCombosLista();
         preencheVetoresDeServidoresEAlunos();
-        serAux = LoginControl.retornaServidorLogado();
+        coordenador = LoginControl.retornaServidorLogado();
         listaGrupos();
-        atualizaComboCoordenadores(serAux);
+        atualizaComboCoordenadores(coordenador);
         atualizaComboServidoresAlunos();
         resetaBotoes();
     }
@@ -64,7 +64,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaDescricao = new javax.swing.JTextArea();
-        jComboBoxCoordenadores = new javax.swing.JComboBox<String>();
+        jComboBoxCoordenadores = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jButtonExcluir = new javax.swing.JButton();
@@ -73,18 +73,19 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         jButtonCadastrar = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jListGrupos = new javax.swing.JList<String>();
+        jListGrupos = new javax.swing.JList<>();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jComboBoxParticipantes = new javax.swing.JComboBox<String>();
+        jComboBoxParticipantes = new javax.swing.JComboBox<>();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jListParticipantes = new javax.swing.JList<String>();
+        jListParticipantes = new javax.swing.JList<>();
         jLabel4 = new javax.swing.JLabel();
         jButtonInserirParticipante = new javax.swing.JButton();
         jButtonExcluirParticipante = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Manusear Grupos");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Gerenciar Grupos - Gerenciador de Reuniões");
+        setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastro de Grupo", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
@@ -96,7 +97,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         jTextAreaDescricao.setRows(5);
         jScrollPane1.setViewportView(jTextAreaDescricao);
 
-        jComboBoxCoordenadores.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select nome completo servidores where serCoordenadores = 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxCoordenadores.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select nome completo servidores where serCoordenadores = 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxCoordenadores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxCoordenadoresActionPerformed(evt);
@@ -109,18 +110,15 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(4, 4, 4)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBoxCoordenadores, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
+                    .addComponent(jTextFieldNome)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBoxCoordenadores, 0, 0, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -134,16 +132,16 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(jComboBoxCoordenadores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26))
         );
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Ações", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
-        jButtonExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/dialog-close.png"))); // NOI18N
+        jButtonExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/deletar.jpg"))); // NOI18N
         jButtonExcluir.setText("Excluir");
         jButtonExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -181,14 +179,14 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButtonCadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
-                .addComponent(jButtonExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
-                .addComponent(jButtonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
+                .addComponent(jButtonCadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -196,10 +194,10 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonEditar)
                     .addComponent(jButtonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Grupos Cadastrados", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
@@ -225,7 +223,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Participantes do Grupo", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
@@ -233,16 +231,16 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
 
         jLabel3.setText("Selecione o Participante:");
         jPanel4.add(jLabel3);
-        jLabel3.setBounds(10, 30, 140, 20);
+        jLabel3.setBounds(10, 30, 290, 20);
 
-        jComboBoxParticipantes.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select nome completo servidor e alunos", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxParticipantes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select nome completo servidor e alunos", "Item 2", "Item 3", "Item 4" }));
         jComboBoxParticipantes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxParticipantesActionPerformed(evt);
             }
         });
         jPanel4.add(jComboBoxParticipantes);
-        jComboBoxParticipantes.setBounds(10, 50, 220, 20);
+        jComboBoxParticipantes.setBounds(10, 50, 290, 20);
 
         jListParticipantes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -252,13 +250,12 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         jScrollPane3.setViewportView(jListParticipantes);
 
         jPanel4.add(jScrollPane3);
-        jScrollPane3.setBounds(10, 130, 290, 140);
+        jScrollPane3.setBounds(10, 140, 290, 110);
 
         jLabel4.setText("Participantes Cadastrados:");
         jPanel4.add(jLabel4);
-        jLabel4.setBounds(10, 110, 250, 14);
+        jLabel4.setBounds(10, 120, 290, 14);
 
-        jButtonInserirParticipante.setMnemonic('I');
         jButtonInserirParticipante.setText("Inserir Participante");
         jButtonInserirParticipante.setToolTipText("Inserir participante no grupo");
         jButtonInserirParticipante.addActionListener(new java.awt.event.ActionListener() {
@@ -267,7 +264,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
             }
         });
         jPanel4.add(jButtonInserirParticipante);
-        jButtonInserirParticipante.setBounds(10, 80, 130, 23);
+        jButtonInserirParticipante.setBounds(10, 80, 140, 23);
 
         jButtonExcluirParticipante.setText("Excluir Participante");
         jButtonExcluirParticipante.addActionListener(new java.awt.event.ActionListener() {
@@ -276,33 +273,35 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
             }
         });
         jPanel4.add(jButtonExcluirParticipante);
-        jButtonExcluirParticipante.setBounds(150, 80, 123, 23);
+        jButtonExcluirParticipante.setBounds(150, 80, 150, 23);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18))
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 10, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -341,6 +340,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     private void jListGruposMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListGruposMouseClicked
         clicouLista = true;
         jogaElementosNosCampos();
+        jButtonCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/cancelar.PNG")));
     }//GEN-LAST:event_jListGruposMouseClicked
 
     private void jButtonInserirParticipanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInserirParticipanteActionPerformed
@@ -467,10 +467,10 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
 
     private void listaGrupos() {
         jListGrupos.removeAll();
-        if (serAux.getSerDe() == 1) {
+        if (coordenador.getSerDe() == 1) {
             jListGrupos.setListData(grupoControl.listaGruposEmVetorDeString());
         } else {
-            jListGrupos.setListData(grupoControl.listaGruposEmVetorDeString(serAux.getSiape()));
+            jListGrupos.setListData(grupoControl.listaGruposEmVetorDeString(coordenador.getSiape()));
         }
     }
 
@@ -620,6 +620,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         jButtonEditar.setEnabled(false);
         jButtonExcluir.setEnabled(false);
         jButtonCancelar.setEnabled(true);
+        jButtonCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/sair.PNG")));
         jButtonInserirParticipante.setEnabled(true);
         jButtonExcluirParticipante.setEnabled(false);
     }
@@ -638,7 +639,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     private void colocaCoordenadorGrupoPrimeiroNaLista(String siape) {
         jComboBoxCoordenadores.removeAllItems();
         jComboBoxCoordenadores.addItem(servidorControl.retornaSiapeNomeEmString(siape));
-        for (String ser : servidorControl.pegaSiapeNomeCoordenadores(serAux)) {
+        for (String ser : servidorControl.pegaSiapeNomeCoordenadores(coordenador)) {
             //separando siape do nome
             String[] tupla = ser.split(" - ");
             if (!siape.equals(tupla[0])) {
@@ -656,13 +657,10 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
             jTextFieldNome.setText("");
             jTextAreaDescricao.setText("");
             clicouLista = false;
-        } else if (serAux.getSerCoordenador() == 1) {
+        } else if (coordenador.getSerCoordenador() == 1 || coordenador.getSerDe() == 1) {
             new TelaPrincipalCoordenadorGUI().setVisible(true);
             this.dispose();
-        } else if (serAux.getSerDe() == 1) {
-            new TelaPrincipalDeGUI().setVisible(true);
-            this.dispose();
-        } else if (serAux.getSerResponsavelAta() == 1) {
+        } else if (coordenador.getSerResponsavelAta() == 1) {
             new TelaPrincipalServidorComumGUI(1).setVisible(true);
             this.dispose();
         } else {

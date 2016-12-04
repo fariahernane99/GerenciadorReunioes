@@ -127,7 +127,7 @@ public class ServidorDAO {
         return array;
     }
 
-    public ArrayList<Servidor> getParticipantesDoGrupo(int gruCodigo) {
+    public ArrayList<Servidor> getServidoresParticipantesDoGrupo(int gruCodigo) {
         GrupoControl grupoControl = new GrupoControl();
         Grupo grupo = grupoControl.getGrupo(gruCodigo);
         ArrayList<Servidor> servidores = new ArrayList<>();

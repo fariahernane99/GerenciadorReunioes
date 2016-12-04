@@ -32,12 +32,12 @@ public class PautaControl {
     public Pauta getPauta(int cod) {
         return pautaDAO.getPauta(cod);
     }
-    
+
     public void pegaPontosPauta(ArrayList<Pauta> pontos) {
-        this.pontos=pontos;
+        this.pontos = pontos;
     }
-    
-    public ArrayList<String> retornaPontos(){
+
+    public ArrayList<String> retornaPontos() {
         ArrayList<String> pautasDiscutidas = new ArrayList<String>();
         for (int i = 0; i < pontos.size(); i++) {
             String s = pontos.get(i).getTitulo() + "." + pontos.get(i).getDefinicao();
@@ -45,6 +45,5 @@ public class PautaControl {
         }
         return pautasDiscutidas;
     }
-    
-    
+
 }

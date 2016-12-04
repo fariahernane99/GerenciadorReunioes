@@ -1,7 +1,5 @@
 package gerenciadorreunioes.controle;
 
-import gerenciadorreunioes.modelo.Reuniao;
-import gerenciadorreunioes.modelo.Servidor;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -21,36 +19,26 @@ import java.text.ParseException;
 
 public class GeraRelatório {
 
-    public static void geraAta() throws ParseException {
-        PautaControl pautaControl = new PautaControl();
-        ReuniaoControl reuniaoControl = new ReuniaoControl();
-        AtaControl ataControl = new AtaControl();
-        ArrayList<String> servidores = reuniaoControl.getServidoresDaReuniao();
-        ArrayList<String> pontosPauta = pautaControl.retornaPontos();
-        String resAta = ataControl.retornaResponsavel();
-        int reuCodigo = ataControl.getCodReuniao();
-        Reuniao aux = reuniaoControl.retornaReuniao();
-        java.util.Date data = aux.getData(); //para dar certo e preciso formatar a data e executar um metodo que esta em RedigirAtaGUI
+    public static void geraAta(int reuCodigo,String resAta,ArrayList<String> servidores,ArrayList<String> pontosPauta) throws ParseException {
         HashMap parameters = new HashMap();
         parameters.put("reuCodigo", reuCodigo);
-        parameters.put("data", data);
         parameters.put("servidores", servidores);
         parameters.put("pontosPauta", pontosPauta);
         parameters.put("responsavelAta", resAta);
         geraRelatorio("Ata", "Ata", parameters);
     }
 
-    public static void geraAtasConcluidas(java.util.Date d1, java.util.Date d2, int codGrupo) {
+    public static void geraAtasConcluidas(java.util.Date d1, java.util.Date d2, String serSiape) {
         HashMap parameters = new HashMap();
-        parameters.put("gruCodigo", codGrupo);
+        parameters.put("serSiape", serSiape);
         parameters.put("dataInicio", d1);
         parameters.put("dataFim", d2);
         geraRelatorio("AtasConcluidas", "AtasConcluidas", parameters);
     }
 
-    public static void geraAtasFechadas(java.util.Date d1, java.util.Date d2, int codGrupo) {
+    public static void geraAtasFechadas(java.util.Date d1, java.util.Date d2,String serSiape) {
         HashMap parameters = new HashMap();
-        parameters.put("gruCodigo", codGrupo);
+        parameters.put("serSiape", serSiape);
         parameters.put("dataInicio", d1);
         parameters.put("dataFim", d2);
         geraRelatorio("AtasFechadas", "AtasFechadas", parameters);

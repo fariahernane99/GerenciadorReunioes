@@ -5,6 +5,8 @@
  */
 package gerenciadorreunioes.controle;
 
+import gerenciadorreunioes.modelo.Ata;
+import gerenciadorreunioes.modelo.AtaDAO;
 import gerenciadorreunioes.modelo.Grupo;
 import gerenciadorreunioes.modelo.GrupoDAO;
 import gerenciadorreunioes.modelo.Reuniao;
@@ -21,6 +23,7 @@ public class ReuniaoControl {
 
     private ReuniaoDAO reuniaoDAO = new ReuniaoDAO();
     private GrupoDAO gruDao = new GrupoDAO();
+    private AtaDAO ataDao = new AtaDAO();
     private ArrayList<Servidor> serv = new ArrayList<>();
     private Reuniao r = new Reuniao();
 
@@ -84,8 +87,23 @@ public class ReuniaoControl {
     public ArrayList<Reuniao> getReunioes(int codGrupo) {
         ArrayList<Reuniao> reunioes = new ArrayList<>();
         for (Reuniao reu : this.getReunioes()) {
-            if (reu.getGrupo().getCodigo() == codGrupo){
+            if (reu.getGrupo().getCodigo() == codGrupo) {
                 reunioes.add(reu);
+            }
+        }
+        return reunioes;
+    }
+
+    public ArrayList<Reuniao> getReunioesAtaAberta(int codGrupo) {
+        ArrayList<Reuniao> reunioes = new ArrayList<>();
+        ArrayList<Ata> atas = ataDao.getAtas();
+        for (int i = 0; i < getReunioes().size(); i++) {
+            for (int j = 0; j < atas.size(); j++) {
+                if (codGrupo == getReunioes().get(i).getGrupo().getCodigo()
+                        && getReunioes().get(i).getCodigo() == atas.get(j).getReuniao().getCodigo()
+                        && atas.get(j).getStatus().equals("Aberta")) {
+                    reunioes.add(getReunioes().get(i));
+                }
             }
         }
         return reunioes;

@@ -5,11 +5,14 @@
  */
 package gerenciadorreunioes.visao;
 
+import gerenciadorreunioes.controle.AtaControl;
 import gerenciadorreunioes.controle.GeraRelatório;
 import gerenciadorreunioes.controle.GrupoControl;
 import gerenciadorreunioes.controle.LoginControl;
-import gerenciadorreunioes.controle.ServidorControl;
+import gerenciadorreunioes.modelo.Ata;
 import gerenciadorreunioes.modelo.Servidor;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -17,30 +20,40 @@ import gerenciadorreunioes.modelo.Servidor;
  */
 public class ConsultarAtaGUI extends javax.swing.JFrame {
 
-    private Servidor serAux;
+    private final Servidor serAux;
     private java.util.Date data1;
     private java.util.Date data2;
     private int codGrupo;
-    private GrupoControl grupoControl = new GrupoControl();
-    private LoginControl loginControl = new LoginControl();
-    private GeraRelatório gera = new GeraRelatório();
+    private final GrupoControl grupoControl = new GrupoControl();
+    private final LoginControl loginControl = new LoginControl();
+    private final AtaControl ataControl = new AtaControl();
+    private final GeraRelatório gera = new GeraRelatório();
+    private final ArrayList<Ata> atas = ataControl.getAtas();
+    private final ArrayList<Ata> atasConcluidas = new ArrayList<>();
+    private final ArrayList<Ata> atasFechadas = new ArrayList<>();
+
     /**
      * Creates new form ConsultarAta
      */
     public ConsultarAtaGUI() {
         initComponents();
         serAux = LoginControl.retornaServidorLogado();
-        //codGrupo = grupoControl.getGrupo(serAux.getSiape()).getCodigo();
+        if (serAux.getSerCoordenador() == 1) {
+            jRadioButtonFechada.setVisible(false);
+        } else {
+            jRadioButtonConcluida.setVisible(false);
+        }
     }
-    
-    public void verificaRadios(){
-    if(jRadioButtonConcluida.isSelected()){
-        jRadioButtonFechada.setSelected(false);
-        
-    } else if(jRadioButtonFechada.isSelected()){
-        jRadioButtonConcluida.setSelected(false);
+
+    public void verificaAtasFechadas() {
+        for (Ata ata : atas) {
+            if (ata.getStatus().equals("Concluída")) {
+                atasConcluidas.add(ata);
+            } else if(ata.getStatus().equals("Fechada")){
+                atasFechadas.add(ata);
+            }
+        }
     }
-}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -178,27 +191,33 @@ public class ConsultarAtaGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConsultarActionPerformed
-        //select seg_gruCodigo from Servidor_grupo WHERE seg_serSiape = '123';
         String status;
         data1 = jDateChooser1.getDate();
         data2 = jDateChooser2.getDate();
-        //codGrupo = grupoControl.getGrupo(serAux.getSiape()).getCodigo();
-        if(jRadioButtonConcluida.isSelected()){
-            status="Concluída";
-            GeraRelatório.geraAtasConcluidas(data1,data2,codGrupo);
-        } else if (jRadioButtonFechada.isSelected()){
-            status="Fechada";
-            GeraRelatório.geraAtasFechadas(data1,data2,codGrupo);
+        System.out.println("Data1==========" + data1.toString());
+        System.out.println("Data2==========" + data2.toString());
+        System.out.println("Siape===========" + serAux.getSiape());
+        if (atasConcluidas.size()!=0) {
+            status = "Concluída";
+            GeraRelatório.geraAtasConcluidas(data1, data2, serAux.getSiape());
+        } else if (atasConcluidas.size()==0){
+            JOptionPane.showMessageDialog(this, "Não há atas com o status 'Concluída'");
+            
+        } else if (atasFechadas.size()!=0) {
+            status = "Fechada";
+            GeraRelatório.geraAtasFechadas(data1, data2, serAux.getSiape());
+        }else if (atasConcluidas.size()==0){
+            JOptionPane.showMessageDialog(this, "Não há atas com o status 'Fechada'");
+            
         }
-        
     }//GEN-LAST:event_jButtonConsultarActionPerformed
 
     private void jRadioButtonConcluidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonConcluidaActionPerformed
-        verificaRadios();
+
     }//GEN-LAST:event_jRadioButtonConcluidaActionPerformed
 
     private void jRadioButtonFechadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonFechadaActionPerformed
-        verificaRadios();
+
     }//GEN-LAST:event_jRadioButtonFechadaActionPerformed
 
 

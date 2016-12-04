@@ -5,8 +5,8 @@
  */
 package gerenciadorreunioes.visao;
 
-import gerenciadorreunioes.controle.AlunoControl;
 import gerenciadorreunioes.controle.AtaControl;
+import gerenciadorreunioes.controle.GeraRelatório;
 import gerenciadorreunioes.controle.GrupoControl;
 import gerenciadorreunioes.controle.LoginControl;
 import gerenciadorreunioes.controle.PautaControl;
@@ -18,6 +18,7 @@ import gerenciadorreunioes.modelo.Grupo;
 import gerenciadorreunioes.modelo.Pauta;
 import gerenciadorreunioes.modelo.Reuniao;
 import gerenciadorreunioes.modelo.Servidor;
+import java.text.ParseException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -28,105 +29,108 @@ import javax.swing.table.DefaultTableModel;
  */
 public class RedigirAtaGUI extends javax.swing.JFrame {
 
-    private RedigirAtaControl redigirAtaControl = new RedigirAtaControl();
-    private AtaControl ataControl = new AtaControl();
-    private AlunoControl alunoControl = new AlunoControl();
-    private PautaControl pautaControl = new PautaControl();
-    private ServidorControl servidorControl = new ServidorControl();
-    private GrupoControl grupoControl = new GrupoControl();
-    private ReuniaoControl reuniaoControl = new ReuniaoControl();
-    private Servidor serAux;
-    private DefaultTableModel de = new DefaultTableModel();
-    private DefaultTableModel dp = new DefaultTableModel();
-    private int codReuniao = 0;
-    private int codGrupo = 0;
-    private int codAta = 0;
+    private final GrupoControl grupoControl = new GrupoControl();
+    private final ReuniaoControl reuniaoControl = new ReuniaoControl();
+    private final ServidorControl servidorControl = new ServidorControl();
+    private final AtaControl ataControl = new AtaControl();
+    private final PautaControl pautaControl = new PautaControl();
+    private final Servidor servidorLogado;
+    private final DefaultTableModel de = new DefaultTableModel();
+    private final DefaultTableModel dp = new DefaultTableModel();
+    private final RedigirAtaControl redigirAtaControl = new RedigirAtaControl();
+    private ArrayList<String> nomeParticipantes;
+    private ArrayList<Pauta> pautas;
+    private int codGrupo;
+    private int codReuniao;
+    private int codAta;
 
     /**
-     * Creates new form RedijirATA
+     * Creates new form RedigirGUI
      */
     public RedigirAtaGUI() {
-        serAux = LoginControl.retornaServidorLogado();
-        initComponents();
-        jLabelRes.setText("Responsável pela ATA:" + serAux.getNome());
-        dp.addColumn("Ponto de pauta");
-        dp.addColumn("Definição");
-        dp.addColumn("Encaminhamento");
-        de.addColumn("Participante");
-        de.addColumn("Presença");
-        jTabbedPane1.setEnabledAt(1, false);
-        ataControl.codReuniao(codReuniao);
-        this.preencheComboGrupo();
-        this.responsavel();
+        servidorLogado = LoginControl.retornaServidorLogado();
+        ArrayList<Grupo> gruposParticipa = grupoControl.pesquisaGruposDoResponsavelAta(servidorLogado.getSiape());
+        if (gruposParticipa.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Você não possui reuniões em que é responsável por ATA!");
+            if (servidorLogado.getSerCoordenador() == 1 || servidorLogado.getSerDe() == 1) {
+                new TelaPrincipalCoordenadorGUI().setVisible(true);
+            } else if (servidorLogado.getSerResponsavelAta() == 1) {
+                new TelaPrincipalServidorComumGUI(1).setVisible(true);
+            } else {
+                new TelaPrincipalServidorComumGUI().setVisible(true);
+            }
+            this.dispose();
+        } else {
+            initComponents();
+            jLabelRes.setText("Responsável pela ATA:" + servidorLogado.getNome());
+            dp.addColumn("Ponto de pauta");
+            dp.addColumn("Definição");
+            dp.addColumn("Encaminhamento");
+            de.addColumn("Participante");
+            de.addColumn("Presença");
+            jTabbedPane1.setEnabledAt(1, false);
+            preencheComboGrupo();
+            responsavel();
+        }
     }
-    
 
-    public String pegaNomeReuniao() {
-        String selecionado = (String) jComboBoxReunioes.getSelectedItem();
-        String[] pegaCodigo = selecionado.split(" - ");
-        codReuniao = Integer.parseInt(pegaCodigo[0]);
-        reuniaoControl.getReuniao(codReuniao);
-        return selecionado;
-    }
-    
-    public void responsavel(){
-        ataControl.pegaResponsavel(serAux);
+    public void responsavel() {
+        ataControl.pegaResponsavel(servidorLogado);
     }
 
     public void preencheComboGrupo() {
-        ArrayList<Grupo> grupos = grupoControl.pesquisaGruposDoResponsavelAta(serAux.getSiape());
-        jComboBoxGrupos.removeAllItems();
-        for (int i = 0; i < grupos.size(); i++) {
-            jComboBoxGrupos.addItem(grupos.get(i).getCodigo() + " - " + grupos.get(i).getNome());
+        ArrayList<Grupo> gruposParticipa = grupoControl.pesquisaGruposDoResponsavelAta(servidorLogado.getSiape());
+        for (Grupo grupo : gruposParticipa) {
+            jComboBoxGrupos.addItem(grupo.getCodigo() + " - " + grupo.getNome());
         }
     }
 
     public void preencheComboReuniao() {
-        if (jComboBoxGrupos.getSelectedItem().equals("")) {
-            JOptionPane.showMessageDialog(this, "Selecione um grupo");
-        } else {
-            String selecionado = (String) jComboBoxGrupos.getSelectedItem();
-            String[] pegaCodigo = selecionado.split(" - ");
-            codGrupo = Integer.parseInt(pegaCodigo[0]);
-            reuniaoControl.setServidoresDaReuniao(codGrupo);
-            reuniaoControl.setServidoresDaReuniao(codGrupo);
-            jComboBoxReunioes.removeAllItems();
-            ArrayList<Reuniao> reunioes = reuniaoControl.retornaReunioesDeUmGrupo(codGrupo);
-            for (int i = 0; i < reunioes.size(); i++) {
-                jComboBoxReunioes.addItem(reunioes.get(i).getCodigo() + " - " + reunioes.get(i).getNome());
-            }
-        }
-    }
-
-    public void preencheTabela() {
-        String selecionado = (String) jComboBoxReunioes.getSelectedItem();
+        jComboBoxReunioes.removeAllItems();
+        String selecionado = (String) jComboBoxGrupos.getSelectedItem();
         String[] pegaCodigo = selecionado.split(" - ");
-        codReuniao = Integer.parseInt(pegaCodigo[0]);
-        ArrayList<String> participantes = redigirAtaControl.retornaParticipantesDaReuniao(codReuniao);
-        de.getDataVector().removeAllElements();
-        for (int i = 0; i < participantes.size(); i++) {
-            de.addRow(new Object[]{participantes.get(i)});
-
+        codGrupo = Integer.parseInt(pegaCodigo[0]);
+        ArrayList<Reuniao> reunioesGrupo = reuniaoControl.getReunioesAtaAberta(codGrupo);
+        for (Reuniao reuniao : reunioesGrupo) {
+            jComboBoxReunioes.addItem(reuniao.getCodigo() + " - " + reuniao.getNome());
         }
-        jTableParticipante.setModel(de);
     }
 
     public void pesquisaReuniaoSelecionada() {
         String selecionado = (String) jComboBoxReunioes.getSelectedItem();
         String[] pegaCodigo = selecionado.split(" - ");
         codReuniao = Integer.parseInt(pegaCodigo[0]);
-        Reuniao r = reuniaoControl.getReuniao(codReuniao);
-        codReuniao = r.getCodigo();
-        jTextFieldHorarioInicio.setText(r.getHorarioInicio());
+        Reuniao reuniaoSelecionada = reuniaoControl.getReuniao(codReuniao);
+        jLabelRes.setText("Responsável pela ATA: " + servidorLogado.getNome());
+        jTextFieldHorarioInicio.setText(reuniaoSelecionada.getHorarioInicio());
+    }
+
+    public void preencheTabela() {
+        String selecionado = (String) jComboBoxReunioes.getSelectedItem();
+        String[] pegaCodigo = selecionado.split(" - ");
+        codReuniao = Integer.parseInt(pegaCodigo[0]);
+        ArrayList<String> participantes = redigirAtaControl.retornaParticipantesDaReuniao(codGrupo);
+        nomeParticipantes = redigirAtaControl.retornaNomeParticipantes(codGrupo);
+        de.getDataVector().removeAllElements();
+        for (int i = 0; i < participantes.size(); i++) {
+            de.addRow(new Object[]{participantes.get(i)});
+        }
+        jTableParticipante.setModel(de);
+    }
+
+    public void atualizaPontos() {
+        ArrayList<Pauta> ppautas = pautaControl.getPautas(codAta);
+        pautas = ppautas;
     }
 
     public void preencheComboPauta() {
         Ata a = ataControl.getAta(codReuniao);
         codAta = a.getCodigo();
-        ArrayList<Pauta> pautas = pautaControl.getPautas(a.getCodigo());
+        ArrayList<Pauta> ppautas = pautaControl.getPautas(codAta);
+        pautas = ppautas;
         jComboBoxPontoPauta.removeAllItems();
-        for (int i = 0; i < pautas.size(); i++) {
-            jComboBoxPontoPauta.addItem(pautas.get(i).getCodigo() + " - " + pautas.get(i).getTitulo());
+        for (int i = 0; i < ppautas.size(); i++) {
+            jComboBoxPontoPauta.addItem(ppautas.get(i).getCodigo() + " - " + ppautas.get(i).getTitulo());
         }
         preencheTabelaPontos();
     }
@@ -134,7 +138,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
     public void preencheTabelaPontos() {
         Ata a = ataControl.getAta(codReuniao);
         codAta = a.getCodigo();
-        ArrayList<Pauta> pautas = pautaControl.getPautas(a.getCodigo());
+        ArrayList<Pauta> pautas = pautaControl.getPautas(codAta);
         dp.getDataVector().removeAllElements();
         for (int i = 0; i < pautas.size(); i++) {
             dp.addRow(new Object[]{pautas.get(i).getCodigo() + " - " + pautas.get(i).getTitulo(), pautas.get(i).getDefinicao(),
@@ -142,29 +146,6 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
 
         }
         jTablePontos.setModel(dp);
-    }
-
-    public String pegaTituloPauta() {
-        String selecionado = (String) jComboBoxPontoPauta.getSelectedItem();
-        return selecionado;
-    }
-
-    public void confirmaPonto() {
-        Pauta p = new Pauta();
-        String pauta = pegaTituloPauta();
-        String[] pegaTitulo = pauta.split(" - ");
-        p.setCodigo(Integer.parseInt(pegaTitulo[0]));
-        p.setTitulo(pegaTitulo[1]);
-        boolean flag = redigirAtaControl.verificaCamposPauta(jTextAreaDefinicao.getText(), jTextAreaEncaminhamento.getText());
-        if (flag) {
-            JOptionPane.showMessageDialog(this, "Preencha os campos de encaminhamento e definição");
-        } else {
-            p.setDefinicao(jTextAreaDefinicao.getText());
-            p.setEncaminhamento(jTextAreaEncaminhamento.getText());
-            p.setAta(ataControl.getAta(codAta));
-            pautaControl.atualiza(p);
-            JOptionPane.showMessageDialog(this, "Ponto registrado com sucesso!!");
-        }
     }
 
     public void criaNovoPonto() {
@@ -190,6 +171,39 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         preencheTabelaPontos();
     }
 
+    public void confirmaPonto() {
+        Pauta p = new Pauta();
+        String pauta = (String) jComboBoxPontoPauta.getSelectedItem();
+        String[] pegaTitulo = pauta.split(" - ");
+        p.setCodigo(Integer.parseInt(pegaTitulo[0]));
+        p.setTitulo(pegaTitulo[1]);
+        boolean flag = redigirAtaControl.verificaCamposPauta(jTextAreaDefinicao.getText(), jTextAreaEncaminhamento.getText());
+        if (flag) {
+            JOptionPane.showMessageDialog(this, "Preencha os campos de encaminhamento e definição");
+        } else {
+            p.setDefinicao(jTextAreaDefinicao.getText());
+            p.setEncaminhamento(jTextAreaEncaminhamento.getText());
+            p.setAta(ataControl.getAta(codReuniao));
+            pautaControl.atualiza(p);
+            preencheTabelaPontos();
+            limpaCampos();
+            JOptionPane.showMessageDialog(this, "Ponto registrado com sucesso!!");
+        }
+    }
+
+    public String pegaNomeReuniao() {
+        String selecionado = (String) jComboBoxReunioes.getSelectedItem();
+        String[] pegaCodigo = selecionado.split(" - ");
+        codReuniao = Integer.parseInt(pegaCodigo[0]);
+        reuniaoControl.getReuniao(codReuniao);
+        return selecionado;
+    }
+
+    public void limpaCampos() {
+        jTextAreaDefinicao.setText("");
+        jTextAreaEncaminhamento.setText("");
+    }
+
     public void selecionaPauta() {
         String selecionado = (String) jComboBoxPontoPauta.getSelectedItem();
         if (selecionado == null) {
@@ -203,7 +217,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         }
     }
 
-    public void finalizarReunião() {
+    public void finalizaReuniao() {
         boolean flag = redigirAtaControl.verificaCamposReuniao(pegaNomeReuniao(), jTextFieldHorarioInicio.getText(), jTextFieldHorarioFim.getText(), jTextFieldLocal.getText());
         if (flag) {
             JOptionPane.showMessageDialog(this, "Preencha todos os campos (Horário de início,Horário do fim e local).");
@@ -213,11 +227,28 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
             r.setHorarioFim(jTextFieldHorarioFim.getText());
             r.setLocal(jTextFieldLocal.getText());
             reuniaoControl.atualiza(r);
-            serAux.setSerResponsavelAta(0);
-            servidorControl.atualiza(serAux);
+            servidorLogado.setSerResponsavelAta(0);
+            servidorControl.atualiza(servidorLogado);
+            Ata a = ataControl.getAta(codReuniao);
+            a.setStatus("Em revisão");
+            ataControl.atualiza(a);
             JOptionPane.showMessageDialog(this, "Ata finalizada !!!.");
+            atualizaPontos();
+            try {
+                GeraRelatório.geraAta(codReuniao, servidorLogado.getNome(), nomeParticipantes, transformaArrayPauta());
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "Não foi possível gerar a ATA!");
+            }
         }
+    }
 
+    public ArrayList<String> transformaArrayPauta() {
+        ArrayList<String> pontos = new ArrayList<>();
+        for (Pauta pauta : pautas) {
+            pontos.add(pauta.getTitulo() + "." + pauta.getDefinicao());
+            System.out.println(pauta.getTitulo() + "." + pauta.getDefinicao());
+        }
+        return pontos;
     }
 
     public void verificaReuniaoSelecionada() {
@@ -234,26 +265,12 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
     public void verificaDados() {
         String selecionado = (String) jComboBoxReunioes.getSelectedItem();
         if (selecionado == null) {
-            JOptionPane.showMessageDialog(this, "Informe a reunião");
+            JOptionPane.showMessageDialog(this, "Você não é responsável por redigir nenhuma ATA deste grupo!");
         } else {
             preencheTabela();
             pesquisaReuniaoSelecionada();
         }
     }
-    
-    public void pegaPontosPauta(){
-        int row = jTablePontos.getRowCount();
-        ArrayList<Pauta> pontos = new ArrayList<>();
-        for(int i=0;i<row;i++){
-        Pauta pauta = new Pauta();
-        pauta.setTitulo((String) jTablePontos.getValueAt(i, 1));
-        pauta.setDefinicao((String) jTablePontos.getValueAt(i, 2));
-        pauta.setEncaminhamento((String) jTablePontos.getValueAt(i, 3));
-        pontos.add(pauta);
-       }
-       pautaControl.pegaPontosPauta(pontos);
-   }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -279,6 +296,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jTextFieldHorarioInicio = new javax.swing.JTextField();
         jButtonPesquisa = new javax.swing.JButton();
+        jButtonVoltarP = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jButtonVoltar = new javax.swing.JButton();
@@ -303,6 +321,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Redigir Ata - Gerenciador de Reuniões");
+        setResizable(false);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Redigir ATA", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 0, 18))); // NOI18N
 
@@ -376,39 +395,52 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
             }
         });
 
+        jButtonVoltarP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/download2.jpg"))); // NOI18N
+        jButtonVoltarP.setText("Voltar");
+        jButtonVoltarP.setMaximumSize(new java.awt.Dimension(111, 33));
+        jButtonVoltarP.setMinimumSize(new java.awt.Dimension(111, 33));
+        jButtonVoltarP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVoltarPActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel5)
-                        .addComponent(jLabel2)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 645, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                            .addComponent(jButtonProsseguir)
-                            .addGap(27, 27, 27))
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBoxGrupos, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBoxReunioes, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabelRes)
-                        .addGap(146, 146, 146)
+                        .addContainerGap()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonPesquisa)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel2)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 645, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                    .addComponent(jLabel1)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jComboBoxGrupos, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                    .addComponent(jLabel3)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jComboBoxReunioes, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldHorarioInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(257, 257, 257)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButtonPesquisa)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel7)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jTextFieldHorarioInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLabelRes)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(jButtonVoltarP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonProsseguir)))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -423,20 +455,23 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
                     .addComponent(jComboBoxReunioes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonPesquisa)
-                .addGap(8, 8, 8)
+                .addGap(19, 19, 19)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelRes)
-                    .addComponent(jLabel7)
-                    .addComponent(jTextFieldHorarioInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelRes)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7)
+                        .addComponent(jTextFieldHorarioInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(36, 36, 36)
                 .addComponent(jLabel2)
-                .addGap(30, 30, 30)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
-                .addComponent(jButtonProsseguir)
-                .addContainerGap(89, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonVoltarP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonProsseguir))
+                .addGap(20, 20, 20))
         );
 
         jTabbedPane1.addTab("Início", jPanel2);
@@ -530,9 +565,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         jLabel8.setText("Horário do fim da Reunião:");
@@ -573,70 +606,65 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelDefinicoes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldHorarioFim, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldLocal)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonFinalizar)
-                .addGap(20, 20, 20))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jPanelEncaminhamentos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(222, 222, 222)
-                .addComponent(jButtonRegistrarDefinicao)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanelDefinicoes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonRegistrarDefinicao)
+                .addGap(260, 260, 260))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextFieldHorarioFim, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextFieldLocal, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(jButtonVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonFinalizar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel4)
                         .addComponent(jButtonCriarNovoPonto))
                     .addComponent(jComboBoxPontoPauta))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanelDefinicoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jPanelEncaminhamentos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonRegistrarDefinicao)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jTextFieldHorarioFim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonVoltar)
-                            .addComponent(jButtonFinalizar)))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
-                            .addComponent(jTextFieldHorarioFim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(jTextFieldLocal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap())
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jTextFieldLocal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonVoltar)
+                    .addComponent(jButtonFinalizar))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -652,7 +680,8 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Redigir Ata", jPanel1);
@@ -662,7 +691,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 14, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 712, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
@@ -675,31 +704,17 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonProsseguirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonProsseguirActionPerformed
-        verificaReuniaoSelecionada();
-    }//GEN-LAST:event_jButtonProsseguirActionPerformed
+    private void jComboBoxGruposMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxGruposMouseClicked
 
-    private void jButtonVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVoltarActionPerformed
-        jTabbedPane1.setSelectedIndex(0);
-        jTabbedPane1.setEnabledAt(1, false);
-        jTabbedPane1.setEnabledAt(0, true);
-    }//GEN-LAST:event_jButtonVoltarActionPerformed
-
-    private void jButtonFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFinalizarActionPerformed
-        finalizarReunião();
-    }//GEN-LAST:event_jButtonFinalizarActionPerformed
+    }//GEN-LAST:event_jComboBoxGruposMouseClicked
 
     private void jComboBoxGruposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxGruposActionPerformed
         preencheComboReuniao();
     }//GEN-LAST:event_jComboBoxGruposActionPerformed
 
-    private void jButtonCriarNovoPontoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCriarNovoPontoActionPerformed
-        criaNovoPonto();
-    }//GEN-LAST:event_jButtonCriarNovoPontoActionPerformed
-
-    private void jComboBoxGruposMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxGruposMouseClicked
-
-    }//GEN-LAST:event_jComboBoxGruposMouseClicked
+    private void jButtonProsseguirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonProsseguirActionPerformed
+        verificaReuniaoSelecionada();
+    }//GEN-LAST:event_jButtonProsseguirActionPerformed
 
     private void jComboBoxReunioesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxReunioesMouseClicked
 
@@ -709,23 +724,48 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jComboBoxReunioesActionPerformed
 
+    private void jButtonPesquisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisaActionPerformed
+        verificaDados();
+    }//GEN-LAST:event_jButtonPesquisaActionPerformed
+
+    private void jButtonVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVoltarActionPerformed
+        jTabbedPane1.setSelectedIndex(0);
+        jTabbedPane1.setEnabledAt(1, false);
+        jTabbedPane1.setEnabledAt(0, true);
+    }//GEN-LAST:event_jButtonVoltarActionPerformed
+
+    private void jButtonFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFinalizarActionPerformed
+        finalizaReuniao();
+        this.dispose();
+        new TelaPrincipalServidorComumGUI().setVisible(true);
+    }//GEN-LAST:event_jButtonFinalizarActionPerformed
+
+    private void jButtonCriarNovoPontoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCriarNovoPontoActionPerformed
+        criaNovoPonto();
+    }//GEN-LAST:event_jButtonCriarNovoPontoActionPerformed
+
     private void jButtonRegistrarDefinicaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRegistrarDefinicaoActionPerformed
         confirmaPonto();
-        preencheComboPauta();
     }//GEN-LAST:event_jButtonRegistrarDefinicaoActionPerformed
-
-    private void jComboBoxPontoPautaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPontoPautaActionPerformed
-        selecionaPauta();
-    }//GEN-LAST:event_jComboBoxPontoPautaActionPerformed
 
     private void jComboBoxPontoPautaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jComboBoxPontoPautaFocusLost
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxPontoPautaFocusLost
 
-    private void jButtonPesquisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisaActionPerformed
-        verificaDados();
-    }//GEN-LAST:event_jButtonPesquisaActionPerformed
+    private void jComboBoxPontoPautaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPontoPautaActionPerformed
+        selecionaPauta();
+    }//GEN-LAST:event_jComboBoxPontoPautaActionPerformed
 
+    private void jButtonVoltarPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVoltarPActionPerformed
+        if (servidorLogado.getSerCoordenador() == 1 || servidorLogado.getSerDe() == 1) {
+            new TelaPrincipalCoordenadorGUI().setVisible(true);
+        } else if (servidorLogado.getSerResponsavelAta() == 1) {
+            new TelaPrincipalServidorComumGUI(1).setVisible(true);
+        } else {
+            new TelaPrincipalServidorComumGUI().setVisible(true);
+        }
+        this.dispose();
+    }//GEN-LAST:event_jButtonVoltarPActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCriarNovoPonto;
@@ -734,6 +774,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButtonProsseguir;
     private javax.swing.JButton jButtonRegistrarDefinicao;
     private javax.swing.JButton jButtonVoltar;
+    private javax.swing.JButton jButtonVoltarP;
     private javax.swing.JComboBox<String> jComboBoxGrupos;
     private javax.swing.JComboBox<String> jComboBoxPontoPauta;
     private javax.swing.JComboBox<String> jComboBoxReunioes;

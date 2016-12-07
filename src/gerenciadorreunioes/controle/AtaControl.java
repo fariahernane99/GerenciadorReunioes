@@ -7,7 +7,8 @@ package gerenciadorreunioes.controle;
 
 import gerenciadorreunioes.modelo.Ata;
 import gerenciadorreunioes.modelo.AtaDAO;
-import gerenciadorreunioes.modelo.Servidor;
+import gerenciadorreunioes.modelo.Grupo;
+import gerenciadorreunioes.modelo.Reuniao;
 import java.util.ArrayList;
 
 /**
@@ -17,8 +18,6 @@ import java.util.ArrayList;
 public class AtaControl {
 
     private AtaDAO ataDAO = new AtaDAO();
-    private int codReuniao;
-    private String responsavelAta;
 
     public boolean deleta(int codigo) {
         return ataDAO.deleta(codigo);
@@ -50,20 +49,18 @@ public class AtaControl {
     public Ata getAta(int codReuniao) {
         return ataDAO.getAta(codReuniao);
     }
-    
-    public void codReuniao(int codReuniao){
-        this.codReuniao=codReuniao;
+
+    public ArrayList<Ata> getAtasDeUmGrupo(String siape) {
+        ArrayList<Ata> atas = new ArrayList<>();
+        GrupoControl grupoControl = new GrupoControl();
+        ReuniaoControl reuniaoControl = new ReuniaoControl();
+        for (Grupo gru : grupoControl.getGrupos(siape)) {
+            for (Reuniao reu : reuniaoControl.getReunioes(gru.getCodigo())) {
+                atas.add(getAta(reu.getCodigo()));
+            }
+        }
+
+        return atas;
     }
-    
-    public int getCodReuniao(){
-        return codReuniao;
-    }
-    
-    public void pegaResponsavel(Servidor res){
-        responsavelAta = res.getNome();
-    }
-    
-    public String retornaResponsavel(){
-        return responsavelAta;
-    }
+
 }

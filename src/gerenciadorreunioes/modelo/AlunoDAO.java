@@ -38,13 +38,6 @@ public class AlunoDAO {
             EntityTransaction tx = manager.getTransaction();
             tx.begin();
             Aluno aluno = manager.find(Aluno.class, matricula);
-            GrupoControl grupoControl = new GrupoControl();
-            for (int i = 0; i < grupoControl.getGrupos().size(); i++) {
-                if (grupoControl.getGrupos().get(i).getAlunos().contains(aluno)) {
-                    grupoControl.getGrupos().get(i).getAlunos().remove(aluno);
-                    grupoControl.atualiza(grupoControl.getGrupos().get(i));
-                }
-            }
             manager.remove(aluno);
             tx.commit();
             manager.close();
@@ -98,19 +91,6 @@ public class AlunoDAO {
         Query query = manager.createQuery("SELECT aluMatricula, aluNome, aluEmail FROM Aluno"
                 + " JOIN Aluno_Grupo JOIN Grupo WHERE aluMatricula = alg_aluMatricula AND"
                 + " alg_gruCodigo = gruCodigo AND gruCodigo = " + gruCodigo);
-        ArrayList<Aluno> alunos = (ArrayList) query.getResultList();
-        tx.commit();
-        manager.close();
-        return alunos;
-    }
-
-    public ArrayList<Aluno> getAlunosDaReuniao(int reuCodigo) {
-        EntityManager manager = JpaUtil.getEntityManager();
-        EntityTransaction tx = manager.getTransaction();
-        tx.begin();
-        Query query = manager.createQuery("SELECT aluMatricula, aluNome, aluEmail FROM Aluno"
-                + " JOIN Aluno_Grupo JOIN Grupo JOIN Reuniao WHERE aluMatricula = alg_aluMatricula AND"
-                + " alg_gruCodigo = gruCodigo AND reu_gruCodigo = gruCodigo AND reuCodigo = " + reuCodigo);
         ArrayList<Aluno> alunos = (ArrayList) query.getResultList();
         tx.commit();
         manager.close();

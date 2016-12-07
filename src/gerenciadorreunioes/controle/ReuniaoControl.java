@@ -7,13 +7,10 @@ package gerenciadorreunioes.controle;
 
 import gerenciadorreunioes.modelo.Ata;
 import gerenciadorreunioes.modelo.AtaDAO;
-import gerenciadorreunioes.modelo.Grupo;
 import gerenciadorreunioes.modelo.GrupoDAO;
 import gerenciadorreunioes.modelo.Reuniao;
 import gerenciadorreunioes.modelo.ReuniaoDAO;
-import gerenciadorreunioes.modelo.Servidor;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -22,10 +19,7 @@ import javax.swing.JOptionPane;
 public class ReuniaoControl {
 
     private ReuniaoDAO reuniaoDAO = new ReuniaoDAO();
-    private GrupoDAO gruDao = new GrupoDAO();
     private AtaDAO ataDao = new AtaDAO();
-    private ArrayList<Servidor> serv = new ArrayList<>();
-    private Reuniao r = new Reuniao();
 
     public boolean deleta(int codigo) {
         return reuniaoDAO.deleta(codigo);
@@ -41,10 +35,6 @@ public class ReuniaoControl {
 
     public ArrayList<Reuniao> getReunioes() {
         return reuniaoDAO.getReunioes();
-    }
-
-    public ArrayList<Grupo> getGrupos() {
-        return gruDao.getGrupos();
     }
 
     public int codReuniao(String nome) {
@@ -74,33 +64,24 @@ public class ReuniaoControl {
         return verifica;
     }
 
-    public Grupo pesquisaGrupo(String siape) {
-        Grupo x = new Grupo();
-        for (int i = 0; i < getGrupos().size(); i++) {
-            if (siape.equals(getGrupos().get(i).getSiapeCoordenador())) {
-                x = getGrupos().get(i);
-            }
-        }
-        return x;
-    }
-
-    public ArrayList<Reuniao> getReunioes(int codGrupo) {
+    public ArrayList<Reuniao> getReunioes(int gruCodigo) {
         ArrayList<Reuniao> reunioes = new ArrayList<>();
-        for (Reuniao reu : this.getReunioes()) {
-            if (reu.getGrupo().getCodigo() == codGrupo) {
+        for (Reuniao reu : getReunioes()) {
+            if (reu.getGrupo().getCodigo() == gruCodigo) {
                 reunioes.add(reu);
             }
         }
         return reunioes;
     }
 
-    public ArrayList<Reuniao> getReunioesAtaAberta(int codGrupo) {
+    public ArrayList<Reuniao> getReunioesAtaAberta(int gruCodigo, String siape) {
         ArrayList<Reuniao> reunioes = new ArrayList<>();
         ArrayList<Ata> atas = ataDao.getAtas();
         for (int i = 0; i < getReunioes().size(); i++) {
             for (int j = 0; j < atas.size(); j++) {
-                if (codGrupo == getReunioes().get(i).getGrupo().getCodigo()
+                if (siape.equals(getReunioes().get(i).getSiapeResponsavelAta())
                         && getReunioes().get(i).getCodigo() == atas.get(j).getReuniao().getCodigo()
+                        && getReunioes().get(i).getGrupo().getCodigo() == gruCodigo
                         && atas.get(j).getStatus().equals("Aberta")) {
                     reunioes.add(getReunioes().get(i));
                 }
@@ -109,28 +90,7 @@ public class ReuniaoControl {
         return reunioes;
     }
 
-    public ArrayList<Reuniao> retornaReunioesDeUmGrupo(int codGrupo) {
-        return reuniaoDAO.retornaReunioesDeUmGrupo(codGrupo);
-    }
-
     public Reuniao getReuniao(int codReuniao) {
         return reuniaoDAO.getReuniao(codReuniao);
     }
-
-    public void setServidoresDaReuniao(int codGrupo) {
-        serv = reuniaoDAO.retornaServidoresReuniao(codGrupo);
-    }
-
-    public Reuniao retornaReuniao() {
-        return r;
-    }
-
-    public ArrayList<String> getServidoresDaReuniao() {
-        ArrayList<String> servidores = new ArrayList<>();
-        for (int i = 0; i < serv.size(); i++) {
-            servidores.add(serv.get(i).getNome());
-        }
-        return servidores;
-    }
-
 }

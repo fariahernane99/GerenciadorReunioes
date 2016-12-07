@@ -34,7 +34,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
     private final ServidorControl servidorControl = new ServidorControl();
     private final AtaControl ataControl = new AtaControl();
     private final PautaControl pautaControl = new PautaControl();
-    private final Servidor servidorLogado;
+    private final Servidor serLogado;
     private final DefaultTableModel de = new DefaultTableModel();
     private final DefaultTableModel dp = new DefaultTableModel();
     private final RedigirAtaControl redigirAtaControl = new RedigirAtaControl();
@@ -48,38 +48,21 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
      * Creates new form RedigirGUI
      */
     public RedigirAtaGUI() {
-        servidorLogado = LoginControl.retornaServidorLogado();
-        ArrayList<Grupo> gruposParticipa = grupoControl.pesquisaGruposDoResponsavelAta(servidorLogado.getSiape());
-        if (gruposParticipa.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Você não possui reuniões em que é responsável por ATA!");
-            if (servidorLogado.getSerCoordenador() == 1 || servidorLogado.getSerDe() == 1) {
-                new TelaPrincipalCoordenadorGUI().setVisible(true);
-            } else if (servidorLogado.getSerResponsavelAta() == 1) {
-                new TelaPrincipalServidorComumGUI(1).setVisible(true);
-            } else {
-                new TelaPrincipalServidorComumGUI().setVisible(true);
-            }
-            this.dispose();
-        } else {
-            initComponents();
-            jLabelRes.setText("Responsável pela ATA:" + servidorLogado.getNome());
-            dp.addColumn("Ponto de pauta");
-            dp.addColumn("Definição");
-            dp.addColumn("Encaminhamento");
-            de.addColumn("Participante");
-            de.addColumn("Presença");
-            jTabbedPane1.setEnabledAt(1, false);
-            preencheComboGrupo();
-            responsavel();
-        }
-    }
-
-    public void responsavel() {
-        ataControl.pegaResponsavel(servidorLogado);
+        initComponents();
+        serLogado = LoginControl.retornaServidorLogado();
+        ArrayList<Grupo> gruposParticipa = grupoControl.pesquisaGruposResponsavelAta(serLogado.getSiape());
+        jLabelRes.setText("Responsável pela ATA:" + serLogado.getNome());
+        dp.addColumn("Ponto de pauta");
+        dp.addColumn("Definição");
+        dp.addColumn("Encaminhamento");
+        de.addColumn("Participante");
+        de.addColumn("Presença");
+        jTabbedPane1.setEnabledAt(1, false);
+        preencheComboGrupo();
     }
 
     public void preencheComboGrupo() {
-        ArrayList<Grupo> gruposParticipa = grupoControl.pesquisaGruposDoResponsavelAta(servidorLogado.getSiape());
+        ArrayList<Grupo> gruposParticipa = grupoControl.pesquisaGruposResponsavelAta(serLogado.getSiape());
         for (Grupo grupo : gruposParticipa) {
             jComboBoxGrupos.addItem(grupo.getCodigo() + " - " + grupo.getNome());
         }
@@ -90,7 +73,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         String selecionado = (String) jComboBoxGrupos.getSelectedItem();
         String[] pegaCodigo = selecionado.split(" - ");
         codGrupo = Integer.parseInt(pegaCodigo[0]);
-        ArrayList<Reuniao> reunioesGrupo = reuniaoControl.getReunioesAtaAberta(codGrupo);
+        ArrayList<Reuniao> reunioesGrupo = reuniaoControl.getReunioesAtaAberta(codGrupo, serLogado.getSiape());
         for (Reuniao reuniao : reunioesGrupo) {
             jComboBoxReunioes.addItem(reuniao.getCodigo() + " - " + reuniao.getNome());
         }
@@ -101,7 +84,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         String[] pegaCodigo = selecionado.split(" - ");
         codReuniao = Integer.parseInt(pegaCodigo[0]);
         Reuniao reuniaoSelecionada = reuniaoControl.getReuniao(codReuniao);
-        jLabelRes.setText("Responsável pela ATA: " + servidorLogado.getNome());
+        jLabelRes.setText("Responsável pela ATA: " + serLogado.getNome());
         jTextFieldHorarioInicio.setText(reuniaoSelecionada.getHorarioInicio());
     }
 
@@ -109,8 +92,8 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         String selecionado = (String) jComboBoxReunioes.getSelectedItem();
         String[] pegaCodigo = selecionado.split(" - ");
         codReuniao = Integer.parseInt(pegaCodigo[0]);
-        ArrayList<String> participantes = redigirAtaControl.retornaParticipantesDaReuniao(codGrupo);
-        nomeParticipantes = redigirAtaControl.retornaNomeParticipantes(codGrupo);
+        ArrayList<String> participantes = redigirAtaControl.retornaParticipantesDoGrupo(codGrupo);
+        nomeParticipantes = redigirAtaControl.retornaParticipantesDoGrupo(codGrupo);
         de.getDataVector().removeAllElements();
         for (int i = 0; i < participantes.size(); i++) {
             de.addRow(new Object[]{participantes.get(i)});
@@ -227,15 +210,20 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
             r.setHorarioFim(jTextFieldHorarioFim.getText());
             r.setLocal(jTextFieldLocal.getText());
             reuniaoControl.atualiza(r);
-            servidorLogado.setSerResponsavelAta(0);
-            servidorControl.atualiza(servidorLogado);
+            servidorControl.atualiza(serLogado);
             Ata a = ataControl.getAta(codReuniao);
-            a.setStatus("Em revisão");
+            a.setStatus("Em Revisão");
             ataControl.atualiza(a);
-            JOptionPane.showMessageDialog(this, "Ata finalizada !!!.");
+            verificaServidorResponsavelMaisAtas(a.getCodigo());
+            JOptionPane.showMessageDialog(this, "Ata finalizada !!!");
             atualizaPontos();
             try {
-                GeraRelatório.geraAta(codReuniao, servidorLogado.getNome(), nomeParticipantes, transformaArrayPauta());
+                GeraRelatório.geraAta(codReuniao, serLogado.getNome(), nomeParticipantes, transformaArrayPauta());
+                if (serLogado.getSerCoordenador() == 1) {
+                    new TelaPrincipalCoordenadorGUI().setVisible(true);
+                } else {
+                    new TelaPrincipalServidorGUI().setVisible(true);
+                }
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(this, "Não foi possível gerar a ATA!");
             }
@@ -265,11 +253,15 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
     public void verificaDados() {
         String selecionado = (String) jComboBoxReunioes.getSelectedItem();
         if (selecionado == null) {
-            JOptionPane.showMessageDialog(this, "Você não é responsável por redigir nenhuma ATA deste grupo!");
+            JOptionPane.showMessageDialog(this, "Você não é responsável por redigir nenhuma ATA deste grupo !!!");
         } else {
             preencheTabela();
             pesquisaReuniaoSelecionada();
         }
+    }
+
+    private void verificaServidorResponsavelMaisAtas(int ataCodigo) {
+
     }
 
     /**
@@ -319,9 +311,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
         jTextFieldLocal = new javax.swing.JTextField();
         jComboBoxPontoPauta = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Redigir Ata - Gerenciador de Reuniões");
-        setResizable(false);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Redigir ATA", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 0, 18))); // NOI18N
 
@@ -360,7 +350,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
 
         jLabel2.setText("Lista de Presença:");
 
-        jButtonProsseguir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/download.png"))); // NOI18N
+        jButtonProsseguir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/prosseguir.png"))); // NOI18N
         jButtonProsseguir.setText("Prosseguir");
         jButtonProsseguir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -395,7 +385,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
             }
         });
 
-        jButtonVoltarP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/download2.jpg"))); // NOI18N
+        jButtonVoltarP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/voltar.jpg"))); // NOI18N
         jButtonVoltarP.setText("Voltar");
         jButtonVoltarP.setMaximumSize(new java.awt.Dimension(111, 33));
         jButtonVoltarP.setMinimumSize(new java.awt.Dimension(111, 33));
@@ -478,7 +468,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Redigir ATA", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 18))); // NOI18N
 
-        jButtonVoltar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/download2.jpg"))); // NOI18N
+        jButtonVoltar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/voltar.jpg"))); // NOI18N
         jButtonVoltar.setText("Voltar");
         jButtonVoltar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -486,7 +476,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
             }
         });
 
-        jButtonFinalizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/download (1).jpg"))); // NOI18N
+        jButtonFinalizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/confirmar.jpg"))); // NOI18N
         jButtonFinalizar.setText("Finalizar Reunião");
         jButtonFinalizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -496,7 +486,7 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
 
         jLabel4.setText("Ponto de Pauta:");
 
-        jButtonCriarNovoPonto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/i54.jpg"))); // NOI18N
+        jButtonCriarNovoPonto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/pauta.jpg"))); // NOI18N
         jButtonCriarNovoPonto.setText("Criar Novo Ponto de Pauta");
         jButtonCriarNovoPonto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -737,7 +727,6 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
     private void jButtonFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFinalizarActionPerformed
         finalizaReuniao();
         this.dispose();
-        new TelaPrincipalServidorComumGUI().setVisible(true);
     }//GEN-LAST:event_jButtonFinalizarActionPerformed
 
     private void jButtonCriarNovoPontoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCriarNovoPontoActionPerformed
@@ -757,14 +746,12 @@ public class RedigirAtaGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBoxPontoPautaActionPerformed
 
     private void jButtonVoltarPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVoltarPActionPerformed
-        if (servidorLogado.getSerCoordenador() == 1 || servidorLogado.getSerDe() == 1) {
-            new TelaPrincipalCoordenadorGUI().setVisible(true);
-        } else if (servidorLogado.getSerResponsavelAta() == 1) {
-            new TelaPrincipalServidorComumGUI(1).setVisible(true);
-        } else {
-            new TelaPrincipalServidorComumGUI().setVisible(true);
-        }
         this.dispose();
+        if (serLogado.getSerCoordenador() == 1) {
+            new TelaPrincipalCoordenadorGUI().setVisible(true);
+        } else {
+            new TelaPrincipalServidorGUI().setVisible(true);
+        }
     }//GEN-LAST:event_jButtonVoltarPActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

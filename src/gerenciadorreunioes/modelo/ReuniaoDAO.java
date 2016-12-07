@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -79,17 +78,6 @@ public class ReuniaoDAO {
         return reunioes;
     }
 
-    public ArrayList<Reuniao> retornaReunioesDeUmGrupo(int codGrupo) {
-        EntityManager manager = JpaUtil.getEntityManager();
-        EntityTransaction tx = manager.getTransaction();
-        tx.begin();
-        Query query = manager.createQuery("SELECT * FROM Reuniao WHERE"
-                + " reu_gruCodigo = " + codGrupo);
-        ArrayList<Reuniao> reunioes = (ArrayList) query.getResultList();
-        tx.commit();
-        manager.close();
-        return reunioes;
-    }
 
     public Reuniao getReuniao(int codReuniao) {
         Reuniao r = null;
@@ -98,18 +86,6 @@ public class ReuniaoDAO {
                 r = reu;
         }
         return r;
-    }
-    
-    public ArrayList<Servidor> retornaServidoresReuniao(int codGrupo) {
-        EntityManager manager = JpaUtil.getEntityManager();
-        EntityTransaction tx = manager.getTransaction();
-        tx.begin();
-        Query query = manager.createQuery("SELECT * FROM Servidor JOIN Servidor_Grupo JOIN Grupo WHERE"
-                + " gruCodigo = " + codGrupo + " AND gruCodigo=seg_gruCodigo AND seg_serSiape = serSiape");
-        ArrayList<Servidor> servidores = (ArrayList) query.getResultList();
-        tx.commit();
-        manager.close();
-        return servidores;
     }
 
 }

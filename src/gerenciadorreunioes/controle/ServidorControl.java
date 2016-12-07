@@ -53,7 +53,11 @@ public class ServidorControl {
     public ArrayList<Servidor> getServidoresDE() {
         return servidorDao.getServidoresDE();
     }
-
+    
+    public ArrayList<Servidor> getDeCoordenadores() {
+        return servidorDao.getDeCoordenadores();
+    }
+    
     public ArrayList<Servidor> getMembrosComuns(Servidor serAux) {
         return servidorDao.getMembrosComuns(serAux);
     }
@@ -69,31 +73,17 @@ public class ServidorControl {
         }
         return arrayString;
     }
-    
-    public String retornaSiapeNomeEmString(String siape){
+
+    public String retornaSiapeNomeEmString(String siape) {
         Servidor s = servidorDao.getServidor(siape);
         return s.getSiape() + " - " + s.getNome();
     }
 
-    public ArrayList<String> pegaSiapeNomeCoordenadores(Servidor serAux) {
+    public ArrayList<String> pegaSiapeNomeCoordenadores(String siape) {
         ArrayList<String> nomeServidores = new ArrayList<>();
-        arrayServidores = servidorDao.getDeCoordenadores();
-        // for responsavel por deixar o servidor logado em primeiro na getServidores
-        for (int i = 0; i < arrayServidores.size(); i++) {
-            if (arrayServidores.get(i).equals(serAux)) {
-                nomeServidores.add(arrayServidores.get(i).getSiape() + " - " + arrayServidores.get(i).getNome());
-            }
-        }
-        // for responsavel por deixar os servidores da DE em seguida na getServidores
-        for (int i = 0; i < arrayServidores.size(); i++) {
-            if ((!arrayServidores.get(i).equals(serAux)) && (arrayServidores.get(i).getSerDe() == 1)) {
-                nomeServidores.add(arrayServidores.get(i).getSiape() + " - " + arrayServidores.get(i).getNome());
-            }
-        }
-        // for responsavel por deixar os demais coordenadores em seguida na getServidores
-        for (int i = 0; i < arrayServidores.size(); i++) {
-            if ((!arrayServidores.get(i).equals(serAux)) && (arrayServidores.get(i).getSerCoordenador() == 1)) {
-                nomeServidores.add(arrayServidores.get(i).getSiape() + " - " + arrayServidores.get(i).getNome());
+        for (Servidor ser : servidorDao.getDeCoordenadores()) {
+            if (!ser.getSiape().equals(siape)) {
+                nomeServidores.add(ser.getSiape() + " - " + ser.getNome());
             }
         }
         return nomeServidores;
@@ -123,11 +113,7 @@ public class ServidorControl {
         return servidorDao.getServidoresDeUmGrupo(gruCodigo);
     }
 
-    public ArrayList<Servidor> getServidoresDaReuniao(int reuCodigo) {
-        return servidorDao.getServidoresDaReuniao(reuCodigo);
-    }
-    
-    public Servidor getServidor(String siape){
+    public Servidor getServidor(String siape) {
         return servidorDao.getServidor(siape);
     }
 

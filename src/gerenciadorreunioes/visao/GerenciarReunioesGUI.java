@@ -33,8 +33,6 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
     private GrupoControl grupoControl = new GrupoControl();
     private ServidorControl servidorControl = new ServidorControl();
     private DefaultListModel modelo = new DefaultListModel();
-    private ArrayList<String> arrayGrupos = grupoControl.pegaCodigoNomeGrupos();
-    private ArrayList<String> arrayServidores = new ArrayList<>();
     private AlunoControl alunoControl = new AlunoControl();
     private AtaControl ataControl = new AtaControl();
     private PautaControl pautaControl = new PautaControl();
@@ -64,21 +62,17 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
         jButtonExcluirPonto.setEnabled(false);
         jComboBoxGrupoParticipante.removeAllItems();
         jButtonCadastrarPonto.setEnabled(false);
-        for (int i = 0; i < arrayGrupos.size(); i++) {
-            jComboBoxGrupoParticipante.addItem(arrayGrupos.get(i));
+        for (Grupo gru : grupoControl.getGrupos(coordenador.getSiape())) {
+            jComboBoxGrupoParticipante.addItem(gru.getCodigo() + " - " + gru.getNome());
         }
         atualizaComboResponsavelAta();
     }
 
     private void atualizaComboResponsavelAta() {
-        arrayServidores.removeAll(arrayServidores);
-        ArrayList<Servidor> arrayAux = servidorControl.getServidoresParticipantesDoGrupo(pegaCodigoGrupo());
-        for (int i = 0; i < arrayAux.size(); i++) {
-            arrayServidores.add(arrayAux.get(i).getSiape() + " - " + arrayAux.get(i).getNome());
-        }
+        ArrayList<Servidor> arrayServidores = servidorControl.getServidoresParticipantesDoGrupo(pegaCodigoGrupo());
         jComboBoxResponsavelAta.removeAllItems();
-        for (int i = 0; i < arrayServidores.size(); i++) {
-            jComboBoxResponsavelAta.addItem(arrayServidores.get(i));
+        for (Servidor ser : arrayServidores) {
+            jComboBoxResponsavelAta.addItem(ser.getSiape() + " - " + ser.getNome());
         }
     }
 
@@ -612,10 +606,10 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             new TelaPrincipalCoordenadorGUI().setVisible(true);
             this.dispose();
         } else if (coordenador.getSerResponsavelAta() == 1) {
-            new TelaPrincipalServidorComumGUI(1).setVisible(true);
+            new TelaPrincipalServidorGUI(1).setVisible(true);
             this.dispose();
         } else {
-            new TelaPrincipalServidorComumGUI().setVisible(true);
+            new TelaPrincipalServidorGUI().setVisible(true);
             this.dispose();
         }
     }
@@ -658,6 +652,7 @@ public class GerenciarReunioesGUI extends javax.swing.JFrame {
             reuniaoAntiga = pegaReuniaoSelecionadaNaLista();
             jTextFieldHora.setText(reuniaoAntiga.getHorarioInicio());
             jTextFieldLocal.setText(reuniaoAntiga.getLocal());
+            jDateChooser1.setDateFormatString("dd/MM/yyyy");
             jDateChooser1.setDate(reuniaoAntiga.getData());
             preenchePontosPauta(reuniaoAntiga);
             preencheGrupoParticipante(reuniaoAntiga);

@@ -14,9 +14,9 @@ public class RedigirAtaControl {
     private ReuniaoControl reuniaoControl = new ReuniaoControl();
     private ArrayList<Pauta> arrayPautas = new ArrayList<>();
 
-    public ArrayList<String> retornaParticipantesDaReuniao(int reuCodigo) {
-        ArrayList<Servidor> arrayServidores = servidorControl.getServidoresDaReuniao(reuCodigo);
-        ArrayList<Aluno> arrayAlunos = alunoControl.getAlunosDaReuniao(reuCodigo);
+    public ArrayList<String> retornaParticipantesDoGrupo(int gruCodigo) {
+        ArrayList<Servidor> arrayServidores = servidorControl.getServidoresParticipantesDoGrupo(gruCodigo);
+        ArrayList<Aluno> arrayAlunos = alunoControl.getAlunosParticipantesDoGrupo(gruCodigo);
         ArrayList<String> arrayString = new ArrayList<>();
         for (Servidor ser : arrayServidores) {
             arrayString.add(ser.getSiape() + " - " + ser.getNome());
@@ -26,20 +26,7 @@ public class RedigirAtaControl {
         }
         return arrayString;
     }
-    
-    public ArrayList<String> retornaNomeParticipantes(int codGrupo) {
-        ArrayList<Servidor> arrayServidores = servidorControl.getServidoresParticipantesDoGrupo(codGrupo);
-        ArrayList<Aluno> arrayAlunos = alunoControl.getAlunosDaReuniao(codGrupo); ///arrumar
-        ArrayList<String> arrayString = new ArrayList<>();
-        for (Servidor ser : arrayServidores) {
-            arrayString.add(ser.getNome());
-        }
-        for (Aluno alu : arrayAlunos) {
-            arrayString.add(alu.getMatricula() + " - " + alu.getNome());
-        }
-        return arrayString;
-    }
-    
+
     public boolean verificaCamposReuniao(String text0, String text1, String text2, String text3) {
         boolean retorno = false;
         if (text0.equals("") || text1.equals("") || text2.equals("") || text3.equals("")) {
@@ -47,7 +34,7 @@ public class RedigirAtaControl {
         }
         return retorno;
     }
-    
+
     public boolean verificaCamposPauta(String text0, String text1) {
         boolean retorno = false;
         if (text0.equals("") || text1.equals("")) {

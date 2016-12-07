@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 /**
  *
@@ -51,7 +52,8 @@ public class Aluno implements Serializable {
         this.email = email;
     }
 
-    @ManyToMany(mappedBy = "alunos")
+    @ManyToMany(cascade = {CascadeType.ALL}, mappedBy = "alunos")
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
     public List<Grupo> getGrupo() {
         return grupo;
     }

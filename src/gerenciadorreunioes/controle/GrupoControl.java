@@ -5,9 +5,13 @@
  */
 package gerenciadorreunioes.controle;
 
+import gerenciadorreunioes.modelo.Ata;
 import gerenciadorreunioes.modelo.Grupo;
 import gerenciadorreunioes.modelo.GrupoDAO;
+import gerenciadorreunioes.modelo.Reuniao;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -17,6 +21,7 @@ public class GrupoControl {
 
     private GrupoDAO grupoDao = new GrupoDAO();
     private ArrayList<Grupo> arrayGrupos;
+    private ReuniaoControl reuniaoControl = new ReuniaoControl();
 
     public boolean verificaCampoNome(String text) {
         boolean verifica = false;
@@ -71,7 +76,7 @@ public class GrupoControl {
     }
 
     public ArrayList<String> pegaCodigoNomeGrupos() {
-        ArrayList<String> nomeGrupos = new ArrayList<String>();
+        ArrayList<String> nomeGrupos = new ArrayList<>();
         arrayGrupos = grupoDao.getGrupos();
         for (int i = 0; i < arrayGrupos.size(); i++) {
             nomeGrupos.add(arrayGrupos.get(i).getCodigo() + " - " + arrayGrupos.get(i).getNome());
@@ -115,5 +120,42 @@ public class GrupoControl {
     public Grupo getGrupo(int gruCodigo) {
         return grupoDao.getGrupo(gruCodigo);
     }
-    
+
+    public ArrayList<Grupo> getGruposAtaAberta(String siape) {
+        AtaControl ataControl = new AtaControl();
+        ArrayList<Grupo> grupos = new ArrayList<>();
+        for (Grupo gru : getGrupos(siape)) {
+            for (Reuniao reu : reuniaoControl.getReunioes(gru.getCodigo())) {
+                Ata ata = ataControl.getAta(reu.getCodigo());
+                if (reu.getGrupo().getCodigo() == gru.getCodigo()
+                        && ata.getReuniao().getCodigo() == reu.getCodigo()
+                        && ata.getStatus().equals("Aberta")) {
+                    grupos.add(gru);
+                }
+            }
+        }
+        return grupos;
+    }
+
+    public ArrayList<Grupo> pesquisaGruposResponsavelAta(String siape) {
+        ArrayList<Grupo> grupos = new ArrayList<>();
+        for (Grupo grupo : getGrupos()) {
+            for (Reuniao reuniao : reuniaoControl.getReunioes()) {
+                if (reuniao.getSiapeResponsavelAta().equals(siape) && reuniao.getGrupo().getCodigo() == grupo.getCodigo()) {
+                    grupos.add(grupo);
+                }
+            }
+        }
+        //remove elementos repetidos
+        Set<Grupo> set = new HashSet<>();
+        for (Grupo grupo : grupos) {
+            set.add(grupo);
+        }
+        grupos.removeAll(grupos);
+        for (Grupo grupo : set) {
+            grupos.add(grupo);
+        }
+        return grupos;
+    }
+
 }

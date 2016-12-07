@@ -85,8 +85,4 @@ public class AlunoControl {
         return alunoDao.getAlunosDeUmGrupo(gruCodigo);
     }
 
-    public ArrayList<Aluno> getAlunosDaReuniao(int reuCodigo) {
-        return alunoDao.getAlunosDaReuniao(reuCodigo);
-    }
-
 }

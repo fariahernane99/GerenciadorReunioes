@@ -44,7 +44,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         preencheVetoresDeServidoresEAlunos();
         coordenador = LoginControl.retornaServidorLogado();
         listaGrupos();
-        atualizaComboCoordenadores(coordenador);
+        atualizaComboCoordenadores();
         atualizaComboServidoresAlunos();
         resetaBotoes();
     }
@@ -466,12 +466,17 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
     }
 
     private void listaGrupos() {
-        jListGrupos.removeAll();
+        DefaultListModel modeloGrupo = new DefaultListModel();
         if (coordenador.getSerDe() == 1) {
-            jListGrupos.setListData(grupoControl.listaGruposEmVetorDeString());
+            for (Grupo gru : grupoControl.getGrupos()) {
+                modeloGrupo.addElement(gru.getCodigo() + " - " + gru.getNome());
+            }
         } else {
-            jListGrupos.setListData(grupoControl.listaGruposEmVetorDeString(coordenador.getSiape()));
+            for (Grupo gru : grupoControl.getGrupos(coordenador.getSiape())) {
+                modeloGrupo.addElement(gru.getCodigo() + " - " + gru.getNome());
+            }
         }
+        jListGrupos.setModel(modeloGrupo);
     }
 
     private String pegaSiapeDoCoordenador(String siapeENome) {
@@ -559,7 +564,7 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         if (jListGrupos.getModel().getSize() > 0) {
             jTextFieldNome.setText(grupoAux.getNome());
             jTextAreaDescricao.setText(grupoAux.getDescricao());
-            colocaCoordenadorGrupoPrimeiroNaLista(grupoAux.getSiapeCoordenador());
+            colocaCoordenadorGrupoPrimeiroNaLista(pegaCodigoGrupo());
             jButtonCadastrar.setEnabled(false);
             jButtonEditar.setEnabled(true);
             jButtonExcluir.setEnabled(true);
@@ -572,15 +577,17 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         }
     }
 
-    private void atualizaComboCoordenadores(Servidor serAux) {
+    private void atualizaComboCoordenadores() {
         jComboBoxCoordenadores.removeAllItems();
-        if (serAux.getSerDe() == 1) {
-            ArrayList<String> arrayString = servidorControl.pegaSiapeNomeCoordenadores(serAux);
-            for (String s : arrayString) {
-                jComboBoxCoordenadores.addItem(s);
+        if (coordenador.getSerDe() == 1) {
+            jComboBoxCoordenadores.addItem(coordenador.getSiape() + " - " + coordenador.getNome());
+            for (Servidor ser : servidorControl.getDeCoordenadores()) {
+                if (!ser.getSiape().equals(coordenador.getSiape())) {
+                    jComboBoxCoordenadores.addItem(ser.getSiape() + " - " + ser.getNome());
+                }
             }
         } else {
-            jComboBoxCoordenadores.addItem(serAux.getSiape() + " - " + serAux.getNome());
+            jComboBoxCoordenadores.addItem(coordenador.getSiape() + " - " + coordenador.getNome());
         }
     }
 
@@ -636,15 +643,19 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
         jListParticipantes.setModel(modelo);
     }
 
-    private void colocaCoordenadorGrupoPrimeiroNaLista(String siape) {
+    private void colocaCoordenadorGrupoPrimeiroNaLista(int gruCodigo) {
         jComboBoxCoordenadores.removeAllItems();
-        jComboBoxCoordenadores.addItem(servidorControl.retornaSiapeNomeEmString(siape));
-        for (String ser : servidorControl.pegaSiapeNomeCoordenadores(coordenador)) {
-            //separando siape do nome
-            String[] tupla = ser.split(" - ");
-            if (!siape.equals(tupla[0])) {
-                jComboBoxCoordenadores.addItem(ser);
+        if (coordenador.getSerDe() == 1) {
+            Grupo gru = grupoControl.getGrupo(gruCodigo);
+            Servidor servidorResponsavel = servidorControl.getServidor(gru.getSiapeCoordenador());
+            jComboBoxCoordenadores.addItem(servidorResponsavel.getSiape() + " - " + servidorResponsavel.getNome());
+            for (Servidor ser : servidorControl.getDeCoordenadores()) {
+                if (!ser.getSiape().equals(servidorResponsavel.getSiape())) {
+                    jComboBoxCoordenadores.addItem(ser.getSiape() + " - " + ser.getNome());
+                }
             }
+        } else {
+            jComboBoxCoordenadores.addItem(coordenador.getSiape() + " - " + coordenador.getNome());
         }
     }
 
@@ -661,10 +672,10 @@ public class GerenciarGruposGUI extends javax.swing.JFrame {
             new TelaPrincipalCoordenadorGUI().setVisible(true);
             this.dispose();
         } else if (coordenador.getSerResponsavelAta() == 1) {
-            new TelaPrincipalServidorComumGUI(1).setVisible(true);
+            new TelaPrincipalServidorGUI(1).setVisible(true);
             this.dispose();
         } else {
-            new TelaPrincipalServidorComumGUI().setVisible(true);
+            new TelaPrincipalServidorGUI().setVisible(true);
             this.dispose();
         }
     }

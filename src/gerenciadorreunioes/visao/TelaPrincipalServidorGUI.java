@@ -5,29 +5,25 @@
  */
 package gerenciadorreunioes.visao;
 
+import gerenciadorreunioes.controle.LoginControl;
+import gerenciadorreunioes.modelo.Servidor;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Alunos
- */
-public class TelaPrincipalServidorComumGUI extends javax.swing.JFrame {
+public class TelaPrincipalServidorGUI extends javax.swing.JFrame {
 
-    /**
-     * Creates new form TelaPrincipalNova
-     */
-    /*
-    MODIFICAR A PARTIR DAQUI !!!!! 
-    SE FOR RESPONSAVEL POR ATA, INICIALIZA O CONSTRUTOR COM PARAMETRO
-    SE NAO, INICIALIZA COM CONSTRUTOR SEM PARAMETRO !!!
-     */
-    public TelaPrincipalServidorComumGUI() {
+    private Servidor servidorLogado;
+    
+    public TelaPrincipalServidorGUI() {
         initComponents();
         jMenuItemRedigirAta.setEnabled(false);
+        servidorLogado = LoginControl.retornaServidorLogado();
+        jLabelCoordenador.setText("Bem vindo(a), Servidor(a) " + servidorLogado.getNome());
     }
 
-    public TelaPrincipalServidorComumGUI(int i) {
+    public TelaPrincipalServidorGUI(int i) {
         initComponents();
+        servidorLogado = LoginControl.retornaServidorLogado();
+        jLabelCoordenador.setText("Bem vindo(a), Servidor(a) " + servidorLogado.getNome());
     }
 
     /**
@@ -40,7 +36,6 @@ public class TelaPrincipalServidorComumGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jToolBar2 = new javax.swing.JToolBar();
-        jButtonImprimirAta = new javax.swing.JButton();
         jButtonBuscarAta = new javax.swing.JButton();
         jButtonSair = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -48,7 +43,6 @@ public class TelaPrincipalServidorComumGUI extends javax.swing.JFrame {
         jLabelCoordenador = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuATAs = new javax.swing.JMenu();
-        jMenuItemImprimirAta = new javax.swing.JMenuItem();
         jMenuItemConsultaAta = new javax.swing.JMenuItem();
         jMenuItemRedigirAta = new javax.swing.JMenuItem();
         jMenuSobre = new javax.swing.JMenu();
@@ -58,12 +52,6 @@ public class TelaPrincipalServidorComumGUI extends javax.swing.JFrame {
         setResizable(false);
 
         jToolBar2.setRollover(true);
-
-        jButtonImprimirAta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/imprimir.jpg"))); // NOI18N
-        jButtonImprimirAta.setFocusable(false);
-        jButtonImprimirAta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButtonImprimirAta.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar2.add(jButtonImprimirAta);
 
         jButtonBuscarAta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/buscar.png"))); // NOI18N
         jButtonBuscarAta.setToolTipText("Consultar Ata");
@@ -98,14 +86,6 @@ public class TelaPrincipalServidorComumGUI extends javax.swing.JFrame {
         jLabelCoordenador.setBounds(0, 10, 540, 23);
 
         jMenuATAs.setText("ATAs");
-
-        jMenuItemImprimirAta.setText("Imprimir ATA");
-        jMenuItemImprimirAta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemImprimirAtaActionPerformed(evt);
-            }
-        });
-        jMenuATAs.add(jMenuItemImprimirAta);
 
         jMenuItemConsultaAta.setText("Consulltar ATA");
         jMenuItemConsultaAta.addActionListener(new java.awt.event.ActionListener() {
@@ -159,12 +139,12 @@ public class TelaPrincipalServidorComumGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItemImprimirAtaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemImprimirAtaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemImprimirAtaActionPerformed
-
     private void jMenuSobreMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuSobreMouseClicked
-         JOptionPane.showMessageDialog(this, "Desenvolvido por World Systems \n Desenvolvedores: Hernane Marcos de Faria Júnior \n Igor Ribeiro da Silva \n Técnico em Informática III - IFMG Formiga");
+         JOptionPane.showMessageDialog(this, "Desenvolvido por World Systems"
+                + "\nDesenvolvedores:"
+                + "\nHernane Marcos de Faria Júnior (tiaocarreiro99@gmail.com)"
+                + "\nIgor Ribeiro da Silva (igorrs704@hotmail.com)"
+                + "\nAlunos do Curso Técnico Integrado em Informática III - IFMG Campus Formiga");
     }//GEN-LAST:event_jMenuSobreMouseClicked
 
     private void jMenuItemRedigirAtaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemRedigirAtaActionPerformed
@@ -191,14 +171,12 @@ public class TelaPrincipalServidorComumGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBuscarAta;
-    private javax.swing.JButton jButtonImprimirAta;
     private javax.swing.JButton jButtonSair;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabelCoordenador;
     private javax.swing.JMenu jMenuATAs;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItemConsultaAta;
-    private javax.swing.JMenuItem jMenuItemImprimirAta;
     private javax.swing.JMenuItem jMenuItemRedigirAta;
     private javax.swing.JMenu jMenuSobre;
     private javax.swing.JPanel jPanel2;

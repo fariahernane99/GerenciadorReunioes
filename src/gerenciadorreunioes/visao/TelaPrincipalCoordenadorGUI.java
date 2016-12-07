@@ -15,17 +15,17 @@ import javax.swing.JOptionPane;
  */
 public class TelaPrincipalCoordenadorGUI extends javax.swing.JFrame {
 
-    private Servidor serAux;
+    private Servidor coordenador;
 
     public TelaPrincipalCoordenadorGUI() {
         initComponents();
-        serAux = LoginControl.retornaServidorLogado();
-        if (serAux.getSerDe() == 1){
-            jLabelCoordenador.setText("Bem vindo(a), Diretor(a) de Ensino " + serAux.getNome() + "!");
+        coordenador = LoginControl.retornaServidorLogado();
+        if (coordenador.getSerDe() == 1){
+            jLabelCoordenador.setText("Bem vindo(a), Diretor(a) de Ensino " + coordenador.getNome() + "!");
         } else {
-            jLabelCoordenador.setText("Bem vindo(a), Coordenador(a) " + serAux.getNome() + "!");
+            jLabelCoordenador.setText("Bem vindo(a), Coordenador(a) " + coordenador.getNome() + "!");
         }
-        if (serAux.getSerResponsavelAta() == 0) {
+        if (coordenador.getSerResponsavelAta() == 0) {
             jMenuItemRedigirAta.setEnabled(false);
         }
     }
@@ -46,7 +46,6 @@ public class TelaPrincipalCoordenadorGUI extends javax.swing.JFrame {
         jButtonGerenciarAlunos = new javax.swing.JButton();
         jToolBar2 = new javax.swing.JToolBar();
         jButtonMudarStatusAta = new javax.swing.JButton();
-        jButtonImprimirAta = new javax.swing.JButton();
         jButtonBuscarAta = new javax.swing.JButton();
         jButtonSair = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -60,7 +59,6 @@ public class TelaPrincipalCoordenadorGUI extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuATAs = new javax.swing.JMenu();
         jMenuItemMudarStatusAta = new javax.swing.JMenuItem();
-        jMenuItemImprimirAta = new javax.swing.JMenuItem();
         jMenuItemConsultaAta = new javax.swing.JMenuItem();
         jMenuItemRedigirAta = new javax.swing.JMenuItem();
         jMenuSobre = new javax.swing.JMenu();
@@ -134,18 +132,6 @@ public class TelaPrincipalCoordenadorGUI extends javax.swing.JFrame {
             }
         });
         jToolBar2.add(jButtonMudarStatusAta);
-
-        jButtonImprimirAta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/imprimir.jpg"))); // NOI18N
-        jButtonImprimirAta.setToolTipText("Imprimir Ata");
-        jButtonImprimirAta.setFocusable(false);
-        jButtonImprimirAta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButtonImprimirAta.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButtonImprimirAta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonImprimirAtaActionPerformed(evt);
-            }
-        });
-        jToolBar2.add(jButtonImprimirAta);
 
         jButtonBuscarAta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/buscar.png"))); // NOI18N
         jButtonBuscarAta.setToolTipText("Consultar Ata");
@@ -225,15 +211,7 @@ public class TelaPrincipalCoordenadorGUI extends javax.swing.JFrame {
         });
         jMenuATAs.add(jMenuItemMudarStatusAta);
 
-        jMenuItemImprimirAta.setText("Imprimir ATA");
-        jMenuItemImprimirAta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemImprimirAtaActionPerformed(evt);
-            }
-        });
-        jMenuATAs.add(jMenuItemImprimirAta);
-
-        jMenuItemConsultaAta.setText("Consulltar ATA");
+        jMenuItemConsultaAta.setText("Consultar ATA");
         jMenuItemConsultaAta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemConsultaAtaActionPerformed(evt);
@@ -274,7 +252,7 @@ public class TelaPrincipalCoordenadorGUI extends javax.swing.JFrame {
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 246, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 275, Short.MAX_VALUE)
                 .addComponent(jButtonSair))
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -297,10 +275,6 @@ public class TelaPrincipalCoordenadorGUI extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jMenuItemGerenciarServidoresActionPerformed
 
-    private void jMenuItemImprimirAtaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemImprimirAtaActionPerformed
-        
-    }//GEN-LAST:event_jMenuItemImprimirAtaActionPerformed
-
     private void jMenuItemGerenciarGruposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGerenciarGruposActionPerformed
         new GerenciarGruposGUI().setVisible(true);
         this.dispose();
@@ -317,7 +291,11 @@ public class TelaPrincipalCoordenadorGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonGerenciarServidoresActionPerformed
 
     private void jMenuSobreMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuSobreMouseClicked
-        JOptionPane.showMessageDialog(this, "Desenvolvido por World Systems \n Desenvolvedores: Hernane Marcos de Faria Júnior \n Igor Ribeiro da Silva  \n Técnico em Informática III - IFMG Formiga ");
+        JOptionPane.showMessageDialog(this, "Desenvolvido por World Systems"
+                + "\nDesenvolvedores:"
+                + "\nHernane Marcos de Faria Júnior (tiaocarreiro99@gmail.com)"
+                + "\nIgor Ribeiro da Silva (igorrs704@hotmail.com)"
+                + "\nAlunos do Curso Técnico Integrado em Informática III - IFMG Campus Formiga");
     }//GEN-LAST:event_jMenuSobreMouseClicked
 
     private void jMenuItemGerenciarReunioesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGerenciarReunioesActionPerformed
@@ -326,8 +304,8 @@ public class TelaPrincipalCoordenadorGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemGerenciarReunioesActionPerformed
 
     private void jMenuItemMudarStatusAtaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemMudarStatusAtaActionPerformed
-        //new MudarStatusAtaGUI().setVisible(true);
-        //this.dispose();
+        new MudarStatusAtaGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jMenuItemMudarStatusAtaActionPerformed
 
     private void jButtonGerenciarReunioesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerenciarReunioesActionPerformed
@@ -335,13 +313,9 @@ public class TelaPrincipalCoordenadorGUI extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButtonGerenciarReunioesActionPerformed
 
-    private void jButtonImprimirAtaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImprimirAtaActionPerformed
-
-    }//GEN-LAST:event_jButtonImprimirAtaActionPerformed
-
     private void jButtonMudarStatusAtaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMudarStatusAtaActionPerformed
-        //new MudarStatusAtaGUI().setVisible(true);
-        //this.dispose();
+        new MudarStatusAtaGUI().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButtonMudarStatusAtaActionPerformed
 
     private void jButtonGerenciarAlunosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerenciarAlunosActionPerformed
@@ -385,7 +359,6 @@ public class TelaPrincipalCoordenadorGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButtonGerenciarGrupos;
     private javax.swing.JButton jButtonGerenciarReunioes;
     private javax.swing.JButton jButtonGerenciarServidores;
-    private javax.swing.JButton jButtonImprimirAta;
     private javax.swing.JButton jButtonMudarStatusAta;
     private javax.swing.JButton jButtonSair;
     private javax.swing.JLabel jLabel2;
@@ -398,7 +371,6 @@ public class TelaPrincipalCoordenadorGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItemGerenciarGrupos;
     private javax.swing.JMenuItem jMenuItemGerenciarReunioes;
     private javax.swing.JMenuItem jMenuItemGerenciarServidores;
-    private javax.swing.JMenuItem jMenuItemImprimirAta;
     private javax.swing.JMenuItem jMenuItemMudarStatusAta;
     private javax.swing.JMenuItem jMenuItemRedigirAta;
     private javax.swing.JMenu jMenuSobre;

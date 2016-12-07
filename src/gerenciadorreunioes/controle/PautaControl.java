@@ -38,7 +38,7 @@ public class PautaControl {
     }
 
     public ArrayList<String> retornaPontos() {
-        ArrayList<String> pautasDiscutidas = new ArrayList<String>();
+        ArrayList<String> pautasDiscutidas = new ArrayList<>();
         for (int i = 0; i < pontos.size(); i++) {
             String s = pontos.get(i).getTitulo() + "." + pontos.get(i).getDefinicao();
             pautasDiscutidas.add(s);

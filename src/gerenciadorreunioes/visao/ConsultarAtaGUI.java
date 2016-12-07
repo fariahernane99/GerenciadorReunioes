@@ -20,15 +20,10 @@ import javax.swing.JOptionPane;
  */
 public class ConsultarAtaGUI extends javax.swing.JFrame {
 
-    private final Servidor serAux;
+    private final Servidor servidorLogado;
     private java.util.Date data1;
     private java.util.Date data2;
-    private int codGrupo;
-    private final GrupoControl grupoControl = new GrupoControl();
-    private final LoginControl loginControl = new LoginControl();
     private final AtaControl ataControl = new AtaControl();
-    private final GeraRelatório gera = new GeraRelatório();
-    private final ArrayList<Ata> atas = ataControl.getAtas();
     private final ArrayList<Ata> atasConcluidas = new ArrayList<>();
     private final ArrayList<Ata> atasFechadas = new ArrayList<>();
 
@@ -37,22 +32,43 @@ public class ConsultarAtaGUI extends javax.swing.JFrame {
      */
     public ConsultarAtaGUI() {
         initComponents();
-        serAux = LoginControl.retornaServidorLogado();
-        if (serAux.getSerCoordenador() == 1) {
-            jRadioButtonFechada.setVisible(false);
-        } else {
-            jRadioButtonConcluida.setVisible(false);
-        }
+        servidorLogado = LoginControl.retornaServidorLogado();
+        verificaAtas();
     }
 
-    public void verificaAtasFechadas() {
-        for (Ata ata : atas) {
+    public void verificaAtas() {
+        for (Ata ata : ataControl.getAtas()) {
             if (ata.getStatus().equals("Concluída")) {
                 atasConcluidas.add(ata);
-            } else if(ata.getStatus().equals("Fechada")){
+            } else if (ata.getStatus().equals("Fechada")) {
                 atasFechadas.add(ata);
             }
         }
+    }
+
+    public void geraAta() {
+        data1 = jDateChooser1.getDate();
+        data2 = jDateChooser2.getDate();
+        if (!atasConcluidas.isEmpty() && servidorLogado.getSerCoordenador() == 1) {
+            GeraRelatório.geraAtasConcluidas(data1, data2, servidorLogado.getSiape());
+        } else if (atasConcluidas.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Não há atas com o status 'Concluída'");
+        } else if (!atasFechadas.isEmpty() && servidorLogado.getSerDe() == 1) {
+            GeraRelatório.geraAtasFechadas(data1, data2, servidorLogado.getSiape());
+        } else if (atasConcluidas.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Não há atas com o status 'Fechada'");
+        }
+    }
+
+    private void cancelar() {
+        if (servidorLogado.getSerCoordenador() == 1 || servidorLogado.getSerDe() == 1) {
+            new TelaPrincipalCoordenadorGUI().setVisible(true);
+        } else if (servidorLogado.getSerResponsavelAta() == 1) {
+            new TelaPrincipalServidorGUI(1).setVisible(true);
+        } else {
+            new TelaPrincipalServidorGUI().setVisible(true);
+        }
+        this.dispose();
     }
 
     /**
@@ -72,12 +88,11 @@ public class ConsultarAtaGUI extends javax.swing.JFrame {
         jDateChooser2 = new com.toedter.calendar.JDateChooser();
         jLabel4 = new javax.swing.JLabel();
         jButtonConsultar = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
-        jRadioButtonConcluida = new javax.swing.JRadioButton();
-        jRadioButtonFechada = new javax.swing.JRadioButton();
+        jButtonCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Consultar Ata - Gerenciador de Reuniões");
+        setTitle("Consultar Atas - Gerenciador de Reuniões");
+        setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Consultar ATAs", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 18))); // NOI18N
 
@@ -97,19 +112,11 @@ public class ConsultarAtaGUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel6.setText("Status da Ata:");
-
-        jRadioButtonConcluida.setText("Concluída");
-        jRadioButtonConcluida.addActionListener(new java.awt.event.ActionListener() {
+        jButtonCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/cancelar.png"))); // NOI18N
+        jButtonCancelar.setText("Cancelar");
+        jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButtonConcluidaActionPerformed(evt);
-            }
-        });
-
-        jRadioButtonFechada.setText("Fechada");
-        jRadioButtonFechada.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButtonFechadaActionPerformed(evt);
+                jButtonCancelarActionPerformed(evt);
             }
         });
 
@@ -132,15 +139,10 @@ public class ConsultarAtaGUI extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(76, 76, 76)
-                        .addComponent(jButtonConsultar))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jRadioButtonFechada)
-                            .addComponent(jRadioButtonConcluida))))
+                        .addGap(22, 22, 22)
+                        .addComponent(jButtonConsultar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonCancelar)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(jLabel4))
         );
@@ -161,17 +163,12 @@ public class ConsultarAtaGUI extends javax.swing.JFrame {
                             .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(jRadioButtonConcluida))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButtonFechada)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                        .addComponent(jButtonConsultar))
+                            .addComponent(jButtonConsultar)
+                            .addComponent(jButtonCancelar)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel4)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jLabel4)))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -182,46 +179,23 @@ public class ConsultarAtaGUI extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConsultarActionPerformed
-        String status;
-        data1 = jDateChooser1.getDate();
-        data2 = jDateChooser2.getDate();
-        System.out.println("Data1==========" + data1.toString());
-        System.out.println("Data2==========" + data2.toString());
-        System.out.println("Siape===========" + serAux.getSiape());
-        if (atasConcluidas.size()!=0) {
-            status = "Concluída";
-            GeraRelatório.geraAtasConcluidas(data1, data2, serAux.getSiape());
-        } else if (atasConcluidas.size()==0){
-            JOptionPane.showMessageDialog(this, "Não há atas com o status 'Concluída'");
-            
-        } else if (atasFechadas.size()!=0) {
-            status = "Fechada";
-            GeraRelatório.geraAtasFechadas(data1, data2, serAux.getSiape());
-        }else if (atasConcluidas.size()==0){
-            JOptionPane.showMessageDialog(this, "Não há atas com o status 'Fechada'");
-            
-        }
+        geraAta();
     }//GEN-LAST:event_jButtonConsultarActionPerformed
 
-    private void jRadioButtonConcluidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonConcluidaActionPerformed
-
-    }//GEN-LAST:event_jRadioButtonConcluidaActionPerformed
-
-    private void jRadioButtonFechadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonFechadaActionPerformed
-
-    }//GEN-LAST:event_jRadioButtonFechadaActionPerformed
+    private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
+        cancelar();
+    }//GEN-LAST:event_jButtonCancelarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonCancelar;
     private javax.swing.JButton jButtonConsultar;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private com.toedter.calendar.JDateChooser jDateChooser2;
@@ -229,9 +203,6 @@ public class ConsultarAtaGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JRadioButton jRadioButtonConcluida;
-    private javax.swing.JRadioButton jRadioButtonFechada;
     // End of variables declaration//GEN-END:variables
 }

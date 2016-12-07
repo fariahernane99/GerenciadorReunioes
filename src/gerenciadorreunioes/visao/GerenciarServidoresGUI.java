@@ -515,10 +515,10 @@ public class GerenciarServidoresGUI extends javax.swing.JFrame {
             new TelaPrincipalCoordenadorGUI().setVisible(true);
             this.dispose();
         } else if (coordenador.getSerResponsavelAta() == 1) {
-            new TelaPrincipalServidorComumGUI(1).setVisible(true);
+            new TelaPrincipalServidorGUI(1).setVisible(true);
             this.dispose();
         } else {
-            new TelaPrincipalServidorComumGUI().setVisible(true);
+            new TelaPrincipalServidorGUI().setVisible(true);
             this.dispose();
         }
     }

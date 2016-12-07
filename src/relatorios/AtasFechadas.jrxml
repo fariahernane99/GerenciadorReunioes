@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-12-01T09:45:30 -->
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-12-04T13:24:16 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Funfa" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b14a168b-5e97-4de4-a485-71f89dde89c4">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="background.image.path" value="C:\Users\Alunos\Desktop\logo.jpg"/>
@@ -41,17 +41,11 @@
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Reunioes"/>
 		<parameter name="serSiape" class="java.lang.String"/>
 		<queryString>
-			<![CDATA[select ataStatus,gruNome,reuData FROM Ata JOIN Reuniao JOIN Grupo JOIN Servidor_Grupo JOIN Servidor ON ataStatus='Fechada' AND serSiape=$P{serSiape} AND gruCodigo=reu_gruCodigo AND serSiape=seg_serSiape AND gruCodigo=seg_gruCodigo AND ata_reuCodigo=reuCodigo GROUP BY reuData]]>
+			<![CDATA[select ataStatus,gruNome,reuData FROM Ata JOIN Reuniao JOIN Grupo JOIN Servidor_Grupo JOIN Servidor ON ataStatus='Fechada' AND serSiape=$P{serSiape} AND gruCodigo=reu_gruCodigo AND serSiape=seg_serSiape AND gruCodigo=seg_gruCodigo AND reuniao_reuCodigo=reuCodigo GROUP BY reuData]]>
 		</queryString>
-		<field name="ataStatus" class="java.lang.String">
-			<fieldDescription><![CDATA[]]></fieldDescription>
-		</field>
-		<field name="gruNome" class="java.lang.String">
-			<fieldDescription><![CDATA[]]></fieldDescription>
-		</field>
-		<field name="reuData" class="java.sql.Date">
-			<fieldDescription><![CDATA[]]></fieldDescription>
-		</field>
+		<field name="ataStatus" class="java.lang.String"/>
+		<field name="gruNome" class="java.lang.String"/>
+		<field name="reuData" class="java.sql.Date"/>
 		<group name="gruNome">
 			<groupExpression><![CDATA[$F{gruNome}]]></groupExpression>
 		</group>
@@ -66,31 +60,21 @@
 	<parameter name="dataInicio" class="java.util.Date"/>
 	<parameter name="dataFim" class="java.util.Date"/>
 	<queryString>
-		<![CDATA[select ataStatus,serSiape,serNome,gruNome,reuData FROM Reuniao JOIN Ata JOIN Grupo JOIN Servidor_Grupo JOIN Servidor ON ataStatus='Fechada' AND serSiape=$P{serSiape} AND serSiape=seg_serSiape AND gruCodigo=seg_gruCodigo AND gruCodigo=reu_gruCodigo AND ata_reuCodigo=reuCodigo AND reuData BETWEEN $P{dataInicio}  AND $P{dataFim}]]>
+		<![CDATA[select ataStatus,serSiape,serNome,gruNome,reuData FROM Reuniao JOIN Ata JOIN Grupo JOIN Servidor_Grupo JOIN Servidor ON ataStatus='Fechada' AND serSiape=$P{serSiape} AND serSiape=seg_serSiape AND gruCodigo=seg_gruCodigo AND gruCodigo=reu_gruCodigo AND reuniao_reuCodigo=reuCodigo AND reuData BETWEEN $P{dataInicio}  AND $P{dataFim}]]>
 	</queryString>
-	<field name="ataStatus" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="serSiape" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="serNome" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="gruNome" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="reuData" class="java.sql.Date">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="ataStatus" class="java.lang.String"/>
+	<field name="serSiape" class="java.lang.String"/>
+	<field name="serNome" class="java.lang.String"/>
+	<field name="gruNome" class="java.lang.String"/>
+	<field name="reuData" class="java.sql.Date"/>
 	<group name="gruNome">
 		<groupExpression><![CDATA[$F{gruNome}]]></groupExpression>
 	</group>
 	<background>
 		<band height="580" splitType="Stretch">
 			<image>
-				<reportElement x="0" y="190" width="550" height="390" uuid="9ad69d33-a03b-493a-9c10-1e410815fce6"/>
-				<imageExpression><![CDATA["C:/Users/Alunos/Desktop/GerenciadorReunioes/src/icon/logo.png"]]></imageExpression>
+				<reportElement x="0" y="170" width="550" height="380" uuid="acc80d48-c150-49ae-8f83-a47ee97f22d4"/>
+				<imageExpression><![CDATA["C:/Users/Igor Silva/Desktop/GerenciadorReunioes/src/icon/logo.png"]]></imageExpression>
 			</image>
 		</band>
 	</background>
@@ -99,7 +83,7 @@
 			<staticText>
 				<reportElement x="0" y="0" width="550" height="20" uuid="3adda767-8640-40e8-824b-477072fe3001"/>
 				<textElement textAlignment="Center"/>
-				<text><![CDATA[RELATÓRIO DE ATAS CONCLUÍDAS]]></text>
+				<text><![CDATA[RELATÓRIO DE ATAS FECHADAS - DIRETORIA DE ENSINO]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="0" y="20" width="550" height="20" uuid="86a8af4b-86a3-4c2b-af3f-5a53159794f4"/>

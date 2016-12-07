@@ -9,7 +9,7 @@ import gerenciadorreunioes.modelo.GrupoDAO;
 import gerenciadorreunioes.modelo.Servidor;
 import gerenciadorreunioes.modelo.ServidorDAO;
 import gerenciadorreunioes.visao.TelaPrincipalCoordenadorGUI;
-import gerenciadorreunioes.visao.TelaPrincipalServidorComumGUI;
+import gerenciadorreunioes.visao.TelaPrincipalServidorGUI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -51,10 +51,10 @@ public class LoginControl {
                 TelaPrincipalCoordenadorGUI telaPrincipal = new TelaPrincipalCoordenadorGUI();
                 telaPrincipal.setVisible(true);
             } else if (servidorLogado.getSerResponsavelAta() == 1) {
-                TelaPrincipalServidorComumGUI telaPrincipal = new TelaPrincipalServidorComumGUI(1);
+                TelaPrincipalServidorGUI telaPrincipal = new TelaPrincipalServidorGUI(1);
                 telaPrincipal.setVisible(true);
             } else {
-                TelaPrincipalServidorComumGUI telaPrincipal = new TelaPrincipalServidorComumGUI();
+                TelaPrincipalServidorGUI telaPrincipal = new TelaPrincipalServidorGUI();
                 telaPrincipal.setVisible(true);
             }
             achou = true;

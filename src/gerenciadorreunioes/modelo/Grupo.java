@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import org.hibernate.annotations.Cascade;
 
 @Entity
 @Table(name = "Grupo")
@@ -73,7 +74,7 @@ public class Grupo implements Serializable {
         this.alunos = alunos;
     }
 
-    @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinTable(name = "Servidor_Grupo", joinColumns = @JoinColumn(name = "seg_gruCodigo"), inverseJoinColumns = @JoinColumn(name = "seg_serSiape"))
     public List<Servidor> getServidores() {
         return servidores;
